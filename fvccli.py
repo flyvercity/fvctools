@@ -12,7 +12,7 @@ subsystems = {
 def main():
     try:
         parser = ArgumentParser()
-        parser.add_argument('--verbose', action='store_true', help='sets logging level to debug')
+        parser.add_argument('-v', '--verbose', action='store_true', help='sets logging level to debug')
         subparsers = parser.add_subparsers(dest='subsystem')
         rms.add_argparser(subparsers)
         args = parser.parse_args()

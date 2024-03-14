@@ -3,6 +3,7 @@
 from pathlib import Path
 import tomllib
 import logging as lg
+import pyparsing as pp
 
 
 def add_argparser(subparsers):
@@ -23,11 +24,143 @@ class Config:
             if config.get('version') != 1:
                 raise UserWarning('Unknown configuration file version (expected 1)')
 
+            input = config.get('input')
+
+            if not input:
+                raise UserWarning('Missing input section')
+
+            input_list = input.get('files')
+
+            if not input_list:
+                raise UserWarning('Missing input.files parameter')
+
+            if not isinstance(input_list, list):
+                input_list = [input_list]
+
+            self._input_file_names = []
+
+            for input_spec in input_list:
+                if isinstance(input_spec, str):
+                    input_spec = {'path': input_spec}
+
+                subpath = input_spec.get('path') or ''
+                glob = input_spec.get('filter') or '**/*'
+                lg.debug(f'Adding input files from {subpath} with filter {glob}')
+                self._input_file_names.extend(Path(self._base_dir, Path(subpath)).glob(glob))
+
         except Exception as exc:
             lg.error(f'Error during configuration: {exc}')
             raise UserWarning('Bad configuration file')
 
+    def input_file_names(self):
+        return self._input_file_names
+
+
+class Item:
+    all_uids = set()
+
+    def __init__(self, uid: str, item_type: str, filename: Path, start_line: int):
+        if uid in Item.all_uids:
+            raise UserWarning(f'Duplicate UID: {uid} (file: {filename}, line: {start_line})')
+
+        Item.all_uids.add(uid)
+
+        self._uid = uid
+        self._item_type = item_type
+        self._start_line = start_line
+        self._end_line = None
+
+    def set_end_line(self, line_no: int):
+        self.end_line = line_no
+
+    def uid(self):
+        return self._uid
+
+    def __str__(self) -> str:
+        return f'Item({self._uid}, {self._item_type}, {self._start_line}, {self._end_line})'
+
+
+class Extractor:
+    def __init__(self):
+        self._items = []
+        self._item = None
+        self._file_name = None
+        self._line_no = 0
+        self._macro = []
+
+    def grammar(self):
+        return pp.And([
+            pp.Suppress(pp.Literal('%%[')),
+            pp.Or([
+                pp.Literal('<'),
+                pp.Literal('>')
+            ]),
+            pp.Or([
+                pp.Literal('REQ'),
+                pp.Literal('SRC')
+            ]),
+            pp.Suppress(pp.Literal('.')),
+            pp.Word(pp.alphanums + '.'),
+            pp.Suppress(pp.Literal(']%%'))
+        ])
+
+    def _report_malformed(self, macro=None):
+        if not macro:
+            macro = self._macro
+
+        raise UserWarning(
+            f'Unexpected macro {macro} at line {self._line_no} in file {self._file_name}')
+
+    def _process_macro(self):
+        command = self._macro[0]
+        item_type = self._macro[1]
+        uid = self._macro[2]
+
+        if command == '<':
+            if self._item is not None:
+                self._report_malformed()
+
+            lg.debug('Entering ITEM state')
+            assert self._file_name is not None
+            self._item = Item(uid, item_type, self._file_name, self._line_no)
+
+        elif command == '>':
+            if self._item is None:
+                self._report_malformed()
+
+            lg.debug('Leaving ITEM state')
+            self._items.append(self._item)
+
+    def process_file(self, file_name: Path):
+        self._file_name = file_name
+        self._line_no = 0
+        text = file_name.read_text()
+
+        for line in text.split('\n'):
+            self._line_no += 1
+
+            if line.find('%%[') != -1:
+                if match := self.grammar().searchString(line):
+                    for macro in match:
+                        lg.debug(f'Found macro: {macro}')
+                        self._macro = macro
+                        self._process_macro()
+                else:
+                    self._report_malformed([line])
+
+    def items(self):
+        return self._items
+
 
 def main(args):
-    Config(args)
-    print('RMS main')
+    config = Config(args)
+
+    items = {}
+
+    for file_name in config.input_file_names():
+        lg.debug(f'Processing file: {file_name}')
+        extractor = Extractor()
+        extractor.process_file(file_name)
+        items.update({i.uid(): i for i in extractor.items()})
+
+    print(list(map(str, items.values())))
