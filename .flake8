@@ -1,0 +1,4 @@
+[flake8]
+max-line-length = 160
+per-file-ignores=
+  tapgame/backoffice/test/*: F401, F811
