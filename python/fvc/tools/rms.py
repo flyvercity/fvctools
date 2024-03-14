@@ -71,7 +71,7 @@ class Item:
         self._end_line = None
 
     def set_end_line(self, line_no: int):
-        self.end_line = line_no
+        self._end_line = line_no
 
     def uid(self):
         return self._uid
@@ -129,7 +129,10 @@ class Extractor:
                 self._report_malformed()
 
             lg.debug('Leaving ITEM state')
+            assert self._item is not None
+            self._item.set_end_line(self._line_no)
             self._items.append(self._item)
+            self._item = None
 
     def process_file(self, file_name: Path):
         self._file_name = file_name
