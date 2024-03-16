@@ -3,7 +3,12 @@
 from pathlib import Path
 import tomllib
 import logging as lg
+from typing import cast
+
+
 import pyparsing as pp
+from git import Repo
+from git.exc import GitCommandError
 
 
 def add_argparser(subparsers):
@@ -52,6 +57,9 @@ class Config:
             lg.error(f'Error during configuration: {exc}')
             raise UserWarning('Bad configuration file')
 
+    def base_dir(self):
+        return self._base_dir
+
     def input_file_names(self):
         return self._input_file_names
 
@@ -60,28 +68,52 @@ class Item:
     all_uids = set()
 
     def __init__(self, uid: str, item_type: str, filename: Path, start_line: int):
-        if uid in Item.all_uids:
-            raise UserWarning(f'Duplicate UID: {uid} (file: {filename}, line: {start_line})')
+        full_uid = f'{item_type}::{uid}'
 
-        Item.all_uids.add(uid)
+        if full_uid in Item.all_uids:
+            raise UserWarning(
+                f'Duplicate UID: {full_uid} (file: {filename}, line: {start_line})')
+
+        Item.all_uids.add(full_uid)
 
         self._uid = uid
         self._item_type = item_type
+        self._filename = filename
         self._start_line = start_line
         self._end_line = None
 
     def set_end_line(self, line_no: int):
         self._end_line = line_no
 
+    def set_version(self, version):
+        self._version = version
+
     def uid(self):
         return self._uid
 
     def __str__(self) -> str:
-        return f'Item({self._uid}, {self._item_type}, {self._start_line}, {self._end_line})'
+        return f'''
+Item
+    UID: {self._uid}
+    Type: {self._item_type}
+    File: {self._filename}
+    Start: {self._start_line}
+    Stop: {self._end_line}
+    Version: {self._version}
+'''
+
+    def begin(self):
+        return self._start_line
+
+    def end(self):
+        assert self._end_line is not None
+        return self._end_line
 
 
 class Extractor:
-    def __init__(self):
+    def __init__(self, repo: Repo):
+        self._repo = repo
+        self._blame_lines = []
         self._items = []
         self._item = None
         self._file_name = None
@@ -90,7 +122,7 @@ class Extractor:
 
     def grammar(self):
         return pp.And([
-            pp.Suppress(pp.Literal('%%[')),
+            pp.Suppress(pp.Literal('%[')),
             pp.Or([
                 pp.Literal('<'),
                 pp.Literal('>')
@@ -101,7 +133,7 @@ class Extractor:
             ]),
             pp.Suppress(pp.Literal('.')),
             pp.Word(pp.alphanums + '.'),
-            pp.Suppress(pp.Literal(']%%'))
+            pp.Suppress(pp.Literal(']%'))
         ])
 
     def _report_malformed(self, macro=None):
@@ -109,7 +141,11 @@ class Extractor:
             macro = self._macro
 
         raise UserWarning(
-            f'Unexpected macro {macro} at line {self._line_no} in file {self._file_name}')
+            f'Malformed macro {macro} at line {self._line_no} in file {self._file_name}')
+
+    def _report_mismatch_id(self):
+        raise UserWarning(
+            f'Mismatched UID at line {self._line_no} in file {self._file_name}')
 
     def _process_macro(self):
         command = self._macro[0]
@@ -128,21 +164,68 @@ class Extractor:
             if self._item is None:
                 self._report_malformed()
 
-            lg.debug('Leaving ITEM state')
             assert self._item is not None
-            self._item.set_end_line(self._line_no)
-            self._items.append(self._item)
+
+            if self._item.uid() != uid or self._item._item_type != item_type:
+                self._report_mismatch_id()
+
+            lg.debug('Leaving ITEM state')
+            item = self._item
+            assert item is not None
+            item.set_end_line(self._line_no)
+            self._version_item(item)
+            self._items.append(item)
             self._item = None
+
+    def _version_item(self, item):
+        start_inx = item.begin() - 1
+        end_inx = item.end() - 1
+        version = None
+
+        for line in self._blame_lines[start_inx:end_inx]:
+            current_version = line.split(' ')[0]
+            lg.debug(f'Found version {item.uid()}@{current_version}')
+
+            if self._is_ansestor(version, current_version):
+                version = current_version
+                lg.debug(f'Candidate version {item.uid()}@{version}')
+
+        lg.debug(f'Final version {item.uid()}@{version}')
+        assert version
+        item.set_version(version)
+
+    def _is_ansestor(self, version, current_version):
+        if version is None:
+            return True
+
+        try:
+            self._repo.git.execute([
+                'git', 'merge-base', '--is-ancestor',
+                version, current_version
+            ])
+
+            return True
+        except GitCommandError:
+            return False
+
+    def _blame(self):
+        lines = self._repo.git.execute([
+            'git', 'blame', '-ls',
+            '--', str(self._file_name)
+        ])
+
+        self._blame_lines = cast(str, lines).split('\n')
 
     def process_file(self, file_name: Path):
         self._file_name = file_name
+        self._blame()
         self._line_no = 0
         text = file_name.read_text()
 
         for line in text.split('\n'):
             self._line_no += 1
 
-            if line.find('%%[') != -1:
+            if line.find('%[') != -1:
                 if match := self.grammar().searchString(line):
                     for macro in match:
                         lg.debug(f'Found macro: {macro}')
@@ -160,10 +243,14 @@ def main(args):
 
     items = {}
 
+    repo = Repo(config.base_dir())
+    extractor = Extractor(repo)
+
     for file_name in config.input_file_names():
         lg.debug(f'Processing file: {file_name}')
-        extractor = Extractor()
         extractor.process_file(file_name)
         items.update({i.uid(): i for i in extractor.items()})
 
-    print(list(map(str, items.values())))
+    if args.verbose:
+        for item in items.values():
+            print(item)
