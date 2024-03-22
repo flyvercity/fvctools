@@ -4,11 +4,16 @@ from pathlib import Path
 import tomllib
 import logging as lg
 from typing import cast
+import json
 
-
+from toolz import curry
+from toolz.dicttoolz import valmap
+from toolz.functoolz import compose
 import pyparsing as pp
 from git import Repo
 from git.exc import GitCommandError
+
+from fvc.rms.model import load_model
 
 
 def add_argparser(subparsers):
@@ -67,8 +72,8 @@ class Config:
 class Item:
     all_uids = set()
 
-    def __init__(self, uid: str, item_type: str, filename: Path, start_line: int):
-        full_uid = f'{item_type}::{uid}'
+    def __init__(self, uid: str, item_class: str, filename: Path, start_line: int):
+        full_uid = f'{item_class}::{uid}'
 
         if full_uid in Item.all_uids:
             raise UserWarning(
@@ -77,10 +82,12 @@ class Item:
         Item.all_uids.add(full_uid)
 
         self._uid = uid
-        self._item_type = item_type
+        self._item_class = item_class
         self._filename = filename
         self._start_line = start_line
         self._end_line = None
+        self._errors = []
+        self._parents = []
 
     def set_end_line(self, line_no: int):
         self._end_line = line_no
@@ -91,16 +98,22 @@ class Item:
     def uid(self):
         return self._uid
 
-    def __str__(self) -> str:
-        return f'''
-Item
-    UID: {self._uid}
-    Type: {self._item_type}
-    File: {self._filename}
-    Start: {self._start_line}
-    Stop: {self._end_line}
-    Version: {self._version}
-'''
+    def iclass(self):
+        return self._item_class
+
+    def __str__(self):
+        return json.dumps(self.json(), indent=2)
+
+    def json(self):
+        return {
+            'uid': self._uid,
+            'class': self._item_class,
+            'file': str(self._filename),
+            'start': self._start_line,
+            'stop': self._end_line,
+            'version': self._version,
+            'errors': self._errors
+        }
 
     def begin(self):
         return self._start_line
@@ -108,6 +121,12 @@ Item
     def end(self):
         assert self._end_line is not None
         return self._end_line
+
+    def add_error(self, error):
+        self._errors.append(error)
+
+    def parents(self):
+        return self._parents
 
 
 class Extractor:
@@ -149,7 +168,7 @@ class Extractor:
 
     def _process_macro(self):
         command = self._macro[0]
-        item_type = self._macro[1]
+        item_class = self._macro[1]
         uid = self._macro[2]
 
         if command == '<':
@@ -158,7 +177,7 @@ class Extractor:
 
             lg.debug('Entering ITEM state')
             assert self._file_name is not None
-            self._item = Item(uid, item_type, self._file_name, self._line_no)
+            self._item = Item(uid, item_class, self._file_name, self._line_no)
 
         elif command == '>':
             if self._item is None:
@@ -166,7 +185,7 @@ class Extractor:
 
             assert self._item is not None
 
-            if self._item.uid() != uid or self._item._item_type != item_type:
+            if self._item.uid() != uid or self._item._item_class != item_class:
                 self._report_mismatch_id()
 
             lg.debug('Leaving ITEM state')
@@ -238,6 +257,49 @@ class Extractor:
         return self._items
 
 
+def build_deptree(items):
+    deptree = {}
+
+    for item in items.values():
+        it = item.iclass()
+
+        if it not in deptree:
+            deptree[it] = {}
+
+        deptree[it][item.uid()] = item
+
+    return deptree
+
+
+def treemap(func, deptree):
+    return valmap(lambda i: valmap(func, i), deptree)
+
+
+def validate(deptree):
+    model = load_model()
+
+    def validate_item(item):
+        if item.iclass() not in model:
+            item.add_error(f'Unknown class {item.iclass()}')
+            return item
+
+    def validate_root(item):
+        if (class_def := model.get(item.iclass())) is None:
+            return item
+
+        if class_def.get('root') and len(item.parents()) > 0:
+            item.add_error('Root item cannot have parents')
+
+        return item
+
+    validate = compose(
+        validate_item,
+        validate_root
+    )
+
+    treemap(validate, deptree)
+
+
 def main(args):
     config = Config(args)
 
@@ -251,6 +313,9 @@ def main(args):
         extractor.process_file(file_name)
         items.update({i.uid(): i for i in extractor.items()})
 
-    if args.verbose:
-        for item in items.values():
-            print(item)
+    deptree = build_deptree(items)
+    validate(deptree)
+
+    if args.output_format == 'json':
+        jtree = treemap(lambda i: i.json(), deptree)
+        print(json.dumps(jtree, indent=2))

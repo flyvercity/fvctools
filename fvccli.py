@@ -1,7 +1,7 @@
 import logging as lg
 from argparse import ArgumentParser
 
-import fvc.tools.rms as rms
+import fvc.rms as rms
 
 
 subsystems = {
@@ -12,7 +12,14 @@ subsystems = {
 def main():
     try:
         parser = ArgumentParser()
-        parser.add_argument('-v', '--verbose', action='store_true', help='sets logging level to debug')
+
+        parser.add_argument(
+            '-v', '--verbose', action='store_true', help='sets logging level to debug')
+
+        parser.add_argument(
+            '--output-format', choices=['json'], default='json',
+            help='output format (default: json)')
+
         subparsers = parser.add_subparsers(dest='subsystem')
         rms.add_argparser(subparsers)
         args = parser.parse_args()
