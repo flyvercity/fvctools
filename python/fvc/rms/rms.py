@@ -6,7 +6,6 @@ import logging as lg
 from typing import cast
 import json
 
-from toolz import curry
 from toolz.dicttoolz import valmap
 from toolz.functoolz import compose
 import pyparsing as pp
