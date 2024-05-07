@@ -15,8 +15,8 @@ from git.exc import GitCommandError
 from fvc.rms.model import load_model
 
 
-def add_argparser(subparsers):
-    parser = subparsers.add_parser('rms', help='Requirement Management System (RMS) tool.')
+def add_argparser(name, subparsers):
+    parser = subparsers.add_parser(name, help='Requirement Management System (RMS) tool.')
     parser.add_argument('--config', help='Configuration file', default='rms.toml')
     parser.add_argument('--revision', help='Revision number', default='HEAD')
 

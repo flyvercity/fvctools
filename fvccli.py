@@ -2,10 +2,12 @@ import logging as lg
 from argparse import ArgumentParser
 
 import fvc.rms as rms
+import fvc.srv as srv
 
 
 subsystems = {
-    'rms': rms.main
+    'rms': rms,
+    'srv': srv
 }
 
 
@@ -21,11 +23,15 @@ def main():
             help='output format (default: json)')
 
         subparsers = parser.add_subparsers(dest='subsystem')
-        rms.add_argparser(subparsers)
+
+        for subsystem in subsystems.items():
+            name, module = subsystem
+            module.add_argparser(name, subparsers)
+
         args = parser.parse_args()
         lg.basicConfig(level=lg.DEBUG if args.verbose else lg.INFO)
 
-        if handler := subsystems.get(args.subsystem):
+        if handler := subsystems.get(args.subsystem).main:  # type: ignore
             handler(args)
         else:
             raise UserWarning(f'Unknown subsystem: {args.subsystem}')
