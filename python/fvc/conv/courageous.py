@@ -69,8 +69,7 @@ def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
                 'loc': {
                     'lat': lat,
                     'lon': lon,
-                    'alt': alt,
-                    'amsl': amsl,
+                    'alt': alt
                 }
             }
 

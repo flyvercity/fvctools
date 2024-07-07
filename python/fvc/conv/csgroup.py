@@ -26,7 +26,6 @@ def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
         lat = row['latitude']
         lon = row['longitude']
         alt = row['altitude']
-        height = row['height']
 
         uaid = {
             'int': track_id
@@ -40,8 +39,7 @@ def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
             'loc': {
                 'lat': float(lat),
                 'lon': float(lon),
-                'alt': float(alt),
-                'height': float(height)
+                'alt': float(alt)
             }
         }
 

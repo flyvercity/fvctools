@@ -1,15 +1,17 @@
 from pathlib import Path
 import json
-import jsonschema
 import logging as lg
 from argparse import RawTextHelpFormatter
 
+import dateutil.parser
+import jsonschema
+import dateutil
 
 import fvc.conv.schema as schema
 from fvc.conv.conv_util import JsonlinesIO, EndOfInput
-
 import fvc.conv.courageous as courageous
 import fvc.conv.csgroup as csgroup
+import fvc.conv.nmea as nmea
 
 
 MAX_ERRORS = 100
@@ -71,7 +73,8 @@ def validate(args):
 
 TOFVC_CONVERTERS = {
     'courageous': courageous.convert_to_fvc,
-    'csgroup': csgroup.convert_to_fvc
+    'csgroup': csgroup.convert_to_fvc,
+    'nmea': nmea.convert_to_fvc
 }
 
 
@@ -111,6 +114,9 @@ Subcommands:
 
 
 def add_argparser(name, subparsers):
+    def dateparam(s):
+        return dateutil.parser.parse(s)
+
     parser = subparsers.add_parser(
         name, help='Data management and conversion tool',
         description=DESCRIPTION,
@@ -129,7 +135,13 @@ def add_argparser(name, subparsers):
 
     parser.add_argument(
         '--external-format', help='External data format',
-        choices=['courageous', 'csgroup']
+        choices=['courageous', 'csgroup', 'nmea']
+    )
+
+    parser.add_argument(
+        '--base-date',
+        help='Base date should be given manually for formats without date in timestamps',
+        type=dateparam
     )
 
 

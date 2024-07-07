@@ -3,3 +3,5 @@ toolz
 jsonschema
 pygeodesy
 scipy
+pynmea2
+python-dateutil

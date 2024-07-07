@@ -23,7 +23,8 @@ METADATA = {
             'enum': [
                 'airlink',
                 'courageous',
-                'csgroup'
+                'csgroup',
+                'nmea'
             ]
         },
         'origin': {'type': 'string'}
