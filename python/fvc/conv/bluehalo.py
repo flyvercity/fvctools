@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import logging as lg
 
 from toolz.dicttoolz import keyfilter
 from pygeodesy.geoids import GeoidPGM
@@ -15,7 +16,14 @@ def amsl_to_ellipsoidal(geoid, lat, lon, amsl_height):
 
 
 def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
-    geoid = GeoidPGM(args.egm)
+    pgm_path = Path(__file__).parent / 'egm96-5.pgm'
+
+    if args.egm:
+        pgm_path = Path(args.egm)
+
+    lg.debug(f'Using geoid model: {pgm_path}')
+
+    geoid = GeoidPGM(pgm_path)
     data = json.loads(input_file.read_text())
 
     metadata = {

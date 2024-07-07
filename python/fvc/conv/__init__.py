@@ -120,7 +120,12 @@ def add_argparser(name, subparsers):
     parser.add_argument('command', help='Converter command', choices=COMMANDS.keys())
     parser.add_argument('--input-file', help='Input file', type=Path)
     parser.add_argument('--output-file', help='Output file', type=Path)
-    parser.add_argument('--egm', help='EGM geoid data file (*.pgm)', type=Path)
+
+    parser.add_argument(
+        '--egm',
+        help='Custom EGM geoid data file (*.pgm). Default: egm96-5.pgm',
+        type=Path
+    )
 
     parser.add_argument(
         '--external-format', help='External data format',
