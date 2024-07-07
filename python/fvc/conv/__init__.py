@@ -54,7 +54,7 @@ def isValid(input_file: Path):
                 lg.error(f'Maximum number of errors reached ({MAX_ERRORS}), stopping')
                 return False
 
-    lg.info(f'Validation successful')
+    lg.info('Validation successful')
     return True
 
 
