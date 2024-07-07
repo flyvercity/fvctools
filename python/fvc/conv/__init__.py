@@ -81,7 +81,7 @@ def convert(args):
 
     try:
         with JsonlinesIO(output_file, 'wt') as io:
-            TOFVC_CONVERTERS[args.external_format](input_file, io)
+            TOFVC_CONVERTERS[args.external_format](args, input_file, io)
 
         lg.info(f'Conversion complete, output written to {output_file}')
 
@@ -103,6 +103,9 @@ DESCRIPTION = '''
 Subcommands:
     validate: Validate a FVC file against the known CUE schema
     convert: Convert an external data file to FVC format
+
+    From EGM geoid data download, visit:
+    https://geographiclib.sourceforge.io/C++/doc/geoid.html#geoidinst
 '''
 
 
@@ -115,6 +118,7 @@ def add_argparser(name, subparsers):
     parser.add_argument('command', help='Converter command', choices=COMMANDS.keys())
     parser.add_argument('--input-file', help='Input file', type=Path)
     parser.add_argument('--output-file', help='Output file', type=Path)
+    parser.add_argument('--egm', help='EGM geoid data file (*.pgm)', type=Path)
 
     parser.add_argument(
         '--external-format', help='External data format',

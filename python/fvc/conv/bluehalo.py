@@ -2,16 +2,20 @@ import json
 from pathlib import Path
 
 from toolz.dicttoolz import keyfilter
+from pygeodesy.geoids import GeoidPGM
 
 from fvc.conv.conv_util import JsonlinesIO
 
 
-def amsl_to_alt(amsl):
-    # TODO: Convert AMSL to altitude
-    return amsl
+def amsl_to_ellipsoidal(geoid, lat, lon, amsl_height):
+    # Initialize the Geoid model using EGM96 with WGS-84 datum
+    geoid_height = geoid.height(lat, lon)
+    ellipsoidal_height = amsl_height + geoid_height
+    return ellipsoidal_height
 
 
-def convert_to_fvc(input_file: Path, output: JsonlinesIO):
+def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
+    geoid = GeoidPGM(args.egm)
     data = json.loads(input_file.read_text())
 
     metadata = {
@@ -39,7 +43,7 @@ def convert_to_fvc(input_file: Path, output: JsonlinesIO):
             loc = record['location']['c']
             lat = loc['lat']
             lon = loc['lon']
-            alt = amsl_to_alt(loc['height_amsl'])
+            alt = amsl_to_ellipsoidal(geoid, lat, lon, loc['height_amsl'])
 
             position = {
                 'loc': {

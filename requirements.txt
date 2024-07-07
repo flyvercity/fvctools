@@ -1,4 +1,5 @@
 pyparsing
-GitPython
 toolz
 jsonschema
+pygeodesy
+scipy
