@@ -21,7 +21,7 @@ def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
     if args.egm:
         pgm_path = Path(args.egm)
 
-    lg.debug(f'Using geoid model: {pgm_path}')
+    lg.debug(f'Using geoid model: {pgm_path.absolute()}')
 
     geoid = GeoidPGM(pgm_path)
     data = json.loads(input_file.read_text())
@@ -29,7 +29,8 @@ def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
     metadata = {
         'content': 'flightlog',
         'source': 'bluehalo',
-        'origin': str(input_file.absolute())
+        'origin': str(input_file.name),
+        'geoid': pgm_path.name
     }
 
     metakeys = ['system_name', 'version']
