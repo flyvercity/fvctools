@@ -43,13 +43,15 @@ def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
             loc = record['location']['c']
             lat = loc['lat']
             lon = loc['lon']
-            alt = amsl_to_ellipsoidal(geoid, lat, lon, loc['height_amsl'])
+            amsl = loc['height_amsl']
+            alt = amsl_to_ellipsoidal(geoid, lat, lon, amsl)
 
             position = {
                 'loc': {
                     'lat': lat,
                     'lon': lon,
-                    'alt': alt
+                    'alt': alt,
+                    'amsl': amsl,
                 }
             }
 

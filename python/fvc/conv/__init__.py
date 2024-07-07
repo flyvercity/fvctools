@@ -103,7 +103,6 @@ COMMANDS = {
 DESCRIPTION = '''
 Subcommands:
     validate: Validate a FVC file against the known schema
-
     convert: Convert an external data file to FVC format
 
     For EGM geoid data download, visit:
