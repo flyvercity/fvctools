@@ -2,57 +2,59 @@ timestamp: {
 	unix: float
 }
 
-ids: {
-	fvc_uas_id: string
-	caa_uas_id: string
+ua_ids: {
+	fvc_uas_id:  string
+	caa_uas_id?: string
 }
 
 location: {
-	lat:  float
-	lon:  float
-	alt:  float
-	baro: float
+	lat:   float // Degrees
+	lon:   float // Degrees
+	alt:   float // Meters
+	baro?: float // Meters
 }
 
 attitide: {
-	roll:    float
-	pitch:   float
-	yaw:     float
-	heading: float
+	roll?:    float // Degrees
+	pitch?:   float // Degrees
+	yaw?:     float // Degrees
+	heading?: float // Degrees from North clockwise
 }
 
 speeds: {
-	vnorth: float
-	vdown:  float
-	vair:   float
+	vnorth?: float
+	veast?:  float
+	vdown?:  float
+	vair?:   float
 }
 
 position: {
-	location: location
-	attitide: attitide
-	speeds:   speeds
+	location:  location
+	attitide?: attitide
+	speeds?:   speeds
 }
 
 signal: {
-	radio:   string
-	RSRP:    integer
-	RSRQ:    integer
-	RSRP_4G: integer
-	RSRQ_4G: integer
-	RSRP_5G: integer
-	RSRQ_5G: integer
-	cell:    string
-	band:    string
+	radio:    string
+	RSRP:     int
+	RSRQ:     int
+	RSRP_4G?: int
+	RSRQ_4G?: int
+	RSRP_5G?: int
+	RSRQ_5G?: int
+	cell?:    string
+	band?:    string
 }
 
 performance: {
-	heartbeat_loss: boolean
+	heartbeat_loss: bool
 	RTT:            float
 }
 
-packet: {
+#cell_log: {
 	ids:       ids
 	timestamp: timestamp
 	position:  position
 	signal:    signal
+	...
 }

@@ -16,7 +16,7 @@ from fvc.rms.model import load_model
 
 
 def add_argparser(name, subparsers):
-    parser = subparsers.add_parser(name, help='Requirement Management System (RMS) tool.')
+    parser = subparsers.add_parser(name, help='Requirement Management System (RMS) tool')
     parser.add_argument('--config', help='Configuration file', default='rms.toml')
     parser.add_argument('--revision', help='Revision number', default='HEAD')
 
@@ -315,6 +315,6 @@ def main(args):
     deptree = build_deptree(items)
     validate(deptree)
 
-    if args.output_format == 'json':
+    if args.json:
         jtree = treemap(lambda i: i.json(), deptree)
         print(json.dumps(jtree, indent=2))

@@ -3,11 +3,13 @@ from argparse import ArgumentParser
 
 import fvc.rms as rms
 import fvc.srv as srv
+import fvc.conv as conv
 
 
 subsystems = {
     'rms': rms,
-    'srv': srv
+    'srv': srv,
+    'conv': conv
 }
 
 
@@ -19,10 +21,15 @@ def main():
             '-v', '--verbose', action='store_true', help='sets logging level to debug')
 
         parser.add_argument(
-            '--output-format', choices=['json'], default='json',
-            help='output format (default: json)')
+            '--json', action='store_true',
+            help='Make JSON default output format instead free form'
+        )
 
-        subparsers = parser.add_subparsers(dest='subsystem')
+        subparsers = parser.add_subparsers(
+            dest='subsystem',
+            description='select a specific tool to run',
+            required=True
+        )
 
         for subsystem in subsystems.items():
             name, module = subsystem

@@ -14,7 +14,7 @@ def update_service(cluster, service, desired_count):
 
 
 def add_argparser(name, subparsers):
-    parser = subparsers.add_parser(name, help='Cloud services management tool.')
+    parser = subparsers.add_parser(name, help='Cloud services management tool')
     parser.add_argument('--cluster', help='ECS cluster name', default='FeintDemo')
     parser.add_argument('--revision', help='Revision number', default='feint-demo-service')
     parser.add_argument('--start', help='Start service', action='store_true')
