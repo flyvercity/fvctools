@@ -1,16 +1,14 @@
 IDENTIFICATION = {
     'type': 'object',
     'properties': {
-        'system': {
-            'type': 'string',
-            'enum': [
-                'fvc',
-                'internal',
-                'icaohex'
-            ]
-        },
-        'value': {'type': 'string'}
-    }
+        'int': {'type': 'string'},
+        'fvc': {'type': 'string'},
+        'icaohex': {'type': 'string'}
+    },
+    'anyOf': [
+        {'required': ['int']},
+        {'required': ['fvc']}
+    ]
 }
 
 METADATA = {

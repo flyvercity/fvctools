@@ -28,8 +28,7 @@ def convert_to_fvc(input_file: Path, output: JsonlinesIO):
 
     for track in data.get('tracks', []):
         uaid = {
-            'system': 'internal',
-            'value': f"{track['name']}-{track['uas_id']}"
+            'int': f"{track['name']}-{track['uas_id']}"
         }
 
         def record_to_entry(record):

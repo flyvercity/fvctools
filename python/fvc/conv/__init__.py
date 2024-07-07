@@ -76,16 +76,21 @@ def convert(args):
         lg.error(f'Unknown external format: {args.external_format}')
         return
 
+    input_file = args.input_file.resolve()
+    output_file = args.output_file if args.output_file else Path(str(input_file) + '.fvc')
+
     try:
-        with JsonlinesIO(args.output_file, 'wt') as io:
-            TOFVC_CONVERTERS[args.external_format](args.input_file, io)
+        with JsonlinesIO(output_file, 'wt') as io:
+            TOFVC_CONVERTERS[args.external_format](input_file, io)
+
+        lg.info(f'Conversion complete, output written to {output_file}')
 
     except EndOfInput:
         lg.info('Conversion complete')
     except Exception as e:
         lg.error(f'Error during conversion: {e}')
 
-    if not isValid(args.output_file):
+    if not isValid(output_file):
         lg.error('Generated file does not comply to the known schema')
 
 
