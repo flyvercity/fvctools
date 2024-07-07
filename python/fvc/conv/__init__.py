@@ -6,8 +6,10 @@ from argparse import RawTextHelpFormatter
 
 
 import fvc.conv.schema as schema
-import fvc.conv.bluehalo as bluehalo
 from fvc.conv.conv_util import JsonlinesIO, EndOfInput
+
+import fvc.conv.bluehalo as bluehalo
+import fvc.conv.csgroup as csgroup
 
 
 MAX_ERRORS = 100
@@ -68,7 +70,8 @@ def validate(args):
 
 
 TOFVC_CONVERTERS = {
-    'bluehalo': bluehalo.convert_to_fvc
+    'bluehalo': bluehalo.convert_to_fvc,
+    'csgroup': csgroup.convert_to_fvc
 }
 
 
@@ -90,9 +93,6 @@ def convert(args):
         lg.info('Conversion complete')
     except Exception as e:
         lg.error(f'Error during conversion: {e}')
-
-    if not isValid(output_file):
-        lg.error('Generated file does not comply to the known schema')
 
 
 COMMANDS = {
@@ -129,7 +129,7 @@ def add_argparser(name, subparsers):
 
     parser.add_argument(
         '--external-format', help='External data format',
-        choices=['bluehalo']
+        choices=['bluehalo', 'csgroup']
     )
 
 
