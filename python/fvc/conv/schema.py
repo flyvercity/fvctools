@@ -22,7 +22,7 @@ METADATA = {
             'type': 'string',
             'enum': [
                 'airlink',
-                'bluehalo',
+                'courageous',
                 'csgroup'
             ]
         },

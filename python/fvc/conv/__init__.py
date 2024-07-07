@@ -8,7 +8,7 @@ from argparse import RawTextHelpFormatter
 import fvc.conv.schema as schema
 from fvc.conv.conv_util import JsonlinesIO, EndOfInput
 
-import fvc.conv.bluehalo as bluehalo
+import fvc.conv.courageous as courageous
 import fvc.conv.csgroup as csgroup
 
 
@@ -70,7 +70,7 @@ def validate(args):
 
 
 TOFVC_CONVERTERS = {
-    'bluehalo': bluehalo.convert_to_fvc,
+    'courageous': courageous.convert_to_fvc,
     'csgroup': csgroup.convert_to_fvc
 }
 
@@ -129,7 +129,7 @@ def add_argparser(name, subparsers):
 
     parser.add_argument(
         '--external-format', help='External data format',
-        choices=['bluehalo', 'csgroup']
+        choices=['courageous', 'csgroup']
     )
 
 

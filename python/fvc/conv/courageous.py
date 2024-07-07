@@ -28,7 +28,7 @@ def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
 
     metadata = {
         'content': 'flightlog',
-        'source': 'bluehalo',
+        'source': 'courageous',
         'origin': str(input_file.name),
         'geoid': pgm_path.name
     }
@@ -40,8 +40,11 @@ def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
     entries = []
 
     for track in data.get('tracks', []):
+        track_name = track.get('name', 'unknown')
+        track_id = track.get('uas_id', 'noid')
+
         uaid = {
-            'int': f"{track['name']}-{track['uas_id']}"
+            'int': f'{track_name}-{track_id}',
         }
 
         def record_to_entry(record):
@@ -49,10 +52,17 @@ def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
                 'unix': record['time']
             }
 
-            loc = record['location']['c']
-            lat = loc['lat']
-            lon = loc['lon']
-            amsl = loc['height_amsl']
+            loc = record['location']
+
+            if 'c' in loc:
+                pos = loc['c']
+
+            if 'Position3d' in record['location']:
+                pos = loc['Position3d']
+
+            lat = pos['lat']
+            lon = pos['lon']
+            amsl = pos['height_amsl']
             alt = amsl_to_ellipsoidal(geoid, lat, lon, amsl)
 
             position = {
