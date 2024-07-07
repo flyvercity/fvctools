@@ -2,6 +2,7 @@ from pathlib import Path
 import json
 import jsonschema
 import logging as lg
+from argparse import RawTextHelpFormatter
 
 
 import fvc.conv.schema as schema
@@ -101,10 +102,11 @@ COMMANDS = {
 
 DESCRIPTION = '''
 Subcommands:
-    validate: Validate a FVC file against the known CUE schema
+    validate: Validate a FVC file against the known schema
+
     convert: Convert an external data file to FVC format
 
-    From EGM geoid data download, visit:
+    For EGM geoid data download, visit:
     https://geographiclib.sourceforge.io/C++/doc/geoid.html#geoidinst
 '''
 
@@ -112,7 +114,8 @@ Subcommands:
 def add_argparser(name, subparsers):
     parser = subparsers.add_parser(
         name, help='Data management and conversion tool',
-        description=DESCRIPTION
+        description=DESCRIPTION,
+        formatter_class=RawTextHelpFormatter
     )
 
     parser.add_argument('command', help='Converter command', choices=COMMANDS.keys())
