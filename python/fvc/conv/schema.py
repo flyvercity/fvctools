@@ -1,3 +1,18 @@
+IDENTIFICATION = {
+    'type': 'object',
+    'properties': {
+        'system': {
+            'type': 'string',
+            'enum': [
+                'fvc',
+                'internal',
+                'icaohex'
+            ]
+        },
+        'value': {'type': 'string'}
+    }
+}
+
 METADATA = {
     'type': 'object',
     'properties': {
@@ -7,10 +22,14 @@ METADATA = {
         },
         'source': {
             'type': 'string',
-            'enum': ['airlink']
+            'enum': [
+                'airlink',
+                'bluehalo'
+            ]
         },
         'origin': {'type': 'string'}
     },
+    'required': ['content'],
     'additionalProperties': True
 }
 
@@ -21,15 +40,17 @@ LOCATION = {
         'lon': {'type': 'number'},
         'alt': {'type': 'number'}
     },
-    'required': ['lat', 'lon', 'alt']
+    'required': ['lat', 'lon', 'alt'],
+    'additionalProperties': True
 }
 
 
 POSITION = {
     'type': 'object',
     'properties': {
-        'location': LOCATION
+        'loc': LOCATION
     },
+    'required': ['loc'],
     'additionalProperties': True
 }
 
@@ -38,17 +59,20 @@ TIMESTAMP = {
     'properties': {
         'unix': {'type': 'number'},
     },
-    'additionalProperties': False
+    'required': ['unix'],
+    'additionalProperties': True
 }
 
 FLIGHTLOG = {
     'type': 'object',
     'properties': {
-        'timestamp': TIMESTAMP,
-        'position': POSITION
+        'time': TIMESTAMP,
+        'uaid': IDENTIFICATION,
+        'pos': POSITION
     },
+    'required': ['time', 'pos'],
+    'optional': ['uaid'],
     'additionalProperties': True
-
 }
 
 CONTENT_SCHEMA = {

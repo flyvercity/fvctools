@@ -1,9 +1,12 @@
 from pathlib import Path
 import json
 import jsonschema
+import logging as lg
 
 
 import fvc.conv.schema as schema
+import fvc.conv.bluehalo as bluehalo
+from fvc.conv.conv_util import JsonlinesIO, EndOfInput
 
 
 MAX_ERRORS = 100
@@ -27,7 +30,7 @@ def isValid(input_file: Path):
             content_schema = schema.CONTENT_SCHEMA[metadata['content']]
 
         except Exception as e:
-            print(f'Metadata validation error at line {line_no}: {e}')
+            lg.error(f'Metadata validation error at line {line_no}: {e}')
             return False
 
         error_count = 0
@@ -44,13 +47,14 @@ def isValid(input_file: Path):
                 jsonschema.validate(data, content_schema)
 
             except Exception as e:
-                print(f'Validation error at line {line_no}: {line}: {e}')
+                lg.error(f'Validation error at line {line_no}: {line}: {e}')
                 error_count += 1
 
             if error_count >= MAX_ERRORS:
-                print(f'Maximum number of errors reached ({MAX_ERRORS}), stopping')
+                lg.error(f'Maximum number of errors reached ({MAX_ERRORS}), stopping')
                 return False
 
+    lg.info(f'Validation successful')
     return True
 
 
@@ -62,13 +66,38 @@ def validate(args):
         print(json.dumps({'valid': valid}))
 
 
+TOFVC_CONVERTERS = {
+    'bluehalo': bluehalo.convert_to_fvc
+}
+
+
+def convert(args):
+    if args.external_format not in TOFVC_CONVERTERS:
+        lg.error(f'Unknown external format: {args.external_format}')
+        return
+
+    try:
+        with JsonlinesIO(args.output_file, 'wt') as io:
+            TOFVC_CONVERTERS[args.external_format](args.input_file, io)
+
+    except EndOfInput:
+        lg.info('Conversion complete')
+    except Exception as e:
+        lg.error(f'Error during conversion: {e}')
+
+    if not isValid(args.output_file):
+        lg.error('Generated file does not comply to the known schema')
+
+
 COMMANDS = {
-    'validate': validate
+    'validate': validate,
+    'convert': convert
 }
 
 DESCRIPTION = '''
 Subcommands:
     validate: Validate a FVC file against the known CUE schema
+    convert: Convert an external data file to FVC format
 '''
 
 
@@ -80,6 +109,12 @@ def add_argparser(name, subparsers):
 
     parser.add_argument('command', help='Converter command', choices=COMMANDS.keys())
     parser.add_argument('--input-file', help='Input file', type=Path)
+    parser.add_argument('--output-file', help='Output file', type=Path)
+
+    parser.add_argument(
+        '--external-format', help='External data format',
+        choices=['bluehalo']
+    )
 
 
 def main(args):
