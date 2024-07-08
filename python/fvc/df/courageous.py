@@ -15,6 +15,34 @@ def amsl_to_ellipsoidal(geoid, lat, lon, amsl_height):
     return ellipsoidal_height
 
 
+def build_geo_position(pos, geoid):
+    lat = pos['lat']
+    lon = pos['lon']
+    amsl = pos['height_amsl']
+    alt = amsl_to_ellipsoidal(geoid, lat, lon, amsl)
+
+    position = {
+        'loc': {
+            'lat': lat,
+            'lon': lon,
+            'alt': alt
+        }
+    }
+
+    return position
+
+
+def build_polar_position(pos):
+    position = {
+        'polar': {
+            'bear': pos['bearing'],
+            'elev': pos['elevation']
+        }
+    }
+
+    return position
+
+
 def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
     pgm_path = Path(__file__).parent / 'egm96-5.pgm'
 
@@ -54,24 +82,14 @@ def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
 
             loc = record['location']
 
-            if 'c' in loc:
-                pos = loc['c']
+            if 't' in loc and loc['t'] == 'Position3d':
+                position = build_geo_position(loc['c'], geoid)
 
-            if 'Position3d' in record['location']:
-                pos = loc['Position3d']
+            elif 'Position3d' in record['location']:
+                position = build_geo_position(loc['Position3d'], geoid)
 
-            lat = pos['lat']
-            lon = pos['lon']
-            amsl = pos['height_amsl']
-            alt = amsl_to_ellipsoidal(geoid, lat, lon, amsl)
-
-            position = {
-                'loc': {
-                    'lat': lat,
-                    'lon': lon,
-                    'alt': alt
-                }
-            }
+            elif 't' in loc and loc['t'] == 'BearingElevation':
+                position = build_polar_position(loc['c'])
 
             return {
                 'time': timestamp,
