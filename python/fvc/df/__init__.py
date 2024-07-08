@@ -3,13 +3,14 @@ import json
 import logging as lg
 from argparse import RawTextHelpFormatter
 import importlib
+import os
 
 import dateutil.parser
 import jsonschema
 import dateutil
 
 import fvc.df.schema as schema
-from fvc.df.util import JsonlinesIO
+from fvc.df.util import JsonlinesIO, fetch_input_file
 
 import fvc.df.flightlog as flightlog
 
@@ -64,7 +65,7 @@ def isValid(input_file: Path):
 
 
 def validate(args):
-    input_file = args.input_file  # type: Path
+    input_file = fetch_input_file(args)
     valid = isValid(input_file)
 
     if args.json:
@@ -77,7 +78,7 @@ def convert(args):
 
     format_mod = importlib.import_module(f'fvc.df.{format}')
     convert_fun = getattr(format_mod, 'convert_to_fvc')
-    input_file = args.input_file.resolve()
+    input_file = fetch_input_file(args)
     output_file = args.output_file if args.output_file else Path(str(input_file) + '.fvc')
 
     with JsonlinesIO(output_file, 'wt') as io:
@@ -87,7 +88,9 @@ def convert(args):
 
 
 def stats(args):
-    with JsonlinesIO(args.input_file, 'rt') as io:
+    input_file = fetch_input_file(args)
+
+    with JsonlinesIO(input_file, 'rt') as io:
         flightlog.stats(args, io)
 
 
@@ -120,8 +123,13 @@ def add_argparser(name, subparsers):
     )
 
     parser.add_argument('command', help='Data file manipulation command', choices=COMMANDS.keys())
-    parser.add_argument('--input-file', help='Input file', type=Path)
+    parser.add_argument('--input-file', help='Input file', type=str)
     parser.add_argument('--output-file', help='Output file', type=Path)
+
+    parser.add_argument(
+        '--cache-dir', help='Directory for caching external data',
+        type=str, default=os.getenv('FVC_CACHE')
+    )
 
     parser.add_argument(
         '--egm',
