@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, UTC
 
 from toolz.itertoolz import accumulate, last
 from pygeodesy.dms import latDMS, lonDMS, F_DMS
@@ -48,7 +48,7 @@ def stats(args, io: JsonlinesIO):
         print(json.dumps(stats, indent=2))
     else:
         def ftime(ts):
-            return datetime.fromtimestamp(ts/1000.0).strftime('%Y-%m-%d %H:%M:%S')
+            return datetime.fromtimestamp(ts/1000.0, tz=UTC).strftime('%Y-%m-%d %H:%M:%S UTC')
 
         def flat(lat):
             return latDMS(lat, form=F_DMS)
