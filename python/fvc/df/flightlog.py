@@ -16,10 +16,6 @@ def stats(args, io: JsonlinesIO):
     if (content := metadata.get('content')) != 'flightlog':
         raise UserWarning(f'Unsupported content type: {content}')
 
-    def iterate():
-        while data := io.read():
-            yield data
-
     targets = {
         'time': lambda rec: rec['time']['unix'],
         'lat': lambda rec: rec['pos']['loc']['lat'],
@@ -42,7 +38,7 @@ def stats(args, io: JsonlinesIO):
 
         return stats
 
-    stats = last(accumulate(stat_acc, iterate(), initial=init))  # type: ignore
+    stats = last(accumulate(stat_acc, io.iterate(), initial=init))  # type: ignore
 
     if args.json:
         print(json.dumps(stats, indent=2))

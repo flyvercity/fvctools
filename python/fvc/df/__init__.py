@@ -3,7 +3,6 @@ import json
 import logging as lg
 from argparse import RawTextHelpFormatter
 import importlib
-import os
 
 import dateutil.parser
 import jsonschema
@@ -137,7 +136,7 @@ def add_argparser(name, subparsers):
 
     parser.add_argument(
         '--cache-dir', help='Directory for caching external data',
-        type=str, default=os.getenv('FVC_CACHE')
+        type=str
     )
 
     parser.add_argument(
