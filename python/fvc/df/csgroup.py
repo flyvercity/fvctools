@@ -4,14 +4,14 @@ import csv
 from fvc.df.util import JsonlinesIO
 
 
-def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
+def convert_to_fvc(args, metadata, input_file: Path, output: JsonlinesIO):
     reader = csv.DictReader(input_file.open())
 
-    metadata = {
+    metadata.update({
         'content': 'flightlog',
         'source': 'csgroup',
         'origin': str(input_file.name),
-    }
+    })
 
     output.write(metadata)
 

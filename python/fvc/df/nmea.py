@@ -7,7 +7,7 @@ import pynmea2
 from fvc.df.util import JsonlinesIO
 
 
-def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
+def convert_to_fvc(args, metadata, input_file: Path, output: JsonlinesIO):
     base_date = args.base_date  # type: datetime
 
     if not base_date:
@@ -15,11 +15,11 @@ def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
 
     lg.debug(f'Using base date: {base_date}')
 
-    metadata = {
+    metadata.update({
         'content': 'flightlog',
         'source': 'nmea',
         'origin': str(input_file.name),
-    }
+    })
 
     output.write(metadata)
 

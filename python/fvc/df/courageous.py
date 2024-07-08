@@ -43,7 +43,7 @@ def build_polar_position(pos):
     return position
 
 
-def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
+def convert_to_fvc(args, metadata, input_file: Path, output: JsonlinesIO):
     pgm_path = Path(__file__).parent / 'egm96-5.pgm'
 
     if args.egm:
@@ -54,12 +54,12 @@ def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
     geoid = GeoidPGM(pgm_path)
     data = json.loads(input_file.read_text())
 
-    metadata = {
+    metadata.update({
         'content': 'flightlog',
         'source': 'courageous',
         'origin': str(input_file.name),
         'geoid': pgm_path.name
-    }
+    })
 
     metakeys = ['system_name', 'version']
     metadata.update(keyfilter(lambda k: k in metakeys, data))

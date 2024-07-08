@@ -13,6 +13,7 @@ import fvc.df.schema as schema
 from fvc.df.util import JsonlinesIO, fetch_input_file
 
 import fvc.df.flightlog as flightlog
+import fvc.df.metadata as metadata
 
 
 MAX_ERRORS = 100
@@ -76,13 +77,14 @@ def convert(args):
     if not (format := args.external_format):
         raise UserWarning('External format not specified')
 
-    format_mod = importlib.import_module(f'fvc.df.{format}')
-    convert_fun = getattr(format_mod, 'convert_to_fvc')
+    ext_format_mod = importlib.import_module(f'fvc.df.{format}')
+    convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
     input_file = fetch_input_file(args)
     output_file = args.output_file if args.output_file else Path(str(input_file) + '.fvc')
+    meta = metadata.initial_metadata(args)
 
     with JsonlinesIO(output_file, 'wt') as io:
-        convert_fun(args, input_file, io)
+        convert_fun(args, meta, input_file, io)
 
     lg.info(f'Conversion complete, output written to {output_file}')
 
@@ -124,7 +126,12 @@ def add_argparser(name, subparsers):
         formatter_class=RawTextHelpFormatter
     )
 
-    parser.add_argument('command', help='Data file manipulation command', choices=COMMANDS.keys())
+    parser.add_argument(
+        'command',
+        help='Data file manipulation command',
+        choices=COMMANDS.keys()
+    )
+
     parser.add_argument('--input-file', help='Input file', type=str)
     parser.add_argument('--output-file', help='Output file', type=Path)
 
@@ -149,6 +156,8 @@ def add_argparser(name, subparsers):
         help='A base date should be given manually for formats without date info in timestamps',
         type=dateparam
     )
+
+    metadata.add_metadata_args(parser)
 
 
 def main(args):

@@ -8,15 +8,15 @@ from dateutil.parser import isoparse
 from fvc.df.util import JsonlinesIO
 
 
-def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):
+def convert_to_fvc(args, metadata, input_file: Path, output: JsonlinesIO):
     reader = csv.DictReader(input_file.open(), delimiter=';')
     row_no = 1
 
-    metadata = {
+    metadata.update({
         'content': 'flightlog',
         'source': 'senhive',
         'origin': str(input_file.name),
-    }
+    })
 
     output.write(metadata)
 
