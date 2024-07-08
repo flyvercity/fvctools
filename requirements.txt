@@ -6,3 +6,4 @@ scipy
 pynmea2
 python-dateutil
 boto3
+GitPython
