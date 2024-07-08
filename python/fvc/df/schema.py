@@ -1,3 +1,40 @@
+LOCATION = {
+    'type': 'object',
+    'properties': {
+        'lat': {'type': 'number', '$comment': 'Latitude in WGS-84'},
+        'lon': {'type': 'number', '$comment': 'Longitude in WGS-84'},
+        'alt': {'type': 'number', '$comment': 'Ellipsoidal altitude'},
+        'amsl': {'type': 'number', '$comment': 'Altitude above mean sea level'},
+        'height': {'type': 'number', '$comment': 'Local height above ground'}
+    },
+    'required': ['lat', 'lon', 'alt'],
+    'optional': ['amsl', 'height'],
+    'additionalProperties': True
+}
+
+POLAR = {
+    'type': 'object',
+    'properties': {
+        'bear': {
+            'type': 'number',
+            '$comment': 'Bearing angle in degrees clockwise from the true north'
+        },
+        'elev': {
+            'type': 'number',
+            '$comment': 'Elevation angle in degrees above horizon'
+        }
+    }
+}
+
+POLAR_SENSOR = {
+    'type': 'object',
+    'properties': {
+        'loc': LOCATION
+    },
+    'required': ['loc'],
+    'additionalProperties': True
+}
+
 IDENTIFICATION = {
     'type': 'object',
     'properties': {
@@ -28,33 +65,29 @@ METADATA = {
                 'senhive'
             ]
         },
-        'origin': {'type': 'string'}
+        'origin': {'type': 'string'},
+        'polar_sensor': POLAR_SENSOR
     },
     'required': ['content'],
     'additionalProperties': True
 }
 
-LOCATION = {
-    'type': 'object',
-    'properties': {
-        'lat': {'type': 'number', '$comment': 'Latitude in WGS-84'},
-        'lon': {'type': 'number', '$comment': 'Longitude in WGS-84'},
-        'alt': {'type': 'number', '$comment': 'Ellipsoidal altitude'},
-        'amsl': {'type': 'number', '$comment': 'Altitude above mean sea level'},
-        'height': {'type': 'number', '$comment': 'Local height above ground'}
-    },
-    'required': ['lat', 'lon', 'alt'],
-    'optional': ['amsl', 'height'],
-    'additionalProperties': True
-}
-
-
 POSITION = {
     'type': 'object',
     'properties': {
-        'loc': LOCATION
+        'loc': LOCATION,
+        'polar': POLAR,
     },
-    'required': ['loc'],
+    'anyOf': [
+        {
+            'required': ['loc'],
+            'optional': ['pol']
+        },
+        {
+            'required': ['pol'],
+            'optional': ['loc']
+        }
+    ],
     'additionalProperties': True
 }
 
