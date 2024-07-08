@@ -106,9 +106,11 @@ Subcommands:
     convert: Convert an external data file to FVC format
     stats: Calculate statistics for a FVC data file
 
-Note:
+Notes:
     For EGM geoid data download, visit:
     https://geographiclib.sourceforge.io/C++/doc/geoid.html#geoidinst
+
+    To set default cache directory, use FVC_CACHE environment variable
 '''
 
 
