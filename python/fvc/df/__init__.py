@@ -103,14 +103,14 @@ COMMANDS = {
 DESCRIPTION = '''
 Subcommands:
     validate: Validate a FVC file against the known schema
-    convert: Convert an external data file to FVC format
+    convert: Convert an external data file to the FVC format
     stats: Calculate statistics for a FVC data file
 
 Notes:
     For EGM geoid data download, visit:
     https://geographiclib.sourceforge.io/C++/doc/geoid.html#geoidinst
 
-    To set default cache directory, use FVC_CACHE environment variable
+    To set a default cache directory, use the FVC_CACHE environment variable
 '''
 
 
@@ -119,7 +119,7 @@ def add_argparser(name, subparsers):
         return dateutil.parser.parse(s)
 
     parser = subparsers.add_parser(
-        name, help='Data file management and conversion tool',
+        name, help='Data file conversion and manipulation tool',
         description=DESCRIPTION,
         formatter_class=RawTextHelpFormatter
     )
@@ -146,7 +146,7 @@ def add_argparser(name, subparsers):
 
     parser.add_argument(
         '--base-date',
-        help='Base date should be given manually for formats without date in timestamps',
+        help='A base date should be given manually for formats without date info in timestamps',
         type=dateparam
     )
 

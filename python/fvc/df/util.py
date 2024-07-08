@@ -46,11 +46,10 @@ def fetch_input_file(args) -> Path:
 
     if input_filename.startswith('s3://'):
         if not args.cache_dir:
-            raise UserWarning('Cache directory shoud be specified for external data')
+            raise UserWarning('Cache directory should be specified for external data')
 
         cache_dir = Path(args.cache_dir)
         cache_dir.mkdir(parents=True, exist_ok=True)
-
         rel_path = path.relative_to('s3://')
         local_path = (Path(args.cache_dir) / rel_path).resolve()
 
