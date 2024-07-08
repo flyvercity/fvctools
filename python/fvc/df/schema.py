@@ -24,7 +24,8 @@ METADATA = {
                 'airlink',
                 'courageous',
                 'csgroup',
-                'nmea'
+                'nmea',
+                'senhive'
             ]
         },
         'origin': {'type': 'string'}

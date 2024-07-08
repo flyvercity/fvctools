@@ -44,8 +44,11 @@ def main():
         else:
             raise UserWarning(f'Unknown subsystem: {args.subsystem}')
 
+        return 0
+
     except UserWarning as e:
         lg.error(e)
+        return 1
 
     except Exception as e:
         lg.error(f'Exception occurred: {e}')
@@ -53,6 +56,8 @@ def main():
         if args.verbose:
             lg.error(traceback.format_exc())
 
+        return 2
+
 
 if __name__ == '__main__':
-    main()
+    exit(main())

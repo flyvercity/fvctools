@@ -2,6 +2,7 @@ from pathlib import Path
 import json
 import logging as lg
 from argparse import RawTextHelpFormatter
+import importlib
 
 import dateutil.parser
 import jsonschema
@@ -11,9 +12,6 @@ import fvc.df.schema as schema
 from fvc.df.util import JsonlinesIO
 
 import fvc.df.flightlog as flightlog
-import fvc.df.courageous as courageous
-import fvc.df.csgroup as csgroup
-import fvc.df.nmea as nmea
 
 
 MAX_ERRORS = 100
@@ -73,23 +71,17 @@ def validate(args):
         print(json.dumps({'valid': valid}))
 
 
-TOFVC_CONVERTERS = {
-    'courageous': courageous.convert_to_fvc,
-    'csgroup': csgroup.convert_to_fvc,
-    'nmea': nmea.convert_to_fvc
-}
-
-
 def convert(args):
-    if args.external_format not in TOFVC_CONVERTERS:
-        lg.error(f'Unknown external format: {args.external_format}')
-        return
+    if not (format := args.external_format):
+        raise UserWarning('External format not specified')
 
+    format_mod = importlib.import_module(f'fvc.df.{format}')
+    convert_fun = getattr(format_mod, 'convert_to_fvc')
     input_file = args.input_file.resolve()
     output_file = args.output_file if args.output_file else Path(str(input_file) + '.fvc')
 
     with JsonlinesIO(output_file, 'wt') as io:
-        TOFVC_CONVERTERS[args.external_format](args, input_file, io)
+        convert_fun(args, input_file, io)
 
     lg.info(f'Conversion complete, output written to {output_file}')
 
@@ -139,7 +131,7 @@ def add_argparser(name, subparsers):
 
     parser.add_argument(
         '--external-format', help='External data format',
-        choices=['courageous', 'csgroup', 'nmea']
+        choices=['courageous', 'csgroup', 'nmea', 'senhive']
     )
 
     parser.add_argument(
