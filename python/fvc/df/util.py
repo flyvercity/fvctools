@@ -5,6 +5,8 @@ import logging as lg
 
 import boto3
 
+type JSON = Dict[str, Any]
+
 
 class JsonlinesIO:
     def __init__(self, filepath: Path, mode: str):
@@ -19,7 +21,7 @@ class JsonlinesIO:
     def __exit__(self, exc_type, exc_value, traceback):
         self._file.close()
 
-    def read(self) -> Dict[str, Any] | None:
+    def read(self) -> JSON | None:
         line = self._file.readline()
         self._in_line_no += 1
 
@@ -36,8 +38,9 @@ def progress_bar(bytes_amount):
     lg.info(f'Downloaded {bytes_amount} bytes')
 
 
-def fetch_input_file(args) -> Path:
-    input_filename = args.input_file
+def fetch_input_file(args, input_filename=None) -> Path:
+    if not input_filename:
+        input_filename = args.input_file
 
     if not input_filename:
         raise UserWarning('Input file not specified')
