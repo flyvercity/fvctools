@@ -8,7 +8,9 @@ import jsonschema
 import dateutil
 
 import fvc.df.schema as schema
-from fvc.df.conv_util import JsonlinesIO, EndOfInput
+from fvc.df.util import JsonlinesIO
+
+import fvc.df.flightlog as flightlog
 import fvc.df.courageous as courageous
 import fvc.df.csgroup as csgroup
 import fvc.df.nmea as nmea
@@ -86,27 +88,28 @@ def convert(args):
     input_file = args.input_file.resolve()
     output_file = args.output_file if args.output_file else Path(str(input_file) + '.fvc')
 
-    try:
-        with JsonlinesIO(output_file, 'wt') as io:
-            TOFVC_CONVERTERS[args.external_format](args, input_file, io)
+    with JsonlinesIO(output_file, 'wt') as io:
+        TOFVC_CONVERTERS[args.external_format](args, input_file, io)
 
-        lg.info(f'Conversion complete, output written to {output_file}')
+    lg.info(f'Conversion complete, output written to {output_file}')
 
-    except EndOfInput:
-        lg.info('Conversion complete')
-    except Exception as e:
-        lg.error(f'Error during conversion: {e}')
+
+def stats(args):
+    with JsonlinesIO(args.input_file, 'rt') as io:
+        flightlog.stats(args, io)
 
 
 COMMANDS = {
     'validate': validate,
-    'convert': convert
+    'convert': convert,
+    'stats': stats
 }
 
 DESCRIPTION = '''
 Subcommands:
     validate: Validate a FVC file against the known schema
     convert: Convert an external data file to FVC format
+    stats: Calculate statistics for a FVC data file
 
 Note:
     For EGM geoid data download, visit:

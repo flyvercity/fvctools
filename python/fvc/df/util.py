@@ -1,13 +1,10 @@
 import json
 from pathlib import Path
-
-
-class EndOfInput(Exception):
-    pass
+from typing import Any, Dict
 
 
 class JsonlinesIO:
-    def __init__(self, filepath: Path, mode: str) -> None:
+    def __init__(self, filepath: Path, mode: str):
         self._filepath = filepath
         self._mode = mode
 
@@ -19,12 +16,12 @@ class JsonlinesIO:
     def __exit__(self, exc_type, exc_value, traceback):
         self._file.close()
 
-    def read(self):
+    def read(self) -> Dict[str, Any] | None:
         line = self._file.readline()
         self._in_line_no += 1
 
         if not line.strip():
-            raise EndOfInput()
+            return None
 
         return json.loads(line)
 

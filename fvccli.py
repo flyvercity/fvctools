@@ -1,5 +1,6 @@
 import logging as lg
 from argparse import ArgumentParser
+import traceback
 
 import fvc.rms as rms
 import fvc.srv as srv
@@ -45,6 +46,12 @@ def main():
 
     except UserWarning as e:
         lg.error(e)
+
+    except Exception as e:
+        lg.error(f'Exception occurred: {e}')
+
+        if args.verbose:
+            lg.error(traceback.format_exc())
 
 
 if __name__ == '__main__':
