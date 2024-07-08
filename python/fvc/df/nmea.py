@@ -4,7 +4,7 @@ import logging as lg
 
 import pynmea2
 
-from fvc.conv.conv_util import JsonlinesIO
+from fvc.df.conv_util import JsonlinesIO
 
 
 def convert_to_fvc(args, input_file: Path, output: JsonlinesIO):

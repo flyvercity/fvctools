@@ -7,11 +7,11 @@ import dateutil.parser
 import jsonschema
 import dateutil
 
-import fvc.conv.schema as schema
-from fvc.conv.conv_util import JsonlinesIO, EndOfInput
-import fvc.conv.courageous as courageous
-import fvc.conv.csgroup as csgroup
-import fvc.conv.nmea as nmea
+import fvc.df.schema as schema
+from fvc.df.conv_util import JsonlinesIO, EndOfInput
+import fvc.df.courageous as courageous
+import fvc.df.csgroup as csgroup
+import fvc.df.nmea as nmea
 
 
 MAX_ERRORS = 100
@@ -108,6 +108,7 @@ Subcommands:
     validate: Validate a FVC file against the known schema
     convert: Convert an external data file to FVC format
 
+Note:
     For EGM geoid data download, visit:
     https://geographiclib.sourceforge.io/C++/doc/geoid.html#geoidinst
 '''
@@ -118,12 +119,12 @@ def add_argparser(name, subparsers):
         return dateutil.parser.parse(s)
 
     parser = subparsers.add_parser(
-        name, help='Data management and conversion tool',
+        name, help='Data file management and conversion tool',
         description=DESCRIPTION,
         formatter_class=RawTextHelpFormatter
     )
 
-    parser.add_argument('command', help='Converter command', choices=COMMANDS.keys())
+    parser.add_argument('command', help='Data file manipulation command', choices=COMMANDS.keys())
     parser.add_argument('--input-file', help='Input file', type=Path)
     parser.add_argument('--output-file', help='Output file', type=Path)
 

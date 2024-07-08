@@ -5,7 +5,7 @@ import logging as lg
 from toolz.dicttoolz import keyfilter
 from pygeodesy.geoids import GeoidPGM
 
-from fvc.conv.conv_util import JsonlinesIO
+from fvc.df.conv_util import JsonlinesIO
 
 
 def amsl_to_ellipsoidal(geoid, lat, lon, amsl_height):
