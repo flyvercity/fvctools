@@ -1,30 +1,24 @@
 import pandas
 import geopandas
+from itertools import tee
 
 from fvc.df.util import fetch_input_file, JsonlinesIO
 
 
-def fetch_geodata(file_name: str) -> gpd.GeoDataFrame:
+def fetch_geodata(file_name: str) -> geopandas.GeoDataFrame:
     file_path = fetch_input_file(input_filename=file_name)
 
     with JsonlinesIO(file_path, 'r') as io:
         metadata = io.read()
-        assert metadata['content'] == 'flightlog'
+        assert metadata and metadata['content'] == 'flightlog'
+        it = tee(io.iterate(), 2)
 
-        def fetch(record):
-            return (
-                record['pos']['loc']['lat'],
-                record['pos']['loc']['lon']
-            )
+        df = pandas.DataFrame({
+            'Latitude': list(map(lambda r: r['pos']['loc']['lat'], it[0])),
+            'Longitude': list(map(lambda r: r['pos']['loc']['lon'], it[1]))
+        })
 
-        data = list(zip(*map(fetch, io.iterate())))
-
-    df = pandas.DataFrame({
-        'Latitude': data[0],
-        'Longitude': data[1]
-    })
-
-    gdf = geopandas.GeoDataFrame(
+    gdf = geopandas.GeoDataFrame(                    # type: ignore
         df,
         geometry=geopandas.points_from_xy(df.Longitude, df.Latitude),
         crs="EPSG:4326"
