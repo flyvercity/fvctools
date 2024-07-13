@@ -16,11 +16,18 @@ def stats(params, io: JsonlinesIO):
     if (content := metadata.get('content')) != 'flightlog':
         raise UserWarning(f'Unsupported content type: {content}')
 
+    def fetch_loc(field):
+        def inner(rec):
+            pos = rec['pos']
+            return pos['loc'][field] if 'loc' in pos else None
+
+        return inner
+
     targets = {
         'time': lambda rec: rec['time']['unix'],
-        'lat': lambda rec: rec['pos']['loc']['lat'],
-        'lon': lambda rec: rec['pos']['loc']['lon'],
-        'alt': lambda rec: rec['pos']['loc']['alt']
+        'lat': fetch_loc('lat'),
+        'lon': fetch_loc('lon'),
+        'alt': fetch_loc('alt')
     }
 
     init = {
@@ -33,8 +40,9 @@ def stats(params, io: JsonlinesIO):
 
     def stat_acc(stats, rec):
         for key, fetch in targets.items():
-            stats[key]['min'] = min(stats[key]['min'], fetch(rec))
-            stats[key]['max'] = max(stats[key]['max'], fetch(rec))
+            if val := fetch(rec):
+                stats[key]['min'] = min(stats[key]['min'], val)
+                stats[key]['max'] = max(stats[key]['max'], val)
 
         return stats
 
