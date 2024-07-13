@@ -4,7 +4,7 @@ import csv
 from fvc.df.util import JsonlinesIO
 
 
-def convert_to_fvc(args, metadata, input_file: Path, output: JsonlinesIO):
+def convert_to_fvc(params, metadata, input_file: Path, output: JsonlinesIO):
     reader = csv.DictReader(input_file.open())
 
     metadata.update({

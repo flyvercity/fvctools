@@ -2,7 +2,6 @@ import json
 from pathlib import Path
 from typing import Any, Dict
 import logging as lg
-import os
 
 import boto3
 
@@ -13,7 +12,7 @@ class JsonlinesIO:
     def __init__(self, filepath: Path, mode: str):
         self._filepath = filepath
         self._mode = mode
-        self._file = None
+        self._file = None  # IO | None
 
     def __enter__(self):
         self._file = self._filepath.open(self._mode, encoding='utf-8', newline=None)
@@ -21,7 +20,8 @@ class JsonlinesIO:
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        self._file.close()
+        if self._file:
+            self._file.close()
 
     def _check_entered(self):
         if not self._file:
@@ -29,7 +29,12 @@ class JsonlinesIO:
 
     def read(self) -> JSON | None:
         self._check_entered()
-        line = self._file.readline()
+
+        if self._file:
+            line = self._file.readline()
+        else:
+            raise RuntimeError('File is not open')
+
         self._in_line_no += 1
 
         if not line.strip():
@@ -39,7 +44,11 @@ class JsonlinesIO:
 
     def write(self, data):
         self._check_entered()
-        self._file.write(json.dumps(data) + '\n')
+
+        if self._file:
+            self._file.write(json.dumps(data) + '\n')
+        else:
+            raise RuntimeError('File is not open')
 
     def iterate(self):
         while data := self.read():
@@ -50,23 +59,11 @@ def progress_bar(bytes_amount):
     lg.info(f'Downloaded {bytes_amount} bytes')
 
 
-def fetch_input_file(args=None, input_filename=None) -> Path:
-    if not input_filename:
-        if not args:
-            raise UserWarning('CLI arguments not specified')
-
-        input_filename = args.input_file
-
-    if not input_filename:
-        raise UserWarning('Input file not specified')
-
+def fetch_input_file(params, input_filename) -> Path:
     path = Path(input_filename)
 
     if input_filename.startswith('s3://'):
-        cache_dir = os.getenv('FVC_CACHE')
-
-        if args and args.cache_dir:
-            cache_dir = args.cache_dir
+        cache_dir = params.get('cache_dir')
 
         if not cache_dir:
             raise UserWarning('Cache directory should be specified for external data')

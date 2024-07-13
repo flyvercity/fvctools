@@ -81,10 +81,10 @@ POSITION = {
     'anyOf': [
         {
             'required': ['loc'],
-            'optional': ['pol']
+            'optional': ['polar']
         },
         {
-            'required': ['pol'],
+            'required': ['polar'],
             'optional': ['loc']
         }
     ],

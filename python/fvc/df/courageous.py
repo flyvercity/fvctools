@@ -43,11 +43,11 @@ def build_polar_position(pos):
     return position
 
 
-def convert_to_fvc(args, metadata, input_file: Path, output: JsonlinesIO):
+def convert_to_fvc(params, metadata, input_file: Path, output: JsonlinesIO):
     pgm_path = Path(__file__).parent / 'egm96-5.pgm'
 
-    if args.egm:
-        pgm_path = Path(args.egm)
+    if egm := params.get('EGM'):
+        pgm_path = Path(egm)
 
     lg.debug(f'Using geoid model: {pgm_path.absolute()}')
 
