@@ -1,28 +1,38 @@
-import click
 import logging as lg
 from argparse import ArgumentParser
 import traceback
+
+import boto3
+import click
 
 import fvc.rms
 import fvc.srv
 import fvc.df
 
 
-@click.group()
+@click.group(help='Flyvercity CLI tools suite')
 @click.pass_context
 @click.option('-v', '--verbose', is_flag=True, help='sets logging level to debug')
 @click.option('--json', is_flag=True, help='Make JSON default output format instead free form')
-def cli(ctx, verbose, json):
+@click.option('--aws-profile', help='AWS profile to use for S3 operations')
+def cli(ctx, verbose, json, aws_profile):
     ctx.ensure_object(dict)
-    ctx.obj['Verbose'] = verbose
+    ctx.obj['verbose'] = verbose
+
     lg.basicConfig(level=lg.DEBUG if verbose else lg.INFO)
-    lg.debug('Verbose mode is on')
-    ctx.obj['Json'] = json
+    lg.debug(f'verbose mode is {"on" if verbose else "off"}')
+
     lg.debug(f'JSON mode is {"on" if json else "off"}')
+    ctx.obj['JSON'] = json
+
+    if aws_profile:
+        lg.debug(f'Using AWS profile: {aws_profile}')
+        boto3.setup_default_session(profile_name=aws_profile)
 
 
 cli.add_command(fvc.srv.srv)
 cli.add_command(fvc.rms.rms)
+cli.add_command(fvc.df.df)
 
 
 def main():

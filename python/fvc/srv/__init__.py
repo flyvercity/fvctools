@@ -14,7 +14,7 @@ def update_service(cluster, service, desired_count):
     return response
 
 
-@click.command()
+@click.command(help='Cloud services management tool')
 @click.option('--cluster', help='ECS cluster name', default='FeintDemo')
 @click.option('--revision', help='Revision number', default='feint-demo-service')
 @click.option('--start', help='Start service', is_flag=True)

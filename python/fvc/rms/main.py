@@ -19,8 +19,8 @@ from fvc.rms.model import load_model
 class Config:
     def __init__(self, params):
         try:
-            self._revision = params['Revision']
-            config_file = Path(params['Config']).resolve()
+            self._revision = params['revision']
+            config_file = Path(params['config']).resolve()
             lg.debug(f'Using configuration file: {config_file}')
             self._base_dir = config_file.parent
             config = tomllib.loads(config_file.read_text())
@@ -294,13 +294,13 @@ def validate(deptree):
     treemap(validate, deptree)
 
 
-@click.command()
+@click.command(help='Requirement Management System (RMS) tool')
 @click.pass_context
 @click.option('--config', help='Configuration file', default='rms.toml')
 @click.option('--revision', help='Revision number', default='HEAD')
 def rms(ctx, config, revision):
-    ctx.obj['Config'] = config
-    ctx.obj['Revision'] = revision
+    ctx.obj['config'] = config
+    ctx.obj['revision'] = revision
     config = Config(ctx.obj)
 
     items = {}
@@ -316,6 +316,6 @@ def rms(ctx, config, revision):
     deptree = build_deptree(items)
     validate(deptree)
 
-    if ctx.obj['Json']:
+    if ctx.obj['JSON']:
         jtree = treemap(lambda i: i.json(), deptree)
         print(json.dumps(jtree, indent=2))

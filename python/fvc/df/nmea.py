@@ -20,8 +20,8 @@ def iterate_nmea_file(input_file: Path):
                 lg.warning(f'Unable to parse line ({line}) with error: {e}')
 
 
-def convert_to_fvc(args, metadata, input_file: Path, output: JsonlinesIO):
-    base_date = args.base_date  # type: datetime
+def convert_to_fvc(params, metadata, input_file: Path, output: JsonlinesIO):
+    base_date = params.get('base_date')  # type: datetime
 
     if not base_date:
         raise UserWarning("This format requires the date to be set manually with '--base-date'")
@@ -57,7 +57,7 @@ def convert_to_fvc(args, metadata, input_file: Path, output: JsonlinesIO):
         output.write(record)
 
 
-def extract_sensor_data(args, sensor_source: Path) -> JSON:
+def extract_sensor_data(params, sensor_source: Path) -> JSON:
     lg.info(f'Extracting sensor data from {sensor_source}')
 
     def iterate():

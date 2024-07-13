@@ -7,7 +7,7 @@ from pygeodesy.dms import latDMS, lonDMS, F_DMS
 from fvc.df.util import JsonlinesIO
 
 
-def stats(args, io: JsonlinesIO):
+def stats(params, io: JsonlinesIO):
     metadata = io.read()
 
     if not metadata:
@@ -40,7 +40,7 @@ def stats(args, io: JsonlinesIO):
 
     stats = last(accumulate(stat_acc, io.iterate(), initial=init))  # type: ignore
 
-    if args.json:
+    if params['JSON']:
         print(json.dumps(stats, indent=2))
     else:
         def ftime(ts):
