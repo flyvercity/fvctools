@@ -1,1 +1,1 @@
-from .rms import add_argparser, main  # noqa: F401
+from fvc.rms.main import rms  # noqa

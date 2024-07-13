@@ -6,6 +6,7 @@ import logging as lg
 from typing import cast
 import json
 
+import click
 from toolz.dicttoolz import valmap
 from toolz.functoolz import compose
 import pyparsing as pp
@@ -15,17 +16,11 @@ from git.exc import GitCommandError
 from fvc.rms.model import load_model
 
 
-def add_argparser(name, subparsers):
-    parser = subparsers.add_parser(name, help='Requirement Management System (RMS) tool')
-    parser.add_argument('--config', help='Configuration file', default='rms.toml')
-    parser.add_argument('--revision', help='Revision number', default='HEAD')
-
-
 class Config:
-    def __init__(self, args):
+    def __init__(self, params):
         try:
-            self._revision = args.revision
-            config_file = Path(args.config).resolve()
+            self._revision = params['Revision']
+            config_file = Path(params['Config']).resolve()
             lg.debug(f'Using configuration file: {config_file}')
             self._base_dir = config_file.parent
             config = tomllib.loads(config_file.read_text())
@@ -299,8 +294,14 @@ def validate(deptree):
     treemap(validate, deptree)
 
 
-def main(args):
-    config = Config(args)
+@click.command()
+@click.pass_context
+@click.option('--config', help='Configuration file', default='rms.toml')
+@click.option('--revision', help='Revision number', default='HEAD')
+def rms(ctx, config, revision):
+    ctx.obj['Config'] = config
+    ctx.obj['Revision'] = revision
+    config = Config(ctx.obj)
 
     items = {}
 
@@ -315,6 +316,6 @@ def main(args):
     deptree = build_deptree(items)
     validate(deptree)
 
-    if args.json:
+    if ctx.obj['Json']:
         jtree = treemap(lambda i: i.json(), deptree)
         print(json.dumps(jtree, indent=2))
