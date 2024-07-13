@@ -17,46 +17,39 @@ MAX_ERRORS = 100
 
 
 def isValid(input_file: Path):
-    line_no = 0
-
-    with input_file.open('rt', encoding='utf-8', newline=None) as f:
-        try:
-            metaline = f.readline()
-            line_no += 1
-
-            metadata = json.loads(metaline)
-            jsonschema.validate(metadata, schema.METADATA)
-            content = metadata['content']
-
-            if content not in schema.CONTENT_SCHEMA:
-                raise UserWarning(f'Unknown content type: {content}')
-
-            content_schema = schema.CONTENT_SCHEMA[metadata['content']]
-
-        except Exception as e:
-            lg.error(f'Metadata validation error at line {line_no}: {e}')
-            return False
-
-        error_count = 0
-
-        while True:
-            line = f.readline()
-            line_no += 1
-
-            if not line.strip():
-                break
-
+    with click.progressbar(length=input_file.stat().st_size, label='Validating data') as bar:
+        with JsonlinesIO(input_file, 'rt', callback=lambda s: bar.update(s)) as f:
             try:
-                data = json.loads(line)
-                jsonschema.validate(data, content_schema)
+                metaline = f.read()
+
+                if not metaline:
+                    raise UserWarning('Cannon read a metadata line')
+
+                jsonschema.validate(metaline, schema.METADATA)
+                content = metaline['content']
+
+                if content not in schema.CONTENT_SCHEMA:
+                    raise UserWarning(f'Unknown content type: {content}')
+
+                content_schema = schema.CONTENT_SCHEMA[content]
 
             except Exception as e:
-                lg.error(f'Validation error at line {line_no}: {line}: {e}')
-                error_count += 1
-
-            if error_count >= MAX_ERRORS:
-                lg.error(f'Maximum number of errors reached ({MAX_ERRORS}), stopping')
+                lg.error(f'Metadata validation error at line {f.in_line_no()}: {e}')
                 return False
+
+            error_count = 0
+
+            for data in f.iterate():
+                try:
+                    jsonschema.validate(data, content_schema)
+
+                except Exception as e:
+                    lg.error(f'Validation error at line {f.in_line_no()}: {e}')
+                    error_count += 1
+
+                if error_count >= MAX_ERRORS:
+                    lg.error(f'Maximum number of errors reached ({MAX_ERRORS}), stopping')
+                    return False
 
     lg.info('Validation successful')
     return True

@@ -11,10 +11,14 @@ JSON = Dict[str, Any]
 
 
 class JsonlinesIO:
-    def __init__(self, filepath: Path, mode: str):
+    def __init__(self, filepath: Path, mode: str, callback=None):
         self._filepath = filepath
         self._mode = mode
         self._file = None  # IO | None
+        self._callback = callback
+
+    def stat_size(self):
+        return self._filepath.stat().st_size
 
     def __enter__(self):
         self._file = self._filepath.open(self._mode, encoding='utf-8', newline=None)
@@ -38,11 +42,18 @@ class JsonlinesIO:
             raise RuntimeError('File is not open')
 
         self._in_line_no += 1
+        last_read_bytes = len(line) + 2  # \n\r
+
+        if self._callback:
+            self._callback(last_read_bytes)
 
         if not line.strip():
             return None
 
         return json.loads(line)
+
+    def in_line_no(self):
+        return self._in_line_no
 
     def write(self, data):
         self._check_entered()
