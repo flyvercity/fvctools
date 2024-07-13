@@ -80,7 +80,7 @@ def validate(ctx):
 )
 @click.option(
     '--external-format', help='External data format',
-    type=click.Choice(['courageous', 'csgroup', 'nmea', 'senhive']),
+    type=click.Choice(['courageous', 'csgroup', 'nmea', 'senhive', 'safirmqtt']),
     required=True
 )
 @click.option(

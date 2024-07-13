@@ -14,8 +14,7 @@ def convert_to_fvc(params, metadata, input_file: Path, output: JsonlinesIO):
 
     metadata.update({
         'content': 'flightlog',
-        'source': 'senhive',
-        'origin': str(input_file.name),
+        'source': 'senhive'
     })
 
     output.write(metadata)

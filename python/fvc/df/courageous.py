@@ -1,25 +1,16 @@
 import json
 from pathlib import Path
-import logging as lg
 
 from toolz.dicttoolz import keyfilter
-from pygeodesy.geoids import GeoidPGM
 
-from fvc.df.util import JsonlinesIO
-
-
-def amsl_to_ellipsoidal(geoid, lat, lon, amsl_height):
-    # Initialize the Geoid model using EGM96 with WGS-84 datum
-    geoid_height = geoid.height(lat, lon)
-    ellipsoidal_height = amsl_height + geoid_height
-    return ellipsoidal_height
+import fvc.df.util as u
 
 
 def build_geo_position(pos, geoid):
     lat = pos['lat']
     lon = pos['lon']
     amsl = pos['height_amsl']
-    alt = amsl_to_ellipsoidal(geoid, lat, lon, amsl)
+    alt = u.amsl_to_ellipsoidal(geoid, lat, lon, amsl)
 
     position = {
         'loc': {
@@ -43,22 +34,13 @@ def build_polar_position(pos):
     return position
 
 
-def convert_to_fvc(params, metadata, input_file: Path, output: JsonlinesIO):
-    pgm_path = Path(__file__).parent / 'egm96-5.pgm'
-
-    if egm := params.get('EGM'):
-        pgm_path = Path(egm)
-
-    lg.debug(f'Using geoid model: {pgm_path.absolute()}')
-
-    geoid = GeoidPGM(pgm_path)
+def convert_to_fvc(params, metadata, input_file: Path, output: u.JsonlinesIO):
+    geoid = u.load_geoid(params, metadata)
     data = json.loads(input_file.read_text())
 
     metadata.update({
         'content': 'flightlog',
-        'source': 'courageous',
-        'origin': str(input_file.name),
-        'geoid': pgm_path.name
+        'source': 'courageous'
     })
 
     metakeys = ['system_name', 'version']

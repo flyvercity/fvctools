@@ -40,6 +40,7 @@ def add_metadata_params(params, polar_sensor_source, polar_sensor_format):
 
 def initial_metadata(params) -> JSON:
     metadata = {}  # type: JSON
+    metadata['origin'] = str(params['input_file'].name)
 
     if 'polar' not in params:
         return metadata

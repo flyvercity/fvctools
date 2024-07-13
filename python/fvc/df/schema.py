@@ -40,7 +40,9 @@ IDENTIFICATION = {
     'properties': {
         'int': {'type': 'string'},
         'fvc': {'type': 'string'},
-        'icaohex': {'type': 'string'}
+        'icaohex': {'type': 'string'},
+        'icaoreg': {'type': 'string'},
+        'atm': {'type': 'string'}
     },
     'anyOf': [
         {'required': ['int']},
@@ -62,7 +64,8 @@ METADATA = {
                 'courageous',
                 'csgroup',
                 'nmea',
-                'senhive'
+                'senhive',
+                'safirmqtt'
             ]
         },
         'origin': {'type': 'string'},

@@ -4,8 +4,10 @@ from typing import Any, Dict
 import logging as lg
 
 import boto3
+from pygeodesy.geoids import GeoidPGM
 
-type JSON = Dict[str, Any]
+
+JSON = Dict[str, Any]
 
 
 class JsonlinesIO:
@@ -91,3 +93,23 @@ def fetch_input_file(params, input_filename) -> Path:
             return path.resolve()
 
     raise UserWarning(f'Unable to resolve input file: {input_filename}')
+
+
+def load_geoid(params, metadata) -> GeoidPGM:
+    pgm_path = Path(__file__).parent / 'egm96-5.pgm'
+
+    if egm := params.get('EGM'):
+        pgm_path = Path(egm)
+
+    lg.debug(f'Using geoid model: {pgm_path.absolute()}')
+
+    metadata.update({'geoid': pgm_path.name})
+    geoid = GeoidPGM(pgm_path)
+    return geoid
+
+
+def amsl_to_ellipsoidal(geoid: GeoidPGM, lat: float, lon: float, amsl_height: float) -> float:
+    # Initialize the Geoid model using EGM96 with WGS-84 datum
+    geoid_height = geoid.height(lat, lon)
+    ellipsoidal_height = amsl_height + geoid_height  # type: ignore
+    return ellipsoidal_height

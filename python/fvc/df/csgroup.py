@@ -9,8 +9,7 @@ def convert_to_fvc(params, metadata, input_file: Path, output: JsonlinesIO):
 
     metadata.update({
         'content': 'flightlog',
-        'source': 'csgroup',
-        'origin': str(input_file.name),
+        'source': 'csgroup'
     })
 
     output.write(metadata)
