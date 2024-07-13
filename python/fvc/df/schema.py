@@ -8,8 +8,7 @@ LOCATION = {
         'height': {'type': 'number', '$comment': 'Local height above ground'}
     },
     'required': ['lat', 'lon', 'alt'],
-    'optional': ['amsl', 'height'],
-    'additionalProperties': True
+    'optional': ['amsl', 'height']
 }
 
 POLAR = {
@@ -31,8 +30,7 @@ POLAR_SENSOR = {
     'properties': {
         'loc': LOCATION
     },
-    'required': ['loc'],
-    'additionalProperties': True
+    'required': ['loc']
 }
 
 IDENTIFICATION = {
@@ -55,7 +53,11 @@ METADATA = {
     'properties': {
         'content': {
             'type': 'string',
-            'enum': ['flightlog']
+            'enum': [
+                'flightlog',
+                'fusion.replay'
+            ],
+            '$comment': 'Current file content descriptor'
         },
         'source': {
             'type': 'string',
@@ -66,13 +68,14 @@ METADATA = {
                 'nmea',
                 'senhive',
                 'safirmqtt'
-            ]
+            ],
+            '$comment': 'Original data format'
         },
-        'origin': {'type': 'string'},
-        'polar_sensor': POLAR_SENSOR
+        'origin': {'type': 'string', "$comment": "Original file name"},
+        'polar_sensor': POLAR_SENSOR,
+        'cycle_length': {'type': 'number'}
     },
-    'required': ['content'],
-    'additionalProperties': True
+    'required': ['content']
 }
 
 POSITION = {
@@ -90,8 +93,7 @@ POSITION = {
             'required': ['polar'],
             'optional': ['loc']
         }
-    ],
-    'additionalProperties': True
+    ]
 }
 
 TIMESTAMP = {
@@ -99,22 +101,46 @@ TIMESTAMP = {
     'properties': {
         'unix': {'type': 'number', '$comment': 'Unix timestamp in milliseconds'},
     },
-    'required': ['unix'],
-    'additionalProperties': True
+    'required': ['unix']
 }
 
 FLIGHTLOG = {
     'type': 'object',
     'properties': {
+        'origin': {'type': 'string'},
         'time': TIMESTAMP,
         'uaid': IDENTIFICATION,
         'pos': POSITION
     },
     'required': ['time', 'pos'],
-    'optional': ['uaid'],
-    'additionalProperties': True
+    'optional': ['uaid', 'origin']
+}
+
+FUSION_REPLAY = {
+    'type': 'object',
+    'properties': {
+        'event': {
+            'type': 'string',
+            'enum': [
+                'launch',
+                'start',
+                'stop',
+                'input',
+                'output',
+                'error'
+            ]
+        },
+        'cycle': {'type': 'number'},
+        'origin': {'type': 'string'},
+        'message': {'type': 'object'},
+        'eid': {'type': 'string'},
+        'metadata': {'type': 'object'}
+    },
+    'required': ['event', 'cycle'],
+    'optional': ['origin', 'message', 'eid', 'metadata']
 }
 
 CONTENT_SCHEMA = {
-    'flightlog': FLIGHTLOG
+    'flightlog': FLIGHTLOG,
+    'fusion.replay': FUSION_REPLAY
 }

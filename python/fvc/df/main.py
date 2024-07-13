@@ -11,6 +11,7 @@ from fvc.df.util import JsonlinesIO, fetch_input_file
 
 import fvc.df.flightlog as flightlog
 import fvc.df.metadata as metadata
+import fvc.df.fusion as fusion
 
 
 MAX_ERRORS = 100
@@ -56,17 +57,17 @@ def isValid(input_file: Path):
 
 
 @click.command(help='Validate a FVC file against the known schema')
-@click.pass_context
-def validate(ctx):
-    input_file = ctx.obj['input_file']
+@click.pass_obj
+def validate(params):
+    input_file = params['input_file']
     valid = isValid(input_file)
 
-    if ctx.obj['JSON']:
+    if params['JSON']:
         print(json.dumps({'valid': valid}))
 
 
 @click.command(help='Convert an external data file to the FVC format')
-@click.pass_context
+@click.pass_obj
 @click.option(
     '--output-file', help='Output file',
     type=Path, required=False
@@ -88,32 +89,32 @@ def validate(ctx):
     type=Path, required=False
 )
 @metadata.metadata_args
-def convert(ctx, output_file, external_format, egm, base_date, **kwargs):
-    input_file = ctx.obj['input_file']
-    ctx.obj['output_file'] = output_file if output_file else Path(str(input_file) + '.fvc')
-    ctx.obj['external_format'] = external_format
-    ctx.obj['EGM'] = egm
-    ctx.obj['base_date'] = base_date
-    metadata.add_metadata_params(ctx.obj, **kwargs)
+def convert(params, output_file, external_format, egm, base_date, **kwargs):
+    input_file = params['input_file']
+    params['output_file'] = output_file if output_file else Path(str(input_file) + '.fvc')
+    params['external_format'] = external_format
+    params['EGM'] = egm
+    params['base_date'] = base_date
+    metadata.add_metadata_params(params, **kwargs)
 
     ext_format_mod = importlib.import_module(f'fvc.df.{external_format}')
     convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
-    output_file = ctx.obj['output_file']
-    meta = metadata.initial_metadata(ctx.obj)
+    output_file = params['output_file']
+    meta = metadata.initial_metadata(params)
 
     with JsonlinesIO(output_file, 'wt') as io:
-        convert_fun(ctx.obj, meta, input_file, io)
+        convert_fun(params, meta, input_file, io)
 
     lg.info(f'Conversion complete, output written to {output_file}')
 
 
 @click.command(help='Calculate statistics for a FVC data file')
-@click.pass_context
-def stats(ctx):
-    input_file = ctx.obj['input_file']
+@click.pass_obj
+def stats(params):
+    input_file = params['input_file']
 
     with JsonlinesIO(input_file, 'rt') as io:
-        flightlog.stats(ctx.obj, io)
+        flightlog.stats(params, io)
 
 
 @click.command(help='Just download and cache external data')
@@ -134,7 +135,7 @@ Notes:
 
 
 @click.group(help=DESCRIPTION)
-@click.pass_context
+@click.pass_obj
 @click.option(
     '--input-file', help='Input file or S3 URI',
     type=str, required=True
@@ -143,13 +144,13 @@ Notes:
     '--cache-dir', help='Directory for caching external data',
     type=Path, envvar='FVC_CACHE', required=False
 )
-def df(ctx, input_file, cache_dir):
-    ctx.ensure_object(dict)
-    ctx.obj['cache_dir'] = cache_dir
-    ctx.obj['input_file'] = fetch_input_file(ctx.obj, input_file)
+def df(params, input_file, cache_dir):
+    params['cache_dir'] = cache_dir
+    params['input_file'] = fetch_input_file(params, input_file)
 
 
 df.add_command(convert)
 df.add_command(validate)
 df.add_command(stats)
 df.add_command(fetch)
+df.add_command(fusion.fusion)

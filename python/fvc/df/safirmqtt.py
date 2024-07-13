@@ -53,6 +53,27 @@ def from_safir_loc(safir_loc, geoid):
     }
 
 
+def flightlog_record(record, geoid):
+    assert record.get('version') == '1'
+    assert 'timestamp' in record
+    time = int(dateparse(record.get('timestamp', '')).timestamp() * 1000.0)
+    rec_ids = record.get('identifiers')
+    assert rec_ids
+    ids = from_safir_ids(rec_ids)
+    rec_loc = record.get('location')
+    pos = from_safir_loc(rec_loc, geoid)
+    origin = record.get('origin')
+
+    record = {
+        'time': {'unix': time},
+        'uaid': ids,
+        'pos': pos,
+        'origin': origin
+    }
+
+    return record
+
+
 def convert_to_fvc(params, metadata, input_file: Path, output: u.JsonlinesIO):
     geoid = u.load_geoid(params, metadata)
 
@@ -64,28 +85,13 @@ def convert_to_fvc(params, metadata, input_file: Path, output: u.JsonlinesIO):
     output.write(metadata)
 
     with u.JsonlinesIO(input_file, 'rt') as input:
-        line_no = 0
-
         try:
             for record in input.iterate():
-                line_no += 1
-                assert record.get('version') == '1'
-                assert 'timestamp' in record
-                time = int(dateparse(record.get('timestamp', '')).timestamp() * 1000.0)
-                rec_ids = record.get('identifiers')
-                assert rec_ids
-                ids = from_safir_ids(rec_ids)
-                rec_loc = record.get('location')
-                pos = from_safir_loc(rec_loc, geoid)
-
-                output.write({
-                    'time': {'unix': time},
-                    'uaid': ids,
-                    'pos': pos
-                })
+                fl_record = flightlog_record(record, geoid)
+                output.write(fl_record)
 
         except Exception as e:
             if params['verbose']:
                 traceback.print_exc()
 
-            lg.warning(f'Error processing {input_file}:{line_no}: {e}')
+            lg.warning(f'Error processing {input_file}:{input.in_line_no()}: {e}')
