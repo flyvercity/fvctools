@@ -74,7 +74,7 @@ def flightlog_record(record, geoid):
     return record
 
 
-def convert_to_fvc(params, metadata, input_file: Path, output: u.JsonlinesIO):
+def convert_to_fvc(params, metadata, input_path: Path, output: u.JsonlinesIO):
     geoid = u.load_geoid(params, metadata)
 
     metadata.update({
@@ -84,7 +84,7 @@ def convert_to_fvc(params, metadata, input_file: Path, output: u.JsonlinesIO):
 
     output.write(metadata)
 
-    with u.JsonlinesIO(input_file, 'rt') as input:
+    with u.JsonlinesIO(input_path, 'rt') as input:
         try:
             for record in input.iterate():
                 fl_record = flightlog_record(record, geoid)
@@ -94,4 +94,4 @@ def convert_to_fvc(params, metadata, input_file: Path, output: u.JsonlinesIO):
             if params['verbose']:
                 traceback.print_exc()
 
-            lg.warning(f'Error processing {input_file}:{input.in_line_no()}: {e}')
+            lg.warning(f'Error processing {input_path}:{input.in_line_no()}: {e}')

@@ -72,38 +72,49 @@ def progress_bar(bytes_amount):
     lg.info(f'Downloaded {bytes_amount} bytes')
 
 
-def fetch_input_file(params, input_filename) -> Path:
-    path = Path(input_filename)
+class InputFile:
+    def __init__(self, params, input_uri):
+        self._params = params
+        self._input_uri = input_uri
 
-    if input_filename.startswith('s3://'):
-        cache_dir = params.get('cache_dir')
+    def __str__(self) -> str:
+        return str(self._input_uri)
 
-        if not cache_dir:
-            raise UserWarning('Cache directory should be specified for external data')
+    def fetch(self) -> Path:
+        if not self._input_uri:
+            raise UserWarning('Input file or URI (--input-file) is not specified')
 
-        cache_dir_path = Path(cache_dir)
-        cache_dir_path.mkdir(parents=True, exist_ok=True)
-        rel_path = path.relative_to('s3://')
-        local_path = (cache_dir_path / rel_path).resolve()
+        path = Path(self._input_uri)
 
-        if local_path.exists():
-            lg.info(f'Using cached file: {local_path}')
+        if self._input_uri.startswith('s3://'):
+            cache_dir = self._params.get('cache_dir')
+
+            if not cache_dir:
+                raise UserWarning('Cache directory should be specified for external data')
+
+            cache_dir_path = Path(cache_dir)
+            cache_dir_path.mkdir(parents=True, exist_ok=True)
+            rel_path = path.relative_to('s3://')
+            local_path = (cache_dir_path / rel_path).resolve()
+
+            if local_path.exists():
+                lg.info(f'Using cached file: {local_path}')
+                return local_path
+
+            lg.info(f'Fetching to {local_path}')
+            local_path.parent.mkdir(parents=True, exist_ok=True)
+            bucket_name = path.parts[1]
+            key = '/'.join(path.parts[2:])
+            lg.debug(f'Bucket: {bucket_name}, Key: {key}')
+            s3 = boto3.client('s3')
+            s3.download_file(bucket_name, key, str(local_path), Callback=progress_bar)
             return local_path
 
-        lg.info(f'Fetching to {local_path}')
-        local_path.parent.mkdir(parents=True, exist_ok=True)
-        bucket_name = path.parts[1]
-        key = '/'.join(path.parts[2:])
-        lg.debug(f'Bucket: {bucket_name}, Key: {key}')
-        s3 = boto3.client('s3')
-        s3.download_file(bucket_name, key, str(local_path), Callback=progress_bar)
-        return local_path
+        else:
+            if path.exists():
+                return path.resolve()
 
-    else:
-        if path.exists():
-            return path.resolve()
-
-    raise UserWarning(f'Unable to resolve input file: {input_filename}')
+        raise UserWarning(f'Unable to resolve input file: {self}')
 
 
 def load_geoid(params, metadata) -> GeoidPGM:

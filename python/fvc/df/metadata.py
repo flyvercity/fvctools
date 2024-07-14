@@ -2,7 +2,7 @@ import click
 from functools import wraps
 import logging as lg
 
-from fvc.df.util import fetch_input_file, JSON
+from fvc.df.util import InputFile, JSON
 import fvc.df.nmea as nmea
 
 
@@ -40,13 +40,13 @@ def add_metadata_params(params, polar_sensor_source, polar_sensor_format):
 
 def initial_metadata(params) -> JSON:
     metadata = {}  # type: JSON
-    metadata['origin'] = str(params['input_file'].name)
+    metadata['origin'] = str(params['input_file'].fetch().name)
 
     if 'polar' not in params:
         return metadata
 
     filename = params['polar']['sensor_source']
-    source = fetch_input_file(params, filename)
+    source = InputFile(params, filename).fetch()
 
     if format := params['polar'].get('sensor_format'):
         if format == 'nmea':

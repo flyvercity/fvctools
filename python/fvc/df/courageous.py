@@ -34,9 +34,9 @@ def build_polar_position(pos):
     return position
 
 
-def convert_to_fvc(params, metadata, input_file: Path, output: u.JsonlinesIO):
+def convert_to_fvc(params, metadata, input_path: Path, output: u.JsonlinesIO):
     geoid = u.load_geoid(params, metadata)
-    data = json.loads(input_file.read_text())
+    data = json.loads(input_path.read_text())
 
     metadata.update({
         'content': 'flightlog',

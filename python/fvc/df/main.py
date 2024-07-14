@@ -7,7 +7,7 @@ import importlib
 import jsonschema
 
 import fvc.df.schema as schema
-from fvc.df.util import JsonlinesIO, fetch_input_file
+import fvc.df.util as u
 
 import fvc.df.flightlog as flightlog
 import fvc.df.metadata as metadata
@@ -17,9 +17,9 @@ import fvc.df.fusion as fusion
 MAX_ERRORS = 100
 
 
-def isValid(input_file: Path):
-    with click.progressbar(length=input_file.stat().st_size, label='Validating data') as bar:
-        with JsonlinesIO(input_file, 'rt', callback=lambda s: bar.update(s)) as f:
+def isValid(input_path: Path):
+    with click.progressbar(length=input_path.stat().st_size, label='Validating data') as bar:
+        with u.JsonlinesIO(input_path, 'rt', callback=lambda s: bar.update(s)) as f:
             try:
                 metaline = f.read()
 
@@ -59,8 +59,8 @@ def isValid(input_file: Path):
 @click.command(help='Validate a FVC file against the known schema')
 @click.pass_obj
 def validate(params):
-    input_file = params['input_file']
-    valid = isValid(input_file)
+    input_path = params['input_file'].fetch()
+    valid = isValid(input_path)
 
     if params['JSON']:
         print(json.dumps({'valid': valid}))
@@ -68,10 +68,6 @@ def validate(params):
 
 @click.command(help='Convert an external data file to the FVC format')
 @click.pass_obj
-@click.option(
-    '--output-file', help='Output file',
-    type=Path, required=False
-)
 @click.option(
     '--external-format', help='External data format',
     type=click.Choice(['courageous', 'csgroup', 'nmea', 'senhive', 'safirmqtt']),
@@ -88,43 +84,44 @@ def validate(params):
     help='Custom EGM geoid data file (*.pgm). Default: egm96-5.pgm',
     type=Path, required=False
 )
+@click.argument('output-file', type=Path, required=False)
 @metadata.metadata_args
-def convert(params, output_file, external_format, egm, base_date, **kwargs):
-    input_file = params['input_file']
-    params['output_file'] = output_file if output_file else Path(str(input_file) + '.fvc')
+def convert(params, external_format, egm, base_date, output_file, **kwargs):
+    input_path = params['input_file'].fetch()
+    output_path = output_file if output_file else Path(str(input_path) + '.fvc')
+    params['output_path'] = output_path
     params['external_format'] = external_format
     params['EGM'] = egm
     params['base_date'] = base_date
     metadata.add_metadata_params(params, **kwargs)
-
     ext_format_mod = importlib.import_module(f'fvc.df.{external_format}')
     convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
-    output_file = params['output_file']
     meta = metadata.initial_metadata(params)
 
-    with JsonlinesIO(output_file, 'wt') as io:
-        convert_fun(params, meta, input_file, io)
+    with u.JsonlinesIO(output_path, 'wt') as io:
+        convert_fun(params, meta, input_path, io)
 
-    lg.info(f'Conversion complete, output written to {output_file}')
+    lg.info(f'Conversion complete, output written to {output_path}')
 
 
 @click.command(help='Calculate statistics for a FVC data file')
 @click.pass_obj
 def stats(params):
-    input_file = params['input_file']
+    input_path = params['input_file'].fetch()
 
-    with JsonlinesIO(input_file, 'rt') as io:
+    with u.JsonlinesIO(input_path, 'rt') as io:
         flightlog.stats(params, io)
 
 
 @click.command(help='Just download and cache external data')
-def fetch():
-    pass
+@click.pass_obj
+def fetch(params):
+    params['input_file'].fetch()
 
 
-DESCRIPTION = '''
-Data file conversion and manipulation tool
+DESCRIPTION = 'Data file conversion and manipulation tool'
 
+EPILOG='''
 Notes:
 
     For EGM geoid data download, visit:
@@ -134,11 +131,11 @@ Notes:
 '''
 
 
-@click.group(help=DESCRIPTION)
+@click.group(help=DESCRIPTION, epilog=EPILOG)
 @click.pass_obj
 @click.option(
     '--input-file', help='Input file or S3 URI',
-    type=str, required=True
+    type=str
 )
 @click.option(
     '--cache-dir', help='Directory for caching external data',
@@ -146,7 +143,7 @@ Notes:
 )
 def df(params, input_file, cache_dir):
     params['cache_dir'] = cache_dir
-    params['input_file'] = fetch_input_file(params, input_file)
+    params['input_file'] = u.InputFile(params, input_file)
 
 
 df.add_command(convert)

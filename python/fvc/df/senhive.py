@@ -8,8 +8,8 @@ from dateutil.parser import isoparse
 from fvc.df.util import JsonlinesIO
 
 
-def convert_to_fvc(params, metadata, input_file: Path, output: JsonlinesIO):
-    reader = csv.DictReader(input_file.open(), delimiter=';')
+def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
+    reader = csv.DictReader(input_path.open(), delimiter=';')
     row_no = 1
 
     metadata.update({

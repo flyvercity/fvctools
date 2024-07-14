@@ -8,8 +8,8 @@ import pynmea2
 from fvc.df.util import JsonlinesIO, JSON
 
 
-def iterate_nmea_file(input_file: Path):
-    with input_file.open() as f:
+def iterate_nmea_file(input_path: Path):
+    with input_path.open() as f:
         while line := f.readline():
             try:
                 message = pynmea2.parse(line)
@@ -20,7 +20,7 @@ def iterate_nmea_file(input_file: Path):
                 lg.warning(f'Unable to parse line ({line}) with error: {e}')
 
 
-def convert_to_fvc(params, metadata, input_file: Path, output: JsonlinesIO):
+def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     base_date = params.get('base_date')  # type: datetime
 
     if not base_date:
@@ -35,7 +35,7 @@ def convert_to_fvc(params, metadata, input_file: Path, output: JsonlinesIO):
 
     output.write(metadata)
 
-    for message in iterate_nmea_file(input_file):
+    for message in iterate_nmea_file(input_path):
         if not isinstance(message, pynmea2.GGA):
             continue
 
