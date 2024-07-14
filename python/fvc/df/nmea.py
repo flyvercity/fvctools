@@ -27,12 +27,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
         raise UserWarning("This format requires the date to be set manually with '--base-date'")
 
     lg.debug(f'Using base date: {base_date}')
-
-    metadata.update({
-        'content': 'flightlog',
-        'source': 'nmea'
-    })
-
+    metadata.update({'content': 'flightlog', 'source': 'nmea'})
     output.write(metadata)
 
     for message in iterate_nmea_file(input_path):

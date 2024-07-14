@@ -12,11 +12,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     reader = csv.DictReader(input_path.open(), delimiter=';')
     row_no = 1
 
-    metadata.update({
-        'content': 'flightlog',
-        'source': 'senhive'
-    })
-
+    metadata.update({'content': 'flightlog', 'source': 'senhive'})
     output.write(metadata)
 
     for row in reader:

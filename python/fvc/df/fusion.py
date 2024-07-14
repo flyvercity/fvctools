@@ -39,11 +39,11 @@ def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
             plots.write(fligtlog_rec)
 
         if record['event'] == 'output':
-            fligtlog_rec['origin'] = 'fusion'
+            fligtlog_rec['fusion'] = True
             tracks.write(fligtlog_rec)
 
 
-@click.command(help="Extract fused flight log data from a replay file")
+@click.command(help='Extract fused flight log data from a replay file')
 @click.option('--output-plots', type=Path, help='Output file for plots')
 @click.option('--output-tracks', type=Path, help='Output file for tracks')
 @click.pass_obj
