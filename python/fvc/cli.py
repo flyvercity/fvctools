@@ -20,8 +20,7 @@ def cli(ctx, verbose, json, aws_profile):
     ctx.obj['verbose'] = verbose
 
     lg.basicConfig(level=lg.DEBUG if verbose else lg.INFO)
-    lg.debug(f'verbose mode is {"on" if verbose else "off"}')
-
+    lg.debug(f'Verbose mode is {"on" if verbose else "off"}')
     lg.debug(f'JSON mode is {"on" if json else "off"}')
     ctx.obj['JSON'] = json
 
