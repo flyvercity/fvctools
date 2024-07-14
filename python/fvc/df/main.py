@@ -69,8 +69,12 @@ def validate(params):
 @click.command(help='Convert an external data file to the FVC format')
 @click.pass_obj
 @click.option(
-    '--external-format', help='External data format',
+    '--x-format', help='External data format',
     type=str, required=True
+)
+@click.option(
+    '--target', help='Target content type',
+    type=click.Choice(['flightlog', 'radarlog']), default='flightlog'
 )
 @click.option(
     '--base-date',
@@ -85,16 +89,15 @@ def validate(params):
 )
 @click.argument('output-file', type=Path, required=False)
 @metadata.metadata_args
-def convert(params, external_format, egm, base_date, output_file, **kwargs):
+def convert(params, output_file, **kwargs):
     try:
+        params.update(kwargs)
+
         input_path = params['input_file'].fetch()
         output_path = output_file if output_file else Path(str(input_path) + '.fvc')
         params['output_path'] = output_path
-        params['external_format'] = external_format
-        params['EGM'] = egm
-        params['base_date'] = base_date
-        metadata.add_metadata_params(params, **kwargs)
-        ext_format_mod = importlib.import_module(f'fvc.df.{external_format}')
+
+        ext_format_mod = importlib.import_module(f'fvc.df.{params["x_format"]}')
         convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
         meta = metadata.initial_metadata(params)
 
@@ -103,7 +106,7 @@ def convert(params, external_format, egm, base_date, output_file, **kwargs):
 
         lg.info(f'Conversion complete, output written to {output_path}')
     except ModuleNotFoundError:
-        raise UserWarning(f'Unknown external format: {external_format}')
+        raise UserWarning(f'Unknown external format: {params["x_format"]}')
 
 
 @click.command(help='Calculate statistics for a FVC data file')

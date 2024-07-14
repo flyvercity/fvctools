@@ -55,6 +55,7 @@ METADATA = {
             'type': 'string',
             'enum': [
                 'flightlog',
+                'radarlog',
                 'fusion.replay'
             ],
             '$comment': 'Current file content descriptor'
@@ -83,19 +84,9 @@ METADATA = {
 POSITION = {
     'type': 'object',
     'properties': {
-        'loc': LOCATION,
-        'polar': POLAR,
+        'loc': LOCATION
     },
-    'anyOf': [
-        {
-            'required': ['loc'],
-            'optional': ['polar']
-        },
-        {
-            'required': ['polar'],
-            'optional': ['loc']
-        }
-    ]
+    'required': ['loc'],
 }
 
 TIMESTAMP = {
@@ -109,13 +100,27 @@ TIMESTAMP = {
 FLIGHTLOG = {
     'type': 'object',
     'properties': {
+        'tag': {'type': 'string', 'enum': ['tgt'], '$comment': 'Geodetic target'},
         'origin': {'type': 'string'},
         'time': TIMESTAMP,
         'uaid': IDENTIFICATION,
         'pos': POSITION
     },
     'required': ['time', 'pos'],
-    'optional': ['uaid', 'origin']
+    'optional': ['tag', 'uaid', 'origin']
+}
+
+RADARLOG = {
+    'type': 'object',
+    'properties': {
+        'tag': {'type': 'string', 'enum': ['ptgt'], '$comment': 'Polar target'},
+        'origin': {'type': 'string'},
+        'time': TIMESTAMP,
+        'uaid': IDENTIFICATION,
+        'pos': POSITION
+    },
+    'required': ['time', 'pos'],
+    'optional': ['tag', 'uaid', 'origin']
 }
 
 FUSION_REPLAY = {

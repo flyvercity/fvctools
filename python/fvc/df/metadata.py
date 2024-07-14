@@ -24,31 +24,17 @@ def metadata_args(command_func):
     return wrapper
 
 
-def add_metadata_params(params, polar_sensor_source, polar_sensor_format):
-    if not polar_sensor_source:
-        return
-
-    lg.debug(f'Adding polar params: {polar_sensor_source}, {polar_sensor_format}')
-
-    params['polar'] = {
-        'sensor_source': polar_sensor_source,
-        'sensor_format': polar_sensor_format
-    }
-
-    return params
-
-
 def initial_metadata(params) -> JSON:
     metadata = {}  # type: JSON
     metadata['origin'] = str(params['input_file'].fetch().name)
 
-    if 'polar' not in params:
+    if not params.get('polar_sensor_format'):
         return metadata
 
-    filename = params['polar']['sensor_source']
+    filename = params['polar_sensor_source']
     source = InputFile(params, filename).fetch()
 
-    if format := params['polar'].get('sensor_format'):
+    if format := params.get('polar_sensor_format'):
         if format == 'nmea':
             metadata['polar_sensor'] = {
                 'source': 'nmea',
