@@ -67,7 +67,8 @@ METADATA = {
                 'csgroup',
                 'nmea',
                 'senhive',
-                'safirmqtt'
+                'safirmqtt',
+                'fusion.replay'
             ],
             '$comment': 'Original data format'
         },

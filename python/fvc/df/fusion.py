@@ -1,4 +1,5 @@
 from pathlib import Path
+import logging as lg
 
 import click
 
@@ -23,7 +24,7 @@ def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
     out_metadata = {
         'origin': str(params['input_file']),
         'content': 'flightlog',
-        'source': 'fusion'
+        'source': 'fusion.replay'
     }
 
     geoid = u.load_geoid(params, out_metadata)
@@ -55,6 +56,8 @@ def flightlog(params, output_plots, output_tracks):
         with u.JsonlinesIO(output_plots, 'wt') as plots:
             with u.JsonlinesIO(output_tracks, 'wt') as tracks:
                 extract_flightlogs(params, replay, plots, tracks)
+    
+    lg.info(f'Flight log data extracted from {params["input_file"]}')
 
 
 @click.group(help='A tool for SAFIR Fusion data files')
