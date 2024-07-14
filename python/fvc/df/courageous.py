@@ -22,16 +22,9 @@ class Courageous:
         pass
 
     def convert(self):
-        data = json.loads(self.input_path.read_text())
-
-        self.metadata.update({
-            'content': self.content(),
-            'source': 'courageous'
-        })
-
-        metakeys = ['system_name', 'version']
-        self.metadata.update(keyfilter(lambda k: k in metakeys, data))
+        self.metadata.update({'content': self.content(), 'source': 'courageous'})
         self.output.write(self.metadata)
+        data = json.loads(self.input_path.read_text())
 
         entries = []
 
@@ -102,9 +95,11 @@ class CourageousPolar(Courageous):
             return None
 
         position = {
-            'polar': {
-                'bear': pos['bearing'],
-                'elev': pos['elevation']
+            'loc': {
+                'polar': {
+                    'bear': pos['bearing'],
+                    'elev': pos['elevation']
+                }
             }
         }
 

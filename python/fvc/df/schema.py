@@ -89,6 +89,14 @@ POSITION = {
     'required': ['loc'],
 }
 
+RADAR_POSITION = {
+    'type': 'object',
+    'properties': {
+        'loc': POLAR
+    },
+    'required': ['loc'],
+}
+
 TIMESTAMP = {
     'type': 'object',
     'properties': {
@@ -117,7 +125,7 @@ RADARLOG = {
         'origin': {'type': 'string'},
         'time': TIMESTAMP,
         'uaid': IDENTIFICATION,
-        'pos': POSITION
+        'pos': RADAR_POSITION
     },
     'required': ['time', 'pos'],
     'optional': ['tag', 'uaid', 'origin']
@@ -149,5 +157,6 @@ FUSION_REPLAY = {
 
 CONTENT_SCHEMA = {
     'flightlog': FLIGHTLOG,
+    'radarlog': RADARLOG,
     'fusion.replay': FUSION_REPLAY
 }

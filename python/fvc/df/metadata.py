@@ -25,10 +25,14 @@ def metadata_args(command_func):
 
 
 def initial_metadata(params) -> JSON:
+    print(params)
     metadata = {}  # type: JSON
     metadata['origin'] = str(params['input_file'].fetch().name)
 
-    if not params.get('polar_sensor_format'):
+    if not params.get('polar_sensor_source'):
+        if 'polar_sensor_format' in params:
+            raise UserWarning('Cannot specify sensor format without a source file')
+
         return metadata
 
     filename = params['polar_sensor_source']
