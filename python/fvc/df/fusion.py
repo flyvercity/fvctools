@@ -8,10 +8,6 @@ from fvc.df.util import JsonlinesIO as JLIO
 import fvc.df.safirmqtt as smq
 
 
-def fusion_flightlog_record(message):
-    return {'time': 0}
-
-
 def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
     metadata = replay.read()
 
