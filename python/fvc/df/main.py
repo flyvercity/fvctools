@@ -63,15 +63,14 @@ def validate(params):
     valid = isValid(input_path)
 
     if params['JSON']:
-        print(json.dumps({'valid': valid}))
+        u.json_print({'valid': valid})
 
 
 @click.command(help='Convert an external data file to the FVC format')
 @click.pass_obj
 @click.option(
     '--external-format', help='External data format',
-    type=click.Choice(['courageous', 'csgroup', 'nmea', 'senhive', 'safirmqtt']),
-    required=True
+    type=str, required=True
 )
 @click.option(
     '--base-date',
@@ -87,21 +86,24 @@ def validate(params):
 @click.argument('output-file', type=Path, required=False)
 @metadata.metadata_args
 def convert(params, external_format, egm, base_date, output_file, **kwargs):
-    input_path = params['input_file'].fetch()
-    output_path = output_file if output_file else Path(str(input_path) + '.fvc')
-    params['output_path'] = output_path
-    params['external_format'] = external_format
-    params['EGM'] = egm
-    params['base_date'] = base_date
-    metadata.add_metadata_params(params, **kwargs)
-    ext_format_mod = importlib.import_module(f'fvc.df.{external_format}')
-    convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
-    meta = metadata.initial_metadata(params)
+    try:
+        input_path = params['input_file'].fetch()
+        output_path = output_file if output_file else Path(str(input_path) + '.fvc')
+        params['output_path'] = output_path
+        params['external_format'] = external_format
+        params['EGM'] = egm
+        params['base_date'] = base_date
+        metadata.add_metadata_params(params, **kwargs)
+        ext_format_mod = importlib.import_module(f'fvc.df.{external_format}')
+        convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
+        meta = metadata.initial_metadata(params)
 
-    with u.JsonlinesIO(output_path, 'wt') as io:
-        convert_fun(params, meta, input_path, io)
+        with u.JsonlinesIO(output_path, 'wt') as io:
+            convert_fun(params, meta, input_path, io)
 
-    lg.info(f'Conversion complete, output written to {output_path}')
+        lg.info(f'Conversion complete, output written to {output_path}')
+    except ModuleNotFoundError:
+        raise UserWarning(f'Unknown external format: {external_format}')
 
 
 @click.command(help='Calculate statistics for a FVC data file')
@@ -117,6 +119,12 @@ def stats(params):
 @click.pass_obj
 def fetch(params):
     params['input_file'].fetch()
+    
+    if not params['JSON']:
+        lg.info('This file is available in the cache')
+    else:
+        path = str(params['input_file'].fetch().resolve())
+        u.json_print({'path': path})
 
 
 DESCRIPTION = 'Data file conversion and manipulation tool'

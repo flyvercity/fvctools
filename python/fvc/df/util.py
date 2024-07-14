@@ -8,6 +8,11 @@ from pygeodesy.geoids import GeoidPGM
 
 
 JSON = Dict[str, Any]
+JSON_INDENT = 2
+
+
+def json_print(data: JSON):
+    print(json.dumps(data, indent=JSON_INDENT))
 
 
 class JsonlinesIO:

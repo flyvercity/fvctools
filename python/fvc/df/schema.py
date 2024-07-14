@@ -67,6 +67,7 @@ METADATA = {
                 'csgroup',
                 'nmea',
                 'senhive',
+                'robinradar',
                 'safirmqtt',
                 'fusion.replay'
             ],
