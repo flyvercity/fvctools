@@ -48,17 +48,27 @@ IDENTIFICATION = {
     ]
 }
 
+CONTENT = {
+    'type': 'string',
+    'enum': [
+        'flightlog',
+        'radarlog',
+        'fusion.replay'
+    ],
+    '$comment': 'Current file content descriptor'
+}
+
 METADATA = {
     'type': 'object',
     'properties': {
         'content': {
-            'type': 'string',
-            'enum': [
-                'flightlog',
-                'radarlog',
-                'fusion.replay'
-            ],
-            '$comment': 'Current file content descriptor'
+            'oneOf': [
+                CONTENT,
+                {
+                    'type': 'array',
+                    'items': CONTENT
+                }
+            ]
         },
         'source': {
             'type': 'string',
