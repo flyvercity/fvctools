@@ -2,9 +2,11 @@ import json
 from pathlib import Path
 from typing import Any, Dict
 import logging as lg
+from datetime import UTC
 
 import boto3
 from pygeodesy.geoids import GeoidPGM
+from dateutil import parser as dateparser
 
 
 JSON = Dict[str, Any]
@@ -140,3 +142,12 @@ def amsl_to_ellipsoidal(geoid: GeoidPGM, lat: float, lon: float, amsl_height: fl
     geoid_height = geoid.height(lat, lon)
     ellipsoidal_height = amsl_height + geoid_height  # type: ignore
     return ellipsoidal_height
+
+
+def datestring_to_ts(datestr: str) -> int:
+    dt = dateparser.parse(datestr)
+
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=UTC)
+
+    return int(dt.timestamp() * 1000)

@@ -1,9 +1,7 @@
 from pathlib import Path
-from xml.parsers.expat import ParserCreate, XMLParserType
+from xml.parsers.expat import ParserCreate
 from typing import TextIO, Any
 import logging as lg
-
-from dateutil import parser as dateparser
 
 import fvc.df.util as u
 
@@ -60,7 +58,7 @@ class Converter:
             self.time = None
 
         def cdata(self, data):
-            self.time = int(dateparser.parse(data).timestamp() * 1000)
+            self.time = u.datestring_to_ts(data)
 
         def close(self):
             if self.time is None:

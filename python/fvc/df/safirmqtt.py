@@ -56,7 +56,7 @@ def from_safir_loc(safir_loc, geoid):
 def flightlog_record(record, geoid):
     assert record.get('version') == '1'
     assert 'timestamp' in record
-    time = int(dateparse(record.get('timestamp', '')).timestamp() * 1000.0)
+    time = u.datestring_to_ts(record.get('timestamp', ''))
     rec_ids = record.get('identifiers')
     assert rec_ids
     ids = from_safir_ids(rec_ids)

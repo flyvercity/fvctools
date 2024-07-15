@@ -5,7 +5,7 @@ import logging as lg
 from datetime import UTC
 from dateutil.parser import isoparse
 
-from fvc.df.util import JsonlinesIO
+from fvc.df.util import JsonlinesIO, datestring_to_ts
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
@@ -17,8 +17,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
     for row in reader:
         row_no += 1
-        date = isoparse(row["'timestamp'"]).replace(tzinfo=UTC)
-        timestamp = int(date.timestamp() * 1000)
+        timestamp = datestring_to_ts(row["'timestamp'"])
         lat = row.get("'vehicle_location_lat'")
         lon = row["'vehicle_location_lon'"]
         alt = row["'altitude_gps (m)'"]
