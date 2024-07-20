@@ -91,12 +91,24 @@ METADATA = {
     'required': ['content']
 }
 
+ATTITUDE = {
+    'type': 'object',
+    'properties': {
+        'roll': {'type': 'number', '$comment': 'Roll angle in degrees'},
+        'pitch': {'type': 'number', '$comment': 'Pitch angle in degrees'},
+        'yaw': {'type': 'number', '$comment': 'Yaw angle in degrees'}
+    },
+    'required': ['roll', 'pitch', 'yaw']
+}
+
 POSITION = {
     'type': 'object',
     'properties': {
-        'loc': LOCATION
+        'loc': LOCATION,
+        'att': ATTITUDE
     },
     'required': ['loc'],
+    'optional': ['att']
 }
 
 RADAR_POSITION = {
@@ -115,6 +127,18 @@ TIMESTAMP = {
     'required': ['unix']
 }
 
+
+CELLULAR_SIGNAL = {
+    'type': 'object',
+    'properties': {
+        'radio': {'type': 'string', 'enum': ['4G', '5Gd']},
+        'RSRP': {'type': ['number', 'null']},
+        'RSRQ': {'type': ['number', 'null']},
+        'RSSI': {'type': ['number', 'null']},
+        'SINR': {'type': ['number', 'null']}
+    }
+}
+
 FLIGHTLOG = {
     'type': 'object',
     'properties': {
@@ -122,10 +146,11 @@ FLIGHTLOG = {
         'origin': {'type': 'string'},
         'time': TIMESTAMP,
         'uaid': IDENTIFICATION,
-        'pos': POSITION
+        'pos': POSITION,
+        'cellsig': CELLULAR_SIGNAL
     },
     'required': ['time', 'pos'],
-    'optional': ['tag', 'uaid', 'origin']
+    'optional': ['tag', 'uaid', 'origin', 'cellsig']
 }
 
 RADARLOG = {

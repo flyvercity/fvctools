@@ -52,8 +52,9 @@ def isValid(input_path: Path):
                     lg.error(f'Maximum number of errors reached ({MAX_ERRORS}), stopping')
                     return False
 
-    lg.info('Validation successful')
-    return True
+    success = error_count == 0
+    lg.info(f'Validation {"succeeded" if success else "failed"}')
+    return success
 
 
 @click.command(help='Validate a FVC file against the known schema')
