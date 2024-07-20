@@ -7,6 +7,9 @@ from datetime import UTC
 import boto3
 from pygeodesy.geoids import GeoidPGM
 from dateutil import parser as dateparser
+from pygments import highlight
+from pygments.lexers.jsonnet import JsonnetLexer
+from pygments.formatters import TerminalFormatter
 
 
 JSON = Dict[str, Any]
@@ -14,7 +17,8 @@ JSON_INDENT = 2
 
 
 def json_print(data: JSON):
-    print(json.dumps(data, indent=JSON_INDENT))
+    json_str = json.dumps(data, indent=JSON_INDENT, sort_keys=True)
+    print(highlight(json_str, JsonnetLexer(), TerminalFormatter()))
 
 
 class JsonlinesIO:
