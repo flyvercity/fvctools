@@ -5,7 +5,7 @@ import click
 
 import fvc.df.util as u
 from fvc.df.util import JsonlinesIO as JLIO
-import fvc.df.safirmqtt as smq
+import fvc.df.xformats.safirmqtt as smq
 
 
 def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):

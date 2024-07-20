@@ -1,6 +1,5 @@
 import click
 from pathlib import Path
-import json
 import logging as lg
 import importlib
 
@@ -98,7 +97,10 @@ def convert(params, output_file, **kwargs):
         output_path = output_file if output_file else Path(str(input_path) + '.fvc')
         params['output_path'] = output_path
 
-        ext_format_mod = importlib.import_module(f'fvc.df.{params["x_format"]}')
+        ext_format_mod = importlib.import_module(
+            f'fvc.df.xformats.{params["x_format"]}'
+        )
+
         convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
         meta = metadata.initial_metadata(params)
 

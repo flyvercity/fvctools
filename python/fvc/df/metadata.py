@@ -3,7 +3,7 @@ from functools import wraps
 import logging as lg
 
 from fvc.df.util import InputFile, JSON
-import fvc.df.nmea as nmea
+import fvc.df.xformats.nmea as nmea
 
 
 def metadata_args(command_func):
@@ -31,8 +31,8 @@ def initial_metadata(params) -> JSON:
     if not params.get('polar_sensor_source'):
         return metadata
 
-    if 'polar_sensor_format' in params:
-        raise UserWarning('Cannot specify sensor format without a source file')
+    if not 'polar_sensor_format' in params:
+        raise UserWarning('Sensor format (--polar-sensor-format) must be provided')
 
     filename = params['polar_sensor_source']
     source = InputFile(params, filename).fetch()
