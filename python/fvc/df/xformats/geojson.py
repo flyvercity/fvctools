@@ -6,19 +6,15 @@ import logging as lg
 import fvc.df.util as u
 
 
-def generate_feature(params, record):
+def generate_point(params, record):
     pos = record['pos']
     loc = pos['loc']
 
-    feature = {
+    point = {
         'type': 'Feature',
         'geometry': {
             'type': 'Point',
-            'coordinates': [
-                loc['lon'],
-                loc['lat'],
-                loc['alt']
-            ]
+            'coordinates': [loc['lon'], loc['lat'], loc['alt']]
         },
         'properties': {}
     }
@@ -28,9 +24,40 @@ def generate_feature(params, record):
             raise UserWarning('Cellular signal data not found')
         
         signal = record['cellsig']
-        feature['properties'] = {'rsrp': signal['RSRP']}
+        point['properties'] = {'rsrp': signal['RSRP']}
 
-    return feature
+    return point
+
+
+def generate_line(params, record, curr_pos):
+    pos = record['pos']
+    loc = pos['loc']
+
+    line = {
+        'type': 'Feature',
+        'geometry': {
+            'type': 'LineString',
+            'coordinates': [
+                [curr_pos['lon'], curr_pos['lat'], curr_pos['alt']],
+                [loc['lon'], loc['lat'], loc['alt']]
+            ]
+        },
+        'properties': {}
+    }
+
+    curr_pos['lat'] = loc['lat']
+    curr_pos['lon'] = loc['lon']
+    curr_pos['alt'] = loc['alt']
+
+    return line
+
+
+def generate_features(params, record, curr_pos):
+    return [
+        generate_point(params, record),
+        generate_line(params, record, curr_pos)
+
+    ]
 
 
 def generate_geojson(features):
@@ -59,11 +86,22 @@ def export_from_fvc(params, output_path: Path | None):
         if (content := metadata.get('content')) != 'flightlog':
             raise UserWarning(f'Unsupported content type: {content}')
 
+        first = io.read()
+
+        if not first:
+            return
+
+        curr_pos = {
+            'lat': first['pos']['loc']['lat'],
+            'lon': first['pos']['loc']['lon'],
+            'alt': first['pos']['loc']['alt']
+        }
+
         features = []
 
         for record in io.iterate():
             try:
-                features.append(generate_feature(params, record))
+                features.extend(generate_features(params, record, curr_pos))
             except UserWarning as e:
                 lg.warning(f'Unable to process record: {e}')
                 continue
