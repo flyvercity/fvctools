@@ -142,7 +142,7 @@ def fetch(params):
 @click.pass_obj
 @click.option(
     '--x-format', help='External data format',
-    type=click.Choice(['geojson']), required=True
+    type=click.Choice(['geojson', 'kml']), required=True
 )
 @click.option('--with-cellular', help='Require cellular signal data', is_flag=True)
 @click.argument('output-file', type=Path, required=False)
