@@ -8,7 +8,7 @@ from fvc.df.util import InputFile, JsonlinesIO, JsonQuery
 
 
 def fetch_geodata(file_name: str) -> geopandas.GeoDataFrame:
-    input_file = InputFile({'cache_dir': os.getenv('FVC_CACHE')}, file_name)
+    input = InputFile({'cache_dir': os.getenv('FVC_CACHE')}, file_name)
 
     qtime = JsonQuery('time.unix')
     quaid = JsonQuery('uaid.int', 'unknown')
@@ -16,7 +16,7 @@ def fetch_geodata(file_name: str) -> geopandas.GeoDataFrame:
     qlon = JsonQuery('pos.loc.lon')
     qalt = JsonQuery('pos.loc.alt')
 
-    with JsonlinesIO(input_file.fetch(), 'r') as io:
+    with JsonlinesIO(input.fetch(), 'r') as io:
         metadata = io.read()
         assert metadata and metadata['content'] == 'flightlog'
 

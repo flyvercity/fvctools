@@ -64,7 +64,7 @@ def isValid(input_path: Path):
 @click.command(help='Validate a FVC file against the known schema')
 @click.pass_obj
 def validate(params):
-    input_path = params['input_file'].fetch()
+    input_path = params['input'].fetch()
     valid = isValid(input_path)
 
     if params['JSON']:
@@ -98,7 +98,7 @@ def convert(params, output_file, **kwargs):
     try:
         params.update(kwargs)
 
-        input_path = params['input_file'].fetch()
+        input_path = params['input'].fetch()
         output_path = output_file if output_file else input_path.with_suffix('.fvc')
         params['output_path'] = output_path
 
@@ -120,7 +120,7 @@ def convert(params, output_file, **kwargs):
 @click.command(help='Calculate statistics for a FVC data file')
 @click.pass_obj
 def stats(params):
-    input_path = params['input_file'].fetch()
+    input_path = params['input'].fetch()
 
     with u.JsonlinesIO(input_path, 'r') as io:
         flightlog.stats(params, io)
@@ -129,12 +129,12 @@ def stats(params):
 @click.command(help='Just download and cache external data')
 @click.pass_obj
 def fetch(params):
-    params['input_file'].fetch()
+    params['input'].fetch()
     
     if not params['JSON']:
         lg.info('This file is available in the cache')
     else:
-        path = str(params['input_file'].fetch().resolve())
+        path = str(params['input'].fetch().resolve())
         u.json_print({'path': path})
 
 
@@ -154,6 +154,12 @@ def export(params, x_format, output_file, **kwargs):
     lg.info(f'Export complete, output written to {real_output}')
 
 
+# @click.command(help='Scan for fvc.df.toml files and execute tasks')
+# def crawl():
+#     import fvc.df.crawl as crawl
+#     crawl.crawl()
+
+
 DESCRIPTION = 'Data file conversion and manipulation tool'
 
 EPILOG='''
@@ -169,16 +175,16 @@ Notes:
 @click.group(help=DESCRIPTION, epilog=EPILOG)
 @click.pass_obj
 @click.option(
-    '--input-file', help='Input file or S3 URI',
+    '--input', help='Input file, directory, or S3 URI',
     type=str
 )
 @click.option(
     '--cache-dir', help='Directory for caching external data',
     type=Path, envvar='FVC_CACHE', required=False
 )
-def df(params, input_file, cache_dir):
+def df(params, input, cache_dir):
     params['cache_dir'] = cache_dir
-    params['input_file'] = u.InputFile(params, input_file)
+    params['input'] = u.InputFile(params, input)
 
 
 df.add_command(convert)

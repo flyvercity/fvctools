@@ -18,7 +18,7 @@ def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
         raise UserWarning(f'Unsupported content type: {content}')
     
     out_metadata = {
-        'origin': str(params['input_file']),
+        'origin': str(params['input']),
         'content': 'flightlog',
         'source': 'fusion.replay'
     }
@@ -48,12 +48,12 @@ def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
 @click.option('--output-tracks', type=Path, help='Output file for tracks')
 @click.pass_obj
 def flightlog(params, output_plots, output_tracks):
-    with u.JsonlinesIO(params['input_file'].fetch(), 'r') as replay:
+    with u.JsonlinesIO(params['input'].fetch(), 'r') as replay:
         with u.JsonlinesIO(output_plots, 'w') as plots:
             with u.JsonlinesIO(output_tracks, 'w') as tracks:
                 extract_flightlogs(params, replay, plots, tracks)
     
-    lg.info(f'Flight log data extracted from {params["input_file"]}')
+    lg.info(f'Flight log data extracted from {params["input"]}')
 
 
 @click.group(help='A tool for SAFIR Fusion data files')

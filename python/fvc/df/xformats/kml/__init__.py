@@ -50,7 +50,7 @@ def generate_features(params, record, curr_pos, kml):
 
 
 def export_from_fvc(params, output_path: Path | None):
-    input_path = params['input_file'].fetch()
+    input_path = params['input'].fetch()
 
     if not output_path:
         output = input_path.with_suffix('.kmz')  # type: Path

@@ -70,7 +70,7 @@ def generate_geojson(features):
 
 
 def export_from_fvc(params, output_path: Path | None):
-    input_path = params['input_file'].fetch()
+    input_path = params['input'].fetch()
 
     if not output_path:
         output = input_path.with_suffix('.geo.json')  # type: Path
