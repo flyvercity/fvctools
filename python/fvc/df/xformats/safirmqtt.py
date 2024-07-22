@@ -79,7 +79,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: u.JsonlinesIO):
     metadata.update({'content': 'flightlog', 'source': 'safirmqtt'})
     output.write(metadata)
 
-    with u.JsonlinesIO(input_path, 'rt') as input:
+    with u.JsonlinesIO(input_path, 'r') as input:
         try:
             for record in input.iterate():
                 fl_record = flightlog_record(record, geoid)

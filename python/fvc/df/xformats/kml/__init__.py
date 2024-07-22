@@ -1,36 +1,41 @@
 from pathlib import Path
 import logging as lg
+from zipfile import ZipFile
+import math
 
 import simplekml
-
 
 import fvc.df.util as u
 
 
 def generate_point(params, record, kml):
-    pos = record['pos']
-    loc = pos['loc']
+    loc = record['pos']['loc']
 
     pnt = kml.newpoint(
         coords=[(loc['lon'], loc['lat'], loc['alt'])],
-        extrude=1
+        extrude=1,
+        altitudemode = simplekml.AltitudeMode.absolute
     )
 
     pnt.style.iconstyle.scale = 1
-    pnt.style.iconstyle.icon.href = 'https://maps.google.com/mapfiles/kml/pal4/icon16.png'
-    pnt.altitudemode = simplekml.AltitudeMode.absolute
+    pnt.style.iconstyle.icon.href = 'images/arrow.png'
+
+    if yaw := record.get('pos', {}).get('att', {}).get('yaw'):
+        pnt.style.iconstyle.heading = yaw
     
 
 def generate_line(params, record, curr_pos, kml):
     pos = record['pos']
     loc = pos['loc']
 
-    line = kml.newlinestring(coords=[
-        (curr_pos['lon'], curr_pos['lat'], curr_pos['alt']),
-        (loc['lon'], loc['lat'], loc['alt'])
-    ])
+    kml.newlinestring(
+        coords=[
+            (curr_pos['lon'], curr_pos['lat'], curr_pos['alt']),
+            (loc['lon'], loc['lat'], loc['alt'])
+        ],
+        altitudemode = simplekml.AltitudeMode.absolute
+    )
 
-    line.altitudemode = simplekml.AltitudeMode.absolute
     
     curr_pos['lat'] = loc['lat']
     curr_pos['lon'] = loc['lon']
@@ -46,13 +51,13 @@ def export_from_fvc(params, output_path: Path | None):
     input_path = params['input_file'].fetch()
 
     if not output_path:
-        output = input_path.with_suffix('.kml')  # type: Path
+        output = input_path.with_suffix('.kmz')  # type: Path
     else:
         output = output_path
 
     kml = simplekml.Kml()
 
-    with u.JsonlinesIO(input_path, 'rt') as io:
+    with u.JsonlinesIO(input_path, 'r') as io:
         metadata = io.read()
 
         if not metadata:
@@ -80,6 +85,11 @@ def export_from_fvc(params, output_path: Path | None):
                 continue
 
         kml_string = kml.kml()
+        arrow = Path(__file__).parent / 'images' / 'arrow.png'
         output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(kml_string)
+        
+        with ZipFile(output, 'w') as kmz:
+            kmz.writestr('doc.kml', kml_string)
+            kmz.write(arrow, 'images/arrow.png')
+
         return output

@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Literal
 import logging as lg
 from datetime import UTC
 
@@ -22,7 +22,7 @@ def json_print(data: JSON):
 
 
 class JsonlinesIO:
-    def __init__(self, filepath: Path, mode: str, callback=None):
+    def __init__(self, filepath: Path, mode: Literal['r', 'w'], callback=None):
         self._filepath = filepath
         self._mode = mode
         self._file = None  # IO | None
@@ -32,7 +32,7 @@ class JsonlinesIO:
         return self._filepath.stat().st_size
 
     def __enter__(self):
-        self._file = self._filepath.open(self._mode, encoding='utf-8', newline=None)
+        self._file = self._filepath.open(f'{self._mode}t', encoding='utf-8', newline=None)
         self._in_line_no = 0
         return self
 

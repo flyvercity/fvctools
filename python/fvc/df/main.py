@@ -23,7 +23,7 @@ def isValid(input_path: Path):
         label='Validating data',
         file=sys.stderr
     ) as bar:
-        with u.JsonlinesIO(input_path, 'rt', callback=lambda s: bar.update(s)) as f:
+        with u.JsonlinesIO(input_path, 'r', callback=lambda s: bar.update(s)) as f:
             try:
                 metaline = f.read()
 
@@ -109,7 +109,7 @@ def convert(params, output_file, **kwargs):
         convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
         meta = metadata.initial_metadata(params)
 
-        with u.JsonlinesIO(output_path, 'wt') as io:
+        with u.JsonlinesIO(output_path, 'w') as io:
             convert_fun(params, meta, input_path, io)
 
         lg.info(f'Conversion complete, output written to {output_path}')
@@ -122,7 +122,7 @@ def convert(params, output_file, **kwargs):
 def stats(params):
     input_path = params['input_file'].fetch()
 
-    with u.JsonlinesIO(input_path, 'rt') as io:
+    with u.JsonlinesIO(input_path, 'r') as io:
         flightlog.stats(params, io)
 
 

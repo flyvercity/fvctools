@@ -77,7 +77,7 @@ def export_from_fvc(params, output_path: Path | None):
     else:
         output = output_path
 
-    with u.JsonlinesIO(input_path, 'rt') as io:
+    with u.JsonlinesIO(input_path, 'r') as io:
         metadata = io.read()
 
         if not metadata:
