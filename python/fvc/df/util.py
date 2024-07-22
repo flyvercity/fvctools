@@ -155,3 +155,19 @@ def datestring_to_ts(datestr: str) -> int:
         dt = dt.replace(tzinfo=UTC)
 
     return int(dt.timestamp() * 1000)
+
+
+class JsonQuery:
+    def __init__(self, query: str, default=None):
+        path = query.split('.')
+
+        def getter(data):
+            for p in path:
+                data = data.get(p) if data else None
+
+            return data if data is not None else default
+        
+        self.getter = getter
+
+    def __call__(self, data):
+        return self.getter(data)

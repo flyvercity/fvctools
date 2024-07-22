@@ -4,23 +4,24 @@ from itertools import tee
 import pandas
 import geopandas
 
-from fvc.df.util import InputFile, JsonlinesIO
+from fvc.df.util import InputFile, JsonlinesIO, JsonQuery
 
 
 def fetch_geodata(file_name: str) -> geopandas.GeoDataFrame:
     input_file = InputFile({'cache_dir': os.getenv('FVC_CACHE')}, file_name)
+
+    qtime = JsonQuery('time.unix')
+    quaid = JsonQuery('uaid.int', 'unknown')
+    qlat = JsonQuery('pos.loc.lat')
+    qlon = JsonQuery('pos.loc.lon')
+    qalt = JsonQuery('pos.loc.alt')
 
     with JsonlinesIO(input_file.fetch(), 'r') as io:
         metadata = io.read()
         assert metadata and metadata['content'] == 'flightlog'
 
         def fetch(r):
-            return (
-                r['time']['unix'],
-                r['uaid']['int'] if 'uaid' in r else 'unknown',
-                r['pos']['loc']['lat'],
-                r['pos']['loc']['lon']
-            )
+            return (qtime(r), quaid(r), qlat(r), qlon(r), qalt(r))
 
         tuples = map(fetch, io.iterate())
         lists = list(zip(*tuples))
@@ -29,12 +30,15 @@ def fetch_geodata(file_name: str) -> geopandas.GeoDataFrame:
             'Time': lists[0],
             'ID': lists[1],
             'Latitude': lists[2],
-            'Longitude': lists[3]
+            'Longitude': lists[3],
+            'Altitude': lists[4]
         })
 
     gdf = geopandas.GeoDataFrame(                    # type: ignore
         df,
-        geometry=geopandas.points_from_xy(df.Longitude, df.Latitude),
+        geometry=geopandas.points_from_xy(
+            df.Longitude, df.Latitude, z=df.Altitude
+        ),
         crs="EPSG:4326"
     )
 
