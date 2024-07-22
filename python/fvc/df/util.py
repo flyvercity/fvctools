@@ -83,13 +83,21 @@ def progress_bar(bytes_amount):
     lg.info(f'Downloaded {bytes_amount} bytes')
 
 
-class InputFile:
+class Input:
     def __init__(self, params, input_uri):
         self._params = params
         self._input_uri = input_uri
 
     def __str__(self) -> str:
         return str(self._input_uri)
+
+    def as_dir(self):
+        directory = Path(self._input_uri)
+
+        if not directory.is_dir():
+            raise UserWarning(f'Input is not a directory: {self}')
+        
+        return directory
 
     def fetch(self) -> Path:
         if not self._input_uri:

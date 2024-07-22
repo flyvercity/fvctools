@@ -3,6 +3,7 @@ from pathlib import Path
 import logging as lg
 import importlib
 import sys
+import tomllib
 
 import jsonschema
 
@@ -71,6 +72,25 @@ def validate(params):
         u.json_print({'valid': valid})
 
 
+def do_convert(params, input_path: Path, output_path: Path):
+    try:
+        params['output_path'] = output_path
+
+        ext_format_mod = importlib.import_module(
+            f'fvc.df.xformats.{params["x_format"]}'
+        )
+
+        convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
+        meta = metadata.initial_metadata(params)
+
+        with u.JsonlinesIO(output_path, 'w') as io:
+            convert_fun(params, meta, input_path, io)
+
+        lg.info(f'Conversion complete, output written to {output_path}')
+    except ModuleNotFoundError:
+        raise UserWarning(f'Unknown external format: {params["x_format"]}')
+
+
 @click.command(help='Convert an external data file to the FVC format')
 @click.pass_obj
 @click.option(
@@ -95,26 +115,10 @@ def validate(params):
 @click.argument('output-file', type=Path, required=False)
 @metadata.metadata_args
 def convert(params, output_file, **kwargs):
-    try:
-        params.update(kwargs)
-
-        input_path = params['input'].fetch()
-        output_path = output_file if output_file else input_path.with_suffix('.fvc')
-        params['output_path'] = output_path
-
-        ext_format_mod = importlib.import_module(
-            f'fvc.df.xformats.{params["x_format"]}'
-        )
-
-        convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
-        meta = metadata.initial_metadata(params)
-
-        with u.JsonlinesIO(output_path, 'w') as io:
-            convert_fun(params, meta, input_path, io)
-
-        lg.info(f'Conversion complete, output written to {output_path}')
-    except ModuleNotFoundError:
-        raise UserWarning(f'Unknown external format: {params["x_format"]}')
+    params.update(kwargs)
+    input_path = params['input'].fetch()
+    output_path = output_file if output_file else input_path.with_suffix('.fvc')
+    do_convert(params, input_path, output_file)
 
 
 @click.command(help='Calculate statistics for a FVC data file')
@@ -154,10 +158,39 @@ def export(params, x_format, output_file, **kwargs):
     lg.info(f'Export complete, output written to {real_output}')
 
 
-# @click.command(help='Scan for fvc.df.toml files and execute tasks')
-# def crawl():
-#     import fvc.df.crawl as crawl
-#     crawl.crawl()
+@click.command(help='Scan for fvc.df.toml files and execute tasks')
+@click.pass_obj
+@click.option('--force', help='Reconvert files even if they exist', is_flag=True)
+def crawl(params, force):
+    input_dir = params['input'].as_dir()
+
+    for toml_file in input_dir.glob('**/fvc.df.toml'):
+        lg.info(f'Found DF local config {toml_file}')
+        crawl_config = tomllib.loads(toml_file.read_text())
+
+        if convert_task := crawl_config.get('convert'):
+            for file_def in convert_task:
+                x_format = convert_task[file_def]['x-format']
+                target = convert_task[file_def].get('target', 'flightlog')
+                
+                params.update({
+                    'x_format': x_format,
+                    'target': target
+                })
+
+                task_dir = toml_file.parent
+
+                for in_file_path in task_dir.glob(file_def):
+                    lg.info(f'Converting {in_file_path} from {x_format} to ({target})')
+                    output_path = in_file_path.with_suffix('.fvc')
+                    
+                    if not output_path.exists() or force:
+                        try:
+                            do_convert(params, in_file_path, output_path)
+                        except Exception as e:
+                            lg.error(f'Error converting {in_file_path}: {e}')
+                    else:
+                        lg.info(f'Output file {output_path} exists, skipping')
 
 
 DESCRIPTION = 'Data file conversion and manipulation tool'
@@ -184,7 +217,7 @@ Notes:
 )
 def df(params, input, cache_dir):
     params['cache_dir'] = cache_dir
-    params['input'] = u.InputFile(params, input)
+    params['input'] = u.Input(params, input)
 
 
 df.add_command(convert)
@@ -192,4 +225,5 @@ df.add_command(validate)
 df.add_command(stats)
 df.add_command(fetch)
 df.add_command(export)
+df.add_command(crawl)
 df.add_command(fusion.fusion)

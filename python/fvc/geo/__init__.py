@@ -4,11 +4,11 @@ from itertools import tee
 import pandas
 import geopandas
 
-from fvc.df.util import InputFile, JsonlinesIO, JsonQuery
+from fvc.df.util import Input, JsonlinesIO, JsonQuery
 
 
 def fetch_geodata(file_name: str) -> geopandas.GeoDataFrame:
-    input = InputFile({'cache_dir': os.getenv('FVC_CACHE')}, file_name)
+    input = Input({'cache_dir': os.getenv('FVC_CACHE')}, file_name)
 
     qtime = JsonQuery('time.unix')
     quaid = JsonQuery('uaid.int', 'unknown')
