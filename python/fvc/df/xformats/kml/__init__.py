@@ -18,10 +18,12 @@ def generate_point(params, record, kml):
     )
 
     pnt.style.iconstyle.scale = 1
-    pnt.style.iconstyle.icon.href = 'images/arrow.png'
 
     if yaw := record.get('pos', {}).get('att', {}).get('yaw'):
         pnt.style.iconstyle.heading = yaw
+        pnt.style.iconstyle.icon.href = 'images/arrow.png'
+    else:
+        pnt.style.iconstyle.icon.href = 'images/circle.png'
     
 
 def generate_line(params, record, curr_pos, kml):
@@ -86,10 +88,12 @@ def export_from_fvc(params, output_path: Path | None):
 
         kml_string = kml.kml()
         arrow = Path(__file__).parent / 'images' / 'arrow.png'
+        arrow = Path(__file__).parent / 'images' / 'circle.png'
         output.parent.mkdir(parents=True, exist_ok=True)
         
         with ZipFile(output, 'w') as kmz:
             kmz.writestr('doc.kml', kml_string)
             kmz.write(arrow, 'images/arrow.png')
+            kmz.write(arrow, 'images/circle.png')
 
         return output
