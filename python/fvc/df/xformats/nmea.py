@@ -4,6 +4,7 @@ import logging as lg
 import statistics
 
 import pynmea2
+from dateutil.parser import parse as dateparse
 
 from fvc.df.util import JsonlinesIO, JSON
 
@@ -26,8 +27,18 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     if not base_date:
         raise UserWarning("This format requires the date to be set manually with '--base-date'")
 
+    # NB: crawl mode 'extra' support
+    if isinstance(base_date, str):
+        base_date = dateparse(base_date)
+
     lg.debug(f'Using base date: {base_date}')
-    metadata.update({'content': 'flightlog', 'source': 'nmea'})
+
+    metadata.update({
+        'content': 'flightlog',
+        'source': 'nmea',
+        'base_date': base_date.date().isoformat()
+    })
+
     output.write(metadata)
 
     for message in iterate_nmea_file(input_path):
@@ -36,14 +47,19 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
         timestamp = datetime.combine(base_date, message.timestamp, tzinfo=UTC)  # type: ignore
 
+        if not message.geo_sep:
+            continue
+
+        # TODO: handle feet
+        alt = message.altitude + float(message.geo_sep)  # type: ignore
+
         record = {
             'time': {'unix': int(timestamp.timestamp()*1000)},
             'pos': {
                 'loc': {
                     'lat': message.latitude,
                     'lon': message.longitude,
-                    # TODO: handle feet
-                    'alt': message.altitude + float(message.geo_sep)  # type: ignore
+                    'alt': alt
                 }
             }
         }

@@ -1,9 +1,11 @@
+import sys
 import click
 from pathlib import Path
 import logging as lg
 import importlib
 import sys
 import tomllib
+import traceback
 
 import jsonschema
 
@@ -172,25 +174,37 @@ def crawl(params, force):
             for file_def in convert_task:
                 x_format = convert_task[file_def]['x-format']
                 target = convert_task[file_def].get('target', 'flightlog')
-                
-                params.update({
-                    'x_format': x_format,
-                    'target': target
-                })
+
+                params.update(convert_task[file_def].get('extra', {}))
+                params.update({'x_format': x_format, 'target': target})
 
                 task_dir = toml_file.parent
 
                 for in_file_path in task_dir.glob(file_def):
-                    lg.info(f'Converting {in_file_path.name} from {x_format} to ({target})')
+                    if in_file_path.is_dir():
+                        lg.info(f'Found directory {in_file_path}, skipping')
+                        continue
+
+                    if in_file_path.name == 'fvc.df.toml':
+                        continue
+
+                    if in_file_path.suffix == '.fvc':
+                        lg.info(f'File {in_file_path.name} is already in FVC format, skipping')
+                        continue
+
+                    lg.info(f'Converting {in_file_path.name} from {x_format} to {target}')
                     output_path = in_file_path.with_suffix('.fvc')
                     
                     if not output_path.exists() or force:
                         try:
                             do_convert(params, in_file_path, output_path)
                         except Exception as e:
+                            if params['verbose']:
+                                traceback.print_exc(file=sys.stderr)
+
                             lg.error(f'Error converting {in_file_path}: {e}')
                     else:
-                        lg.info(f'Output file {output_path} exists, skipping')
+                        lg.info(f'Output file {output_path.name} exists, skipping')
 
 
 DESCRIPTION = 'Data file conversion and manipulation tool'

@@ -8,7 +8,7 @@ LOCATION = {
         'height': {'type': 'number', '$comment': 'Local height above ground'}
     },
     'required': ['lat', 'lon', 'alt'],
-    'optional': ['amsl', 'height']
+    'optional': ['alt', 'amsl', 'height']
 }
 
 POLAR = {
