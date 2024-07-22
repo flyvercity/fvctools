@@ -46,5 +46,9 @@
        style="fill:#232c5c;stroke:#000000;stroke-width:1.00157"
        d="M 16,1.9931741 30.006826,29.979522 1.9658703,29.897611 Z"
        id="path1" />
+    <path
+       style="fill:#00ff00;stroke:#009f00;stroke-width:1.00157;stroke-opacity:1"
+       d="M 16.027304,5.8976109 V 21.351536"
+       id="path2" />
   </g>
 </svg>
