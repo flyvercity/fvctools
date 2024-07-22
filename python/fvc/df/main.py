@@ -118,7 +118,7 @@ def convert(params, output_file, **kwargs):
     params.update(kwargs)
     input_path = params['input'].fetch()
     output_path = output_file if output_file else input_path.with_suffix('.fvc')
-    do_convert(params, input_path, output_file)
+    do_convert(params, input_path, output_path)
 
 
 @click.command(help='Calculate statistics for a FVC data file')
@@ -181,7 +181,7 @@ def crawl(params, force):
                 task_dir = toml_file.parent
 
                 for in_file_path in task_dir.glob(file_def):
-                    lg.info(f'Converting {in_file_path} from {x_format} to ({target})')
+                    lg.info(f'Converting {in_file_path.name} from {x_format} to ({target})')
                     output_path = in_file_path.with_suffix('.fvc')
                     
                     if not output_path.exists() or force:
