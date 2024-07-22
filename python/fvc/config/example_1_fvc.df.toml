@@ -1,0 +1,2 @@
+[convert]
+"*.json" = { x-format = "courageous", target = "flightlog" }
