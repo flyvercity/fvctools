@@ -81,7 +81,8 @@ METADATA = {
                 'robinradar',
                 'safirmqtt',
                 'fusion.replay',
-                'artlog'
+                'artlog',
+                'datcon'
             ],
             '$comment': 'Original data format'
         },

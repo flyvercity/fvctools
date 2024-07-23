@@ -15,7 +15,6 @@ def grammar():
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
-
     with input_path.open('rt') as input:
         header = input.readline()
 
@@ -24,7 +23,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
         columns = grammar().parse_string(header)
         reader = csv.DictReader(input, fieldnames=columns, delimiter=' ')  # type: ignore
-        metadata.update({'content': 'flightlog', 'source': 'artlog'})
+        metadata.update({'content': 'flightlog', 'source': 'datcon'})
         output.write(metadata)
 
         for row in reader:

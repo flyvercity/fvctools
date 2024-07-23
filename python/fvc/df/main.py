@@ -192,11 +192,14 @@ def crawl(params, force):
                         lg.info(f'File {in_file_path.name} is already in FVC format, skipping')
                         continue
 
-                    lg.info(f'Converting {in_file_path.name} from {x_format} to {target}')
                     output_path = in_file_path.with_suffix('.fvc')
                     
                     if not output_path.exists() or force:
                         try:
+                            lg.info(
+                                f'Converting {in_file_path.name} from {x_format} to {target}'
+                            )
+
                             do_convert(params, in_file_path, output_path)
                         except Exception as e:
                             if params['verbose']:
