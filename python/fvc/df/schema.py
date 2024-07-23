@@ -80,7 +80,8 @@ METADATA = {
                 'senhive',
                 'robinradar',
                 'safirmqtt',
-                'fusion.replay'
+                'fusion.replay',
+                'artlog'
             ],
             '$comment': 'Original data format'
         },
