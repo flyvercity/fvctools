@@ -36,11 +36,11 @@ POLAR_SENSOR = {
 IDENTIFICATION = {
     'type': 'object',
     'properties': {
-        'int': {'type': 'string'},
-        'fvc': {'type': 'string'},
-        'icaohex': {'type': 'string'},
-        'icaoreg': {'type': 'string'},
-        'atm': {'type': 'string'}
+        'int': {'type': 'string', '$comment': 'Source-internal identifier'},
+        'fvc': {'type': 'string', '$comment': 'Flyvercity unique identifier'},
+        'icaohex': {'type': 'string', '$comment': 'ICAO 24-bit address'},
+        'icaoreg': {'type': 'string', '$comment': 'ICAO registration'},
+        'atm': {'type': 'string', '$comment': 'ATM callsign'},
     },
     'anyOf': [
         {'required': ['int']},
