@@ -1,0 +1,6 @@
+# A trivial 'fvc.df.toml' example
+# See 'example_2.fvc.df.toml''' for more details
+
+
+[convert]
+"*.json" = { x-format = "courageous" }

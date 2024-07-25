@@ -232,6 +232,8 @@ Notes:
     https://geographiclib.sourceforge.io/C++/doc/geoid.html#geoidinst
 
     To set a default cache directory, use the FVC_CACHE environment variable.
+
+    From examples of 'fvc.df.toml' files, see 'examples/df' directory in the source code.
 '''
 
 

@@ -1,0 +1,14 @@
+# A section with convert tasks
+[convert]
+
+# Each entry is identified by a 'glob' string, e.g.:
+* "track.xml" - one file named 'track.xml'
+* "*.log" - all log-files
+* "**/*" - all files recursively
+[convert."**/*"]
+x-format = "nmea"	# x-format is external format to convert from (see --x-format option)
+target = "flightlog"    # default target is 'flightlog', but 'radarlog' is also supported
+
+# Some formats require additional data (see a corresponding --help). Pass this through 'extra' subtable.
+[convert."**/*".extra]
+base_date = "2023-10-02"
