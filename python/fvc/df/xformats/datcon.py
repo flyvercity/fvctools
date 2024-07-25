@@ -31,7 +31,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
             record = {
                 'time': {
-                    'unix': int(row['TS'])
+                    'unix': int(row['TS']) // 1_000_000,  # nanoseconds to milliseconds
                 },
                 'uaid': {
                     'int': row['GUID'] if row['GUID'] != 'N/A' else row['ID']
