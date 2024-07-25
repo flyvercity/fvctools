@@ -6,6 +6,7 @@ import importlib
 import sys
 import tomllib
 import traceback
+from datetime import datetime
 
 import jsonschema
 
@@ -210,6 +211,18 @@ def crawl(params, force):
                         lg.info(f'Output file {output_path.name} exists, skipping')
 
 
+@click.command(help='Convert UNIX timestamps to human-readable format')
+@click.pass_obj
+@click.argument('epoch', type=int, required=True)
+def epoch(params, epoch):
+    dt = datetime.fromtimestamp(epoch / 1000.0)
+    
+    if not params['JSON']:
+        lg.info(dt)
+    else:
+        u.json_print({'datetime': dt.isoformat()})
+
+
 DESCRIPTION = 'Data file conversion and manipulation tool'
 
 EPILOG='''
@@ -243,4 +256,5 @@ df.add_command(stats)
 df.add_command(fetch)
 df.add_command(export)
 df.add_command(crawl)
+df.add_command(epoch)
 df.add_command(fusion.fusion)
