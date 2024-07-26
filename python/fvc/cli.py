@@ -14,15 +14,20 @@ import fvc.df
 @click.pass_context
 @click.option('-v', '--verbose', is_flag=True, help='sets logging level to debug')
 @click.option('--json', is_flag=True, help='Make JSON default output format instead free form')
+@click.option('--no-pprint', is_flag=True, help='Disable colored pretty printing')
 @click.option('--aws-profile', help='AWS profile to use for S3 operations')
-def cli(ctx, verbose, json, aws_profile):
+def cli(ctx, verbose, json, no_pprint, aws_profile):
     ctx.ensure_object(dict)
     ctx.obj['verbose'] = verbose
 
     lg.basicConfig(level=lg.DEBUG if verbose else lg.INFO)
     lg.debug(f'Verbose mode is {"on" if verbose else "off"}')
-    lg.debug(f'JSON mode is {"on" if json else "off"}')
+
+    lg.debug(
+        f'JSON mode is {"on" if json else "off"} (pprint: {"off" if no_pprint else "on"})'
+    )
     ctx.obj['JSON'] = json
+    ctx.obj['no_pprint'] = no_pprint
 
     if aws_profile:
         lg.debug(f'Using AWS profile: {aws_profile}')

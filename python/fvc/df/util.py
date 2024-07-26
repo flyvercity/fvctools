@@ -1,25 +1,14 @@
 import json
 from pathlib import Path
-from typing import Any, Dict, Literal
+from typing import Literal
 import logging as lg
 from datetime import UTC
 
 import boto3
 from pygeodesy.geoids import GeoidPGM
 from dateutil import parser as dateparser
-from pygments import highlight
-from pygments.lexers.jsonnet import JsonnetLexer
-from pygments.formatters import TerminalFormatter
 
-
-JSON = Dict[str, Any]
-JSON_INDENT = 2
-
-
-def json_print(data: JSON):
-    json_str = json.dumps(data, indent=JSON_INDENT, sort_keys=True)
-    print(highlight(json_str, JsonnetLexer(), TerminalFormatter()))
-
+from fvc.util import JSON
 
 class JsonlinesIO:
     def __init__(self, filepath: Path, mode: Literal['r', 'w'], callback=None):

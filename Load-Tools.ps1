@@ -1,6 +1,16 @@
-function Add-Prefix([string]$prefix, [string]$path) {
-    $i = Get-Item $path
-    return "$($i.Directory)\$($prefix)_$($i.Name)"
+function Invoke-FvcTools 
+{
+    param (
+        [Parameter(ValueFromRemainingArguments=$true)]
+        [string[]]$listArgs
+    )
+
+    return $(python .\python\fvc\cli.py @listArgs)
 }
 
-Set-Alias -Name fvc -Value .\Run-FvcTools
+function FvcTool {
+    $result = $(Invoke-FvcTools --json --no-pprint @args)
+    return ConvertFrom-Json -InputObject $result
+}
+
+Set-Alias -Name fvc -Value Invoke-FvcTools

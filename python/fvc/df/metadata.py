@@ -2,7 +2,8 @@ import click
 from functools import wraps
 import logging as lg
 
-from fvc.df.util import Input, JSON
+from fvc.util import JSON
+from fvc.df.util import Input
 import fvc.df.xformats.nmea as nmea
 
 

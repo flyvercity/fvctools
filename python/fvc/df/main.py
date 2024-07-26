@@ -10,6 +10,7 @@ from datetime import datetime
 
 import jsonschema
 
+from fvc.util import json_print
 import fvc.df.schema as schema
 import fvc.df.util as u
 
@@ -72,7 +73,7 @@ def validate(params):
     valid = isValid(input_path)
 
     if params['JSON']:
-        u.json_print({'valid': valid})
+        json_print(params, {'valid': valid})
 
 
 def do_convert(params, input_path: Path, output_path: Path):
@@ -142,7 +143,7 @@ def fetch(params):
         lg.info('This file is available in the cache')
     else:
         path = str(params['input'].fetch().resolve())
-        u.json_print({'path': path})
+        json_print(params, {'path': path})
 
 
 @click.command(help='Convert data to an external format')
@@ -218,9 +219,9 @@ def epoch(params, epoch):
     dt = datetime.fromtimestamp(epoch / 1000.0)
     
     if not params['JSON']:
-        lg.info(dt)
+        print(dt.isoformat())
     else:
-        u.json_print({'datetime': dt.isoformat()})
+        json_print(params, {'datetime': dt.isoformat()})
 
 
 DESCRIPTION = 'Data file conversion and manipulation tool'
