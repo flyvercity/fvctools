@@ -1,11 +1,12 @@
 import json
 from pathlib import Path
-from typing import Literal
+from typing import Literal, Any
 import logging as lg
 from datetime import UTC
 
 import boto3
 from pygeodesy.geoids import GeoidPGM
+from pygeodesy import dms
 from dateutil import parser as dateparser
 
 from fvc.util import JSON
@@ -170,3 +171,47 @@ class JsonQuery:
 
     def __call__(self, data):
         return self.getter(data)
+
+
+def parse_lat(lat: Any) -> float:
+    # Try to detect NMEA format
+    if isinstance(lat, str):
+        split = lat.split('.')
+
+        if len(split) == 2 and len(split[0]) == 4:
+            if lat[-1] in ['N', 'S']:
+                sign = -1 if lat[-1] == 'S' else 1
+                lat = lat[:-1]
+            else:
+                sign = 1
+
+            deg = int(lat[:2])
+            min = float(lat[2:])
+            return sign*(deg + min/60.0)
+        
+    # Something else
+    return dms.parseDMS(lat)
+
+
+def parse_lon(lon: Any) -> float:
+    # Try to detect NMEA format
+    if isinstance(lon, str):
+        split = lon.split('.')
+
+        if len(split) == 2 and len(split[0]) == 5:
+            if lon[-1] in ['W', 'E']:
+                sign = -1 if lon[-1] == 'W' else 1
+                lon = lon[:-1]
+            else:
+                sign = 1
+
+            deg = int(lon[:3])
+            min = float(lon[3:])
+            return sign*(deg + min/60.0)
+        
+    # Something else
+    return dms.parseDMS(lon)
+
+
+def render_latlon(lat, lon) -> str:
+    return f'{dms.latDMS(lat, dms.F_DMS)} {dms.lonDMS(lon, dms.F_DMS)}'

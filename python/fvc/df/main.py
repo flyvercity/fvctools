@@ -1,5 +1,4 @@
 import sys
-import click
 from pathlib import Path
 import logging as lg
 import importlib
@@ -8,6 +7,7 @@ import tomllib
 import traceback
 from datetime import datetime
 
+import click
 import jsonschema
 
 from fvc.util import json_print
@@ -221,17 +221,21 @@ def epoch(params, epoch):
 
 @click.command(help='Get geoid indulation by latitude/longitude')
 @click.pass_obj
-@click.argument('latitude', type=float)
-@click.argument('longitude', type=float)
-def indulation(params, latitude, longitude):
+@click.argument('latitude', type=str)
+@click.argument('longitude', type=str)
+def undulation(params, latitude, longitude):
     geoid = u.load_geoid(params)
-    lg.debug(f'Using lat: {latitude}, lon: {longitude}')
-    height = geoid.height(latitude, longitude)
+    lat = u.parse_lat(latitude)
+    lon = u.parse_lon(longitude)
+
+    lg.debug(f'Using {u.render_latlon(lat, lon)}')
+
+    height = geoid.height(lat, lon)
 
     if not params['JSON']:
         print(height)
     else:
-        json_print(params, {'indulation': height})
+        json_print(params, {'undulation': height})
 
 
 DESCRIPTION = 'Data file conversion and manipulation tool'
@@ -275,5 +279,5 @@ df.add_command(fetch)
 df.add_command(export)
 df.add_command(crawl)
 df.add_command(epoch)
-df.add_command(indulation)
+df.add_command(undulation)
 df.add_command(fusion.fusion)
