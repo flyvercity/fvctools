@@ -225,6 +225,9 @@ def epoch(params, epoch):
 @click.argument('longitude', type=str)
 def undulation(params, latitude, longitude):
     geoid = u.load_geoid(params)
+
+    lg.debug(f'Given {latitude} {longitude}')
+
     lat = u.parse_lat(latitude)
     lon = u.parse_lon(longitude)
 

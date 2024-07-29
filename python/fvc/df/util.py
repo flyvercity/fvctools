@@ -179,6 +179,8 @@ def parse_lat(lat: Any) -> float:
         split = lat.split('.')
 
         if len(split) == 2 and len(split[0]) == 4:
+            lat = lat.replace(',', '')
+
             if lat[-1] in ['N', 'S']:
                 sign = -1 if lat[-1] == 'S' else 1
                 lat = lat[:-1]
@@ -199,6 +201,8 @@ def parse_lon(lon: Any) -> float:
         split = lon.split('.')
 
         if len(split) == 2 and len(split[0]) == 5:
+            lon = lon.replace(',', '')
+
             if lon[-1] in ['W', 'E']:
                 sign = -1 if lon[-1] == 'W' else 1
                 lon = lon[:-1]
