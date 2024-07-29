@@ -174,7 +174,7 @@ class JsonQuery:
 
 
 def parse_lat(lat: Any) -> float:
-    # Try to detect NMEA format
+    # Try to detect the NMEA-0183 format
     if isinstance(lat, str):
         split = lat.split('.')
 
@@ -196,7 +196,7 @@ def parse_lat(lat: Any) -> float:
 
 
 def parse_lon(lon: Any) -> float:
-    # Try to detect NMEA format
+    # Try to detect the NMEA-0183 format
     if isinstance(lon, str):
         split = lon.split('.')
 
