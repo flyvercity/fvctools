@@ -111,11 +111,6 @@ def do_convert(params, input_path: Path, output_path: Path):
     type=click.DateTime(['%d %b %Y', '%Y-%m-%d']),
     required=False
 )
-@click.option(
-    '--egm',
-    help='Custom EGM geoid data file (*.pgm). Default: egm96-5.pgm',
-    type=Path, required=False
-)
 @click.argument('output-file', type=Path, required=False)
 @metadata.metadata_args
 def convert(params, output_file, **kwargs):
@@ -224,6 +219,21 @@ def epoch(params, epoch):
         json_print(params, {'datetime': dt.isoformat()})
 
 
+@click.command(help='Get geoid indulation by latitude/longitude')
+@click.pass_obj
+@click.argument('latitude', type=float)
+@click.argument('longitude', type=float)
+def indulation(params, latitude, longitude):
+    geoid = u.load_geoid(params)
+    lg.debug(f'Using lat: {latitude}, lon: {longitude}')
+    height = geoid.height(latitude, longitude)
+
+    if not params['JSON']:
+        print(height)
+    else:
+        json_print(params, {'indulation': height})
+
+
 DESCRIPTION = 'Data file conversion and manipulation tool'
 
 EPILOG='''
@@ -248,8 +258,13 @@ Notes:
     '--cache-dir', help='Directory for caching external data',
     type=Path, envvar='FVC_CACHE', required=False
 )
-def df(params, input, cache_dir):
-    params['cache_dir'] = cache_dir
+@click.option(
+    '--egm',
+    help='Custom EGM geoid data file (*.pgm). Default: egm96-5.pgm',
+    type=Path, required=False
+)
+def df(params, input, **kwargs):
+    params.update(kwargs)
     params['input'] = u.Input(params, input)
 
 
@@ -260,4 +275,5 @@ df.add_command(fetch)
 df.add_command(export)
 df.add_command(crawl)
 df.add_command(epoch)
+df.add_command(indulation)
 df.add_command(fusion.fusion)

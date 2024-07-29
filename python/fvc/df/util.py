@@ -125,7 +125,7 @@ class Input:
         raise UserWarning(f'Unable to resolve input file: {self}')
 
 
-def load_geoid(params, metadata) -> GeoidPGM:
+def load_geoid(params, metadata=None) -> GeoidPGM:
     pgm_path = Path(__file__).parent / 'egm96-5.pgm'
 
     if egm := params.get('EGM'):
@@ -133,7 +133,9 @@ def load_geoid(params, metadata) -> GeoidPGM:
 
     lg.debug(f'Using geoid model: {pgm_path.absolute()}')
 
-    metadata.update({'geoid': pgm_path.name})
+    if metadata:
+        metadata.update({'geoid': pgm_path.name})
+
     geoid = GeoidPGM(pgm_path)
     return geoid
 
