@@ -5,6 +5,7 @@ import tomllib
 import logging as lg
 from typing import cast
 import json
+import traceback
 
 import click
 from toolz.dicttoolz import valmap
@@ -16,63 +17,98 @@ from git.exc import GitCommandError
 from fvc.tools.rms.model import load_model
 
 
+class InputRecord:
+    def __init__(self, input_class, record_base, filepaths, driver):
+        self._input_class = input_class
+        self._record_base = record_base
+        self._filepaths = filepaths
+        self._driver = driver
+
+
 class Config:
     def __init__(self, params):
+        self._input_records = []
+
         try:
             config_file = Path(params['config']).resolve()
             lg.debug(f'Using configuration file: {config_file}')
             self._base_dir = config_file.parent
             config = tomllib.loads(config_file.read_text())
 
+            if params.get('verbose'):
+                lg.debug(f'Configuration file content: {config}')
+
             if config.get('version') != 1:
                 raise UserWarning('Unknown configuration file version (expected 1)')
+
+            base = config.get('base')
+
+            if not base:
+                raise UserWarning('Missing base_dir parameter')
 
             input = config.get('input')
 
             if not input:
                 raise UserWarning('Missing input section')
 
-            input_list = input.get('files')
+            for input_record in input:
+                path = input_record.get('path')
+                record_base = Path(base, path)
 
-            if not input_list:
-                raise UserWarning('Missing input.files parameter')
+                if not path:
+                    raise UserWarning('Missing input.path parameter')
 
-            if not isinstance(input_list, list):
-                input_list = [input_list]
+                input_class = input_record.get('class')
 
-            self._input_file_names = []
+                if not input_class:
+                    raise UserWarning('Missing input.class parameter')
 
-            for input_spec in input_list:
-                if isinstance(input_spec, str):
-                    input_spec = {'path': input_spec}
+                driver = input_record.get('driver')
 
-                subpath = input_spec.get('path') or ''
-                glob = input_spec.get('filter') or '**/*'
-                lg.debug(f'Adding input files from {subpath} with filter {glob}')
-                self._input_file_names.extend(Path(self._base_dir, Path(subpath)).glob(glob))
+                if not driver:
+                    raise UserWarning('Missing input.driver parameter')
+
+                filter = input_record.get('filter')
+                glob = filter or '**/*'
+
+                if not filter and driver == 'obsidian':
+                    lg.info(f'Using default filter (*.md) for {path}')
+                    glob = '*.md'
+
+                lg.debug(f'Adding input files from {path} with filter {glob}')
+                filepaths = Path(base, Path(path)).glob(glob)
+
+                self._input_records.append(InputRecord(
+                    input_class, record_base, filepaths, driver
+                ))
 
         except Exception as exc:
             lg.error(f'Error during configuration: {exc}')
             raise UserWarning('Bad configuration file')
 
+        for input_record in self._input_records:
+            print(input_record._record_base)
+            print(list(input_record._filepaths))
+
     def base_dir(self):
         return self._base_dir
 
-    def input_file_names(self):
-        return self._input_file_names
+    def input_records(self):
+        return self._input_records
 
 
 class Item:
     all_uids = set()
 
     def __init__(self, uid: str, item_class: str, filename: Path, start_line: int):
-        full_uid = f'{item_class}::{uid}'
+        if not uid.startswith(item_class):
+            raise UserWarning(f'UID {uid} does not start with class {item_class}')
 
-        if full_uid in Item.all_uids:
+        if uid in Item.all_uids:
             raise UserWarning(
-                f'Duplicate UID: {full_uid} (file: {filename}, line: {start_line})')
+                f'Duplicate UID: {uid} (file: {filename}, line: {start_line})')
 
-        Item.all_uids.add(full_uid)
+        Item.all_uids.add(uid)
 
         self._uid = uid
         self._item_class = item_class
@@ -303,6 +339,7 @@ def rms(ctx, config):
     items = {}
 
     repo = Repo(config.base_dir())
+    return
     extractor = Extractor(repo)
 
     for file_name in config.input_file_names():

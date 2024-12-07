@@ -68,7 +68,7 @@ def main():
         lg.error(f'Exception occurred: {e}')
 
         argparse = ArgumentParser()
-        argparse.add_argument('-v', '--verbose', action='store_true')
+        argparse.add_argument('--verbose', action='store_true')
         args, _ = argparse.parse_known_args()
 
         if args.verbose:
