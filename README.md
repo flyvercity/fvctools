@@ -1,6 +1,6 @@
 # Flyvercity CLI Tool Suite
 
-Requires `rye` and Python 3.11+.
+Requires `rye` project and package management tool.
 
 ## Development Environment
 
