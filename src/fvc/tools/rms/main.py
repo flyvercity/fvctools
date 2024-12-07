@@ -19,7 +19,6 @@ from fvc.tools.rms.model import load_model
 class Config:
     def __init__(self, params):
         try:
-            self._revision = params['revision']
             config_file = Path(params['config']).resolve()
             lg.debug(f'Using configuration file: {config_file}')
             self._base_dir = config_file.parent
@@ -297,13 +296,8 @@ def validate(deptree):
 @click.command(help='Requirement Management System (RMS) tool')
 @click.pass_context
 @click.option('--config', help='Configuration file', default='rms.toml')
-@click.option('--revision', help='Revision number', default='HEAD')
-def rms(ctx, config, revision):
-    print('Under construction')
-    return
-
+def rms(ctx, config):
     ctx.obj['config'] = config
-    ctx.obj['revision'] = revision
     config = Config(ctx.obj)
 
     items = {}
