@@ -9,7 +9,7 @@ from pygeodesy.geoids import GeoidPGM
 from pygeodesy import dms
 from dateutil import parser as dateparser
 
-from fvc.util import JSON
+from fvc.tools.util import JSON
 
 class JsonlinesIO:
     def __init__(self, filepath: Path, mode: Literal['r', 'w'], callback=None):

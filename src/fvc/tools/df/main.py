@@ -10,13 +10,13 @@ from datetime import datetime
 import click
 import jsonschema
 
-from fvc.util import json_print
-import fvc.df.schema as schema
-import fvc.df.util as u
+from fvc.tools.util import json_print
+import fvc.tools.df.schema as schema
+import fvc.tools.df.util as u
 
-import fvc.df.flightlog as flightlog
-import fvc.df.metadata as metadata
-import fvc.df.fusion as fusion
+import fvc.tools.df.flightlog as flightlog
+import fvc.tools.df.metadata as metadata
+import fvc.tools.df.fusion as fusion
 
 
 MAX_ERRORS = 100

@@ -1,7 +1,7 @@
 from pathlib import Path
 import csv
 
-from fvc.df.util import JsonlinesIO
+from fvc.tools.df.util import JsonlinesIO
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):

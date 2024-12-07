@@ -4,7 +4,7 @@ from datetime import datetime, UTC
 from toolz.itertoolz import accumulate, last
 from pygeodesy.dms import latDMS, lonDMS, F_DMS
 
-from fvc.df.util import JsonlinesIO
+from fvc.tools.df.util import JsonlinesIO
 
 
 def stats(params, io: JsonlinesIO):

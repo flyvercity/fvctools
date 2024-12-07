@@ -13,7 +13,7 @@ import pyparsing as pp
 from git import Repo
 from git.exc import GitCommandError
 
-from fvc.rms.model import load_model
+from fvc.tools.rms.model import load_model
 
 
 class Config:

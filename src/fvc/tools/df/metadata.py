@@ -2,9 +2,9 @@ import click
 from functools import wraps
 import logging as lg
 
-from fvc.util import JSON
-from fvc.df.util import Input
-import fvc.df.xformats.nmea as nmea
+from fvc.tools.util import JSON
+from fvc.tools.df.util import Input
+import fvc.tools.df.xformats.nmea as nmea
 
 
 def metadata_args(command_func):

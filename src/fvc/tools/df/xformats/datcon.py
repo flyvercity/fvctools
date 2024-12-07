@@ -2,7 +2,7 @@ from pathlib import Path
 import csv
 import pyparsing as pp
 
-from fvc.df.util import JsonlinesIO
+from fvc.tools.df.util import JsonlinesIO
 
 
 def grammar():

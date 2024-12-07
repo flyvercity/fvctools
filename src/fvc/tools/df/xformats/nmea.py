@@ -6,7 +6,7 @@ import statistics
 import pynmea2
 from dateutil.parser import parse as dateparse
 
-from fvc.df.util import JsonlinesIO, JSON
+from fvc.tools.df.util import JsonlinesIO, JSON
 
 
 def iterate_nmea_file(input_path: Path):

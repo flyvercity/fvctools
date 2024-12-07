@@ -5,7 +5,7 @@ function Invoke-FvcTools
         [string[]]$listArgs
     )
 
-    return $(python $PSScriptRoot\python\fvc\cli.py @listArgs)
+    return $(rye run fvc @listArgs)
 }
 
 function FvcTool {

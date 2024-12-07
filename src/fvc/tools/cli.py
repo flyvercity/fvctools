@@ -5,9 +5,8 @@ import traceback
 import boto3
 import click
 
-import fvc.rms
-import fvc.srv
-import fvc.df
+import fvc.tools.rms
+import fvc.tools.df
 
 
 @click.group(help='Flyvercity CLI tools suite')
@@ -34,9 +33,8 @@ def cli(ctx, verbose, json, no_pprint, aws_profile):
         boto3.setup_default_session(profile_name=aws_profile)
 
 
-cli.add_command(fvc.srv.srv)
-cli.add_command(fvc.rms.rms)
-cli.add_command(fvc.df.df)
+cli.add_command(fvc.tools.rms.rms)
+cli.add_command(fvc.tools.df.df)
 
 
 def main():

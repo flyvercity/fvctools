@@ -4,7 +4,7 @@ from itertools import tee
 import pandas
 import geopandas
 
-from fvc.df.util import Input, JsonlinesIO, JsonQuery
+from fvc.tools.df.util import Input, JsonlinesIO, JsonQuery
 
 
 def fetch_geodata(file_name: str) -> geopandas.GeoDataFrame:

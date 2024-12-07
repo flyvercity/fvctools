@@ -1,1 +1,37 @@
-# fvctools
+# Flyvercity CLI Tool Suite
+
+Requires `rye` and Python 3.11+.
+
+## Development Environment
+
+Generic invocation:
+
+```sh
+rye run fvc --help
+```
+
+### PowerShell
+
+Load for PowerShell and create `fvc` alias:
+
+```pwsh
+. .\Load-Tools
+```
+
+Invoke:
+
+```pwsh
+fvc --help
+```
+
+Use as an object:
+
+```pwsh
+(FvcTool <arguments>).<field>
+```
+
+Example:
+
+```pwsh
+(FvcTool df undulation 10.0 10.0).undulation
+```
