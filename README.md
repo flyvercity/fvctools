@@ -6,7 +6,7 @@ Requires `rye` project and package management tool.
 
 Generic invocation:
 
-```sh
+```bash
 rye run fvc --help
 ```
 
