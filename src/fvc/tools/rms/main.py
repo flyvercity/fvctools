@@ -299,6 +299,9 @@ def validate(deptree):
 @click.option('--config', help='Configuration file', default='rms.toml')
 @click.option('--revision', help='Revision number', default='HEAD')
 def rms(ctx, config, revision):
+    print('Under construction')
+    return
+
     ctx.obj['config'] = config
     ctx.obj['revision'] = revision
     config = Config(ctx.obj)
