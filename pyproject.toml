@@ -1,7 +1,7 @@
 [project]
 name = "fvctools"
 version = "0.1.0"
-description = "Add your description here"
+description = "Flyvercity CLI Tools Suite"
 authors = [
     { name = "Boris Resnick", email = "boris@flyver.city" }
 ]

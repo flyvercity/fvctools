@@ -1,4 +1,4 @@
-# Flyvercity CLI Tool Suite
+# Flyvercity CLI Tools Suite
 
 Requires `rye` project and package management tool.
 
