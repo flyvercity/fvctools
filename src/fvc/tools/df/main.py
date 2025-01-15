@@ -258,10 +258,6 @@ Notes:
 @click.group(help=DESCRIPTION, epilog=EPILOG)
 @click.pass_obj
 @click.option(
-    '--input', help='Input file, directory, or S3 URI',
-    type=str
-)
-@click.option(
     '--cache-dir', help='Directory for caching external data',
     type=Path, envvar='FVC_CACHE', required=False
 )
@@ -270,6 +266,7 @@ Notes:
     help='Custom EGM geoid data file (*.pgm). Default: egm96-5.pgm',
     type=Path, required=False
 )
+@click.argument('input', required=True)
 def df(params, input, **kwargs):
     params.update(kwargs)
     params['input'] = u.Input(params, input)

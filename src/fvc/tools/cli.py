@@ -12,7 +12,7 @@ import fvc.tools.df
 @click.group(help='Flyvercity CLI tools suite')
 @click.pass_context
 @click.option('--verbose', is_flag=True, help='sets logging level to debug')
-@click.option('--json', is_flag=True, help='Make JSON default output format instead free form')
+@click.option('--json', is_flag=True, help='Make JSON default output format instead of free form')
 @click.option('--no-pprint', is_flag=True, help='Disable colored pretty printing')
 @click.option('--aws-profile', help='AWS profile to use for S3 operations')
 def cli(ctx, verbose, json, no_pprint, aws_profile):

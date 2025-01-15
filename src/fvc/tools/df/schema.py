@@ -5,10 +5,15 @@ LOCATION = {
         'lon': {'type': 'number', '$comment': 'Longitude in WGS-84'},
         'alt': {'type': 'number', '$comment': 'Ellipsoidal altitude'},
         'amsl': {'type': 'number', '$comment': 'Altitude above mean sea level'},
-        'height': {'type': 'number', '$comment': 'Local height above ground'}
+        'height': {'type': 'number', '$comment': 'Local height above ground'},
+        'bear': {
+            'type': 'number',
+            '$comment': 'Bearing angle in degrees clockwise from the true north'
+        },
+        'gspeed': {'type': 'number', '$comment': 'Ground speed in meters per second'}
     },
     'required': ['lat', 'lon', 'alt'],
-    'optional': ['alt', 'amsl', 'height']
+    'optional': ['alt', 'amsl', 'height', 'bear', 'gspeed']
 }
 
 POLAR = {
@@ -133,7 +138,7 @@ TIMESTAMP = {
 CELLULAR_SIGNAL = {
     'type': 'object',
     'properties': {
-        'radio': {'type': 'string', 'enum': ['4G', '5Gd']},
+        'radio': {'type': 'string', 'enum': ['4G', '5G']},
         'RSRP': {'type': ['number', 'null']},
         'RSRQ': {'type': ['number', 'null']},
         'RSSI': {'type': ['number', 'null']},
