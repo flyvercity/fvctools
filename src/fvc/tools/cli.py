@@ -60,7 +60,7 @@ def pwsh():
 
 cli.add_command(fvc.tools.rms.rms)
 cli.add_command(fvc.tools.df.df)
-cli.add_command(fvc.tools.calc.main.calc)
+cli.add_command(fvc.tools.calc.calc)
 
 
 def main():

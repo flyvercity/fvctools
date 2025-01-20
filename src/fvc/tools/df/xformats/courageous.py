@@ -4,11 +4,12 @@ import logging as lg
 
 from toolz.dicttoolz import keyfilter
 
-import fvc.tools.df.util as u
+import fvc.tools.util as u
+from fvc.tools.df.util import JsonlinesIO
 
 
 class Courageous:
-    def __init__(self, params, metadata, input_path: Path, output: u.JsonlinesIO):
+    def __init__(self, params, metadata, input_path: Path, output: JsonlinesIO):
         self.params = params
         self.metadata = metadata
         self.input_path = input_path
@@ -106,7 +107,7 @@ class CourageousPolar(Courageous):
         return position
 
 
-def convert_to_fvc(params, metadata, input_path: Path, output: u.JsonlinesIO):
+def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     if params.get('target') == 'flightlog':
         Converter = CourageousCartesian
     elif params.get('target') == 'radarlog':

@@ -106,10 +106,11 @@ def do_convert(params, input_path: Path, output_path: Path):
     try:
         params['output_path'] = output_path
 
-        ext_format_mod = importlib.import_module(
-            f'fvc.df.xformats.{params["x_format"]}'
-        )
+        x_format = params['x_format']
 
+        lg.debug(f'Using external format module: {x_format}')
+        ext_format_mod = importlib.import_module(f'fvc.tools.df.xformats.{x_format}')
+        lg.debug('Imported external format function')
         convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
         meta = metadata.initial_metadata(params)
 
@@ -117,7 +118,8 @@ def do_convert(params, input_path: Path, output_path: Path):
             convert_fun(params, meta, input_path, io)
 
         lg.info(f'Conversion complete, output written to {output_path}')
-    except ModuleNotFoundError:
+    except ModuleNotFoundError as e:
+        lg.error(f'Error importing external format module: {e}')
         raise UserWarning(f'Unknown external format: {params["x_format"]}')
 
 

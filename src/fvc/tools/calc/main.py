@@ -3,7 +3,6 @@ from datetime import datetime
 import logging as lg
 
 import fvc.tools.util as u
-import fvc.tools.df.util as df_u
 
 
 @click.group(help='Specialized calculation tools')

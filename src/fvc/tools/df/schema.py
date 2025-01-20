@@ -87,7 +87,8 @@ METADATA = {
                 'safirmqtt',
                 'fusion.replay',
                 'artlog',
-                'datcon'
+                'datcon',
+                'agentfly'
             ],
             '$comment': 'Original data format'
         },

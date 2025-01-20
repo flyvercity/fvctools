@@ -3,7 +3,8 @@ from xml.parsers.expat import ParserCreate
 from typing import TextIO, Any
 import logging as lg
 
-import fvc.tools.df.util as u
+import fvc.tools.util as u
+from fvc.tools.df.util import JsonlinesIO
 
 
 def iterate_robin(f: TextIO):
@@ -30,7 +31,7 @@ def iterate_robin(f: TextIO):
 
 
 class Context:
-    def __init__(self, output: u.JsonlinesIO):
+    def __init__(self, output: JsonlinesIO):
         self.output = output
 
 
@@ -162,7 +163,7 @@ class Converter:
         self.current = self.current.parent
 
 
-def convert_to_fvc(params, metadata, input_path: Path, output: u.JsonlinesIO):
+def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     metadata.update({'content': 'flightlog', 'source': 'robinradar'})
     output.write(metadata)
     ctx = Context(output)

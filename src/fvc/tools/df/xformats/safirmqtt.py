@@ -4,8 +4,8 @@ import traceback
 
 from dateutil.parser import parse as dateparse
 
-import fvc.tools.df.util as u
-
+import fvc.tools.util as u
+from fvc.tools.df.util import JsonlinesIO
 
 def from_safir_ids(safir_ids):
     ids = {}
@@ -74,12 +74,12 @@ def flightlog_record(record, geoid):
     return record
 
 
-def convert_to_fvc(params, metadata, input_path: Path, output: u.JsonlinesIO):
+def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     geoid = u.load_geoid(params, metadata)
     metadata.update({'content': 'flightlog', 'source': 'safirmqtt'})
     output.write(metadata)
 
-    with u.JsonlinesIO(input_path, 'r') as input:
+    with JsonlinesIO(input_path, 'r') as input:
         try:
             for record in input.iterate():
                 fl_record = flightlog_record(record, geoid)
