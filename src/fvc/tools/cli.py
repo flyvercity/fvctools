@@ -5,8 +5,10 @@ import traceback
 import boto3
 import click
 
+import fvc.tools.calc.main
 import fvc.tools.rms
 import fvc.tools.df
+import fvc.tools.calc
 
 
 @click.group(help='Flyvercity CLI tools suite')
@@ -15,9 +17,14 @@ import fvc.tools.df
 @click.option('--json', is_flag=True, help='Make JSON default output format instead of free form')
 @click.option('--no-pprint', is_flag=True, help='Disable colored pretty printing')
 @click.option('--aws-profile', help='AWS profile to use for S3 operations')
-def cli(ctx, verbose, json, no_pprint, aws_profile):
+@click.option(
+    '--egm', type=click.Path(exists=True), required=False,
+    help='Custom EGM geoid data file (*.pgm). Default: egm96-5.pgm'
+)
+def cli(ctx, verbose, json, no_pprint, aws_profile, egm):
     ctx.ensure_object(dict)
     ctx.obj['verbose'] = verbose
+    ctx.obj['EGM'] = egm
 
     lg.basicConfig(level=lg.DEBUG if verbose else lg.INFO)
     lg.debug(f'Verbose mode is {"on" if verbose else "off"}')
@@ -53,6 +60,7 @@ def pwsh():
 
 cli.add_command(fvc.tools.rms.rms)
 cli.add_command(fvc.tools.df.df)
+cli.add_command(fvc.tools.calc.main.calc)
 
 
 def main():

@@ -66,7 +66,33 @@ def isValid(input_path: Path):
     return success
 
 
-@click.command(help='Validate a FVC file against the known schema')
+DESCRIPTION = 'Data file conversion and manipulation tool'
+
+EPILOG='''
+Notes:
+
+    For EGM geoid data download, visit:
+    https://geographiclib.sourceforge.io/C++/doc/geoid.html#geoidinst
+
+    To set a default cache directory, use the FVC_CACHE environment variable.
+
+    From examples of 'fvc.df.toml' files, see 'examples/df' directory in the source code.
+'''
+
+
+@click.group(help=DESCRIPTION, epilog=EPILOG)
+@click.pass_obj
+@click.option(
+    '--cache-dir', help='Directory for caching external data',
+    type=Path, envvar='FVC_CACHE', required=False
+)
+@click.argument('input', required=True)
+def df(params, input, **kwargs):
+    params.update(kwargs)
+    params['input'] = u.Input(params, input)
+
+
+@df.command(help='Validate a FVC file against the known schema')
 @click.pass_obj
 def validate(params):
     input_path = params['input'].fetch()
@@ -95,12 +121,8 @@ def do_convert(params, input_path: Path, output_path: Path):
         raise UserWarning(f'Unknown external format: {params["x_format"]}')
 
 
-@click.command(help='Convert an external data file to the FVC format')
+@df.command(help='Convert an external data file to the FVC format')
 @click.pass_obj
-@click.option(
-    '--x-format', help='External data format',
-    type=str, required=True
-)
 @click.option(
     '--target', help='Target content type',
     type=click.Choice(['flightlog', 'radarlog']), default='flightlog'
@@ -111,16 +133,18 @@ def do_convert(params, input_path: Path, output_path: Path):
     type=click.DateTime(['%d %b %Y', '%Y-%m-%d']),
     required=False
 )
+@click.argument('x_format', type=str, required=True)
 @click.argument('output-file', type=Path, required=False)
 @metadata.metadata_args
-def convert(params, output_file, **kwargs):
+def convert(params, x_format, output_file, **kwargs):
+    params['x_format'] = x_format
     params.update(kwargs)
     input_path = params['input'].fetch()
     output_path = output_file if output_file else input_path.with_suffix('.fvc')
     do_convert(params, input_path, output_path)
 
 
-@click.command(help='Calculate statistics for a FVC data file')
+@df.command(help='Calculate statistics for a FVC data file')
 @click.pass_obj
 def stats(params):
     input_path = params['input'].fetch()
@@ -129,7 +153,7 @@ def stats(params):
         flightlog.stats(params, io)
 
 
-@click.command(help='Just download and cache external data')
+@df.command(help='Just download and cache external data')
 @click.pass_obj
 def fetch(params):
     params['input'].fetch()
@@ -141,7 +165,7 @@ def fetch(params):
         json_print(params, {'path': path})
 
 
-@click.command(help='Convert data to an external format')
+@df.command(help='Convert data to an external format')
 @click.pass_obj
 @click.option(
     '--x-format', help='External data format',
@@ -157,7 +181,7 @@ def export(params, x_format, output_file, **kwargs):
     lg.info(f'Export complete, output written to {real_output}')
 
 
-@click.command(help='Scan for fvc.df.toml files and execute tasks')
+@df.command(help='Scan for fvc.df.toml files and execute tasks')
 @click.pass_obj
 @click.option('--force', help='Reconvert files even if they exist', is_flag=True)
 def crawl(params, force):
@@ -207,77 +231,4 @@ def crawl(params, force):
                         lg.info(f'Output file {output_path.name} exists, skipping')
 
 
-@click.command(help='Convert UNIX timestamps to human-readable format')
-@click.pass_obj
-@click.argument('epoch', type=int, required=True)
-def epoch(params, epoch):
-    dt = datetime.fromtimestamp(epoch / 1000.0)
-    
-    if not params['JSON']:
-        print(dt.isoformat())
-    else:
-        json_print(params, {'datetime': dt.isoformat()})
-
-
-@click.command(help='Get geoid indulation by latitude/longitude')
-@click.pass_obj
-@click.argument('latitude', type=str)
-@click.argument('longitude', type=str)
-def undulation(params, latitude, longitude):
-    geoid = u.load_geoid(params)
-
-    lg.debug(f'Given {latitude} {longitude}')
-
-    lat = u.parse_lat(latitude)
-    lon = u.parse_lon(longitude)
-
-    lg.debug(f'Using {u.render_latlon(lat, lon)}')
-
-    height = geoid.height(lat, lon)
-
-    if not params['JSON']:
-        print(height)
-    else:
-        json_print(params, {'undulation': height})
-
-
-DESCRIPTION = 'Data file conversion and manipulation tool'
-
-EPILOG='''
-Notes:
-
-    For EGM geoid data download, visit:
-    https://geographiclib.sourceforge.io/C++/doc/geoid.html#geoidinst
-
-    To set a default cache directory, use the FVC_CACHE environment variable.
-
-    From examples of 'fvc.df.toml' files, see 'examples/df' directory in the source code.
-'''
-
-
-@click.group(help=DESCRIPTION, epilog=EPILOG)
-@click.pass_obj
-@click.option(
-    '--cache-dir', help='Directory for caching external data',
-    type=Path, envvar='FVC_CACHE', required=False
-)
-@click.option(
-    '--egm',
-    help='Custom EGM geoid data file (*.pgm). Default: egm96-5.pgm',
-    type=Path, required=False
-)
-@click.argument('input', required=True)
-def df(params, input, **kwargs):
-    params.update(kwargs)
-    params['input'] = u.Input(params, input)
-
-
-df.add_command(convert)
-df.add_command(validate)
-df.add_command(stats)
-df.add_command(fetch)
-df.add_command(export)
-df.add_command(crawl)
-df.add_command(epoch)
-df.add_command(undulation)
 df.add_command(fusion.fusion)
