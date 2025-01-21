@@ -15,7 +15,7 @@ rye run fvc --help
 Load for PowerShell and create `fvc` alias:
 
 ```pwsh
-. .\Load-Tools
+. .\Load-FvcTools
 ```
 
 Invoke:
@@ -33,5 +33,5 @@ Use as an object:
 Example:
 
 ```pwsh
-(FvcTool df undulation 10.0 10.0).undulation
+(FvcTool calc undulation 10.0 10.0).undulation
 ```
