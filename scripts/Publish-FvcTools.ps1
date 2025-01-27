@@ -16,7 +16,8 @@ if ($LASTEXITCODE -ne 0) { throw "Failed to get authorization token" }
 $endpoint_command = "aws $profile_arg codeartifact get-repository-endpoint"
 $endpoint_command += " --query repositoryEndpoint"
 $endpoint_command += " $repository_arg"
-$endpoint_command += " $domain_arg $domain_owner_arg $region_arg $format_arg $output_arg"
+$endpoint_command += " $format_arg"
+$endpoint_command += " $domain_arg $domain_owner_arg $region_arg $output_arg"
 $endpoint = Invoke-Expression $endpoint_command
 if ($LASTEXITCODE -ne 0) { throw "Failed to get repository endpoint" }
 
