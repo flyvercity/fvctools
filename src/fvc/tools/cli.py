@@ -33,6 +33,22 @@ def cli(ctx, verbose, json, no_pprint, aws_profile):
         boto3.setup_default_session(profile_name=aws_profile)
 
 
+@cli.group(help='Shell Integration')
+def shell():
+    pass
+
+
+POWERSHELL_SCRIPT = '''#powershell
+function FvcTool {
+    return $(fvc --json --no-pprint @args) | ConvertFrom-Json
+}
+'''
+
+@shell.command(help='Powershell Integration Script')
+def pwsh():
+    click.echo(POWERSHELL_SCRIPT.replace('\n', ' '))
+
+
 cli.add_command(fvc.tools.rms.rms)
 cli.add_command(fvc.tools.df.df)
 
