@@ -46,7 +46,9 @@ function FvcTool {
 
 @shell.command(help='Powershell Integration Script')
 def pwsh():
-    click.echo(POWERSHELL_SCRIPT.replace('\n', ' '))
+    click.echo(''.join(
+        filter(lambda l: not l.startswith('#'), POWERSHELL_SCRIPT.splitlines())
+    ))
 
 
 cli.add_command(fvc.tools.rms.rms)
