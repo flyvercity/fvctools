@@ -1,1 +1,1 @@
-from fvc.tools.rms.main import rms  # noqa
+from fvc.tools.rms.rms import rms  # noqa
