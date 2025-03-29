@@ -6,7 +6,6 @@ import boto3
 import click
 
 import fvc.tools.calc.main
-import fvc.tools.rms
 import fvc.tools.df
 import fvc.tools.calc
 
@@ -58,7 +57,6 @@ def pwsh():
     ))
 
 
-cli.add_command(fvc.tools.rms.rms)
 cli.add_command(fvc.tools.df.df)
 cli.add_command(fvc.tools.calc.calc)
 
