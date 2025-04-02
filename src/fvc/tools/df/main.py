@@ -177,7 +177,7 @@ def fetch(params):
 @click.argument('output-file', type=Path, required=False)
 def export(params, x_format, output_file, **kwargs):
     params.update(kwargs)
-    export_module = importlib.import_module(f'fvc.df.xformats.{x_format}')
+    export_module = importlib.import_module(f'fvc.tools.df.xformats.{x_format}')
     export_fun = getattr(export_module, 'export_from_fvc')
     real_output = export_fun(params, output_file)
     lg.info(f'Export complete, output written to {real_output}')
