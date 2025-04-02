@@ -1,13 +1,25 @@
 # Flyvercity CLI Tools Suite
 
-Requires `rye` project and package management tool.
+## Installation
+
+```pwsh
+scripts/Install-FvcTools.ps1
+```
+
+## Getting Started
+
+```pwsh
+fvc --help
+```
 
 ## Development Environment
+
+Requires `uv` project and package management tool.
 
 Generic invocation:
 
 ```bash
-rye run fvc --help
+uv run fvc --help
 ```
 
 ### PowerShell
@@ -15,7 +27,7 @@ rye run fvc --help
 Load for PowerShell and create `fvc` alias:
 
 ```pwsh
-. .\Load-FvcTools
+. .\Set-DevEnv.ps1
 ```
 
 Invoke:

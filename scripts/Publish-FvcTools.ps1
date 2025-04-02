@@ -21,5 +21,5 @@ $endpoint_command += " $domain_arg $domain_owner_arg $region_arg $output_arg"
 $endpoint = Invoke-Expression $endpoint_command
 if ($LASTEXITCODE -ne 0) { throw "Failed to get repository endpoint" }
 
-$command = "rye run twine upload --repository-url $endpoint -u $username -p $password .\dist\*"
+$command = "uv run twine upload --repository-url $endpoint -u $username -p $password .\dist\*"
 Invoke-Expression $command
