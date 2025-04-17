@@ -22,7 +22,7 @@ def generate_point(params, record):
     if params['with_cellular']:
         if 'cellsig' not in record:
             raise UserWarning('Cellular signal data not found')
-        
+
         signal = record['cellsig']
         point['properties'] = {'rsrp': signal['RSRP']}
 

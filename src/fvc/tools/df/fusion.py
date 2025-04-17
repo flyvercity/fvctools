@@ -3,7 +3,8 @@ import logging as lg
 
 import click
 
-import fvc.tools.df.util as u
+import fvc.tools.util as u
+import fvc.tools.df.util as uf
 from fvc.tools.df.util import JsonlinesIO as JLIO
 import fvc.tools.df.xformats.safirmqtt as smq
 
@@ -48,11 +49,11 @@ def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
 @click.option('--output-tracks', type=Path, help='Output file for tracks')
 @click.pass_obj
 def flightlog(params, output_plots, output_tracks):
-    with u.JsonlinesIO(params['input'].fetch(), 'r') as replay:
-        with u.JsonlinesIO(output_plots, 'w') as plots:
-            with u.JsonlinesIO(output_tracks, 'w') as tracks:
+    with uf.JsonlinesIO(params['input'].fetch(), 'r') as replay:
+        with uf.JsonlinesIO(output_plots, 'w') as plots:
+            with uf.JsonlinesIO(output_tracks, 'w') as tracks:
                 extract_flightlogs(params, replay, plots, tracks)
-    
+
     lg.info(f'Flight log data extracted from {params["input"]}')
 
 

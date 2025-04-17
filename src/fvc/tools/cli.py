@@ -50,10 +50,11 @@ function FvcTool {
 }
 '''
 
+
 @shell.command(help='Powershell Integration Script')
 def pwsh():
     click.echo(''.join(
-        filter(lambda l: not l.startswith('#'), POWERSHELL_SCRIPT.splitlines())
+        filter(lambda line: not line.startswith('#'), POWERSHELL_SCRIPT.splitlines())
     ))
 
 

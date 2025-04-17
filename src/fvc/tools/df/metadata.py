@@ -1,6 +1,5 @@
 import click
 from functools import wraps
-import logging as lg
 
 from fvc.tools.util import JSON
 from fvc.tools.df.util import Input
@@ -32,7 +31,7 @@ def initial_metadata(params) -> JSON:
     if not params.get('polar_sensor_source'):
         return metadata
 
-    if not 'polar_sensor_format' in params:
+    if 'polar_sensor_format' not in params:
         raise UserWarning('Sensor format (--polar-sensor-format) must be provided')
 
     filename = params['polar_sensor_source']

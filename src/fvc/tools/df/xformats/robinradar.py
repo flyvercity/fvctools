@@ -1,6 +1,6 @@
 from pathlib import Path
 from xml.parsers.expat import ParserCreate
-from typing import TextIO, Any
+from typing import TextIO
 import logging as lg
 
 import fvc.tools.util as u
@@ -78,7 +78,7 @@ class Converter:
 
         def close(self):
             if self.lat is None or self.lon is None or self.alt is None:
-                raise ValueError('Incomplete position record') 
+                raise ValueError('Incomplete position record')
 
             if type(self.parent) is Converter.Track:
                 self.parent.record['pos'] = {
@@ -137,10 +137,9 @@ class Converter:
             if type(self.parent) is Converter.Position:
                 self.parent.alt = self.alt
 
-
     def __init__(self, ctx: Context):
         self.ctx = ctx
-        self.current = Converter.Top()  # type: Any
+        self.current = Converter.Top()
 
     def start_element(self, name, attrs):
         Class = getattr(Converter, name, None)
@@ -160,7 +159,7 @@ class Converter:
         if close_method := getattr(self.current, 'close', None):
             close_method()
 
-        self.current = self.current.parent
+        self.current = self.current.parent  # type: ignore
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
@@ -181,6 +180,6 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 parser.CharacterDataHandler = converter.cdata
                 parser.EndElementHandler = converter.end_element
                 parser.Parse(block, True)
-            
+
             except Exception as e:
                 lg.warning(f'Error parsing block {block_no} line {line_no}: {e}')

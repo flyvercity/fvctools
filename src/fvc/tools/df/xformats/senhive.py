@@ -2,8 +2,6 @@ from pathlib import Path
 import csv
 import logging as lg
 
-from datetime import UTC
-from dateutil.parser import isoparse
 
 from fvc.tools.util import datestring_to_ts
 from fvc.tools.df.util import JsonlinesIO

@@ -2,10 +2,8 @@ import sys
 from pathlib import Path
 import logging as lg
 import importlib
-import sys
 import tomllib
 import traceback
-from datetime import datetime
 
 import click
 import jsonschema
@@ -24,7 +22,7 @@ MAX_ERRORS = 100
 
 def isValid(input_path: Path):
     with click.progressbar(
-        length=input_path.stat().st_size, 
+        length=input_path.stat().st_size,
         label='Validating data',
         file=sys.stderr
     ) as bar:
@@ -68,7 +66,7 @@ def isValid(input_path: Path):
 
 DESCRIPTION = 'Data file conversion and manipulation tool'
 
-EPILOG='''
+EPILOG = '''
 Notes:
 
     For EGM geoid data download, visit:
@@ -159,7 +157,7 @@ def stats(params):
 @click.pass_obj
 def fetch(params):
     params['input'].fetch()
-    
+
     if not params['JSON']:
         lg.info('This file is available in the cache')
     else:
@@ -216,7 +214,7 @@ def crawl(params, force):
                         continue
 
                     output_path = in_file_path.with_suffix('.fvc')
-                    
+
                     if not output_path.exists() or force:
                         try:
                             lg.info(

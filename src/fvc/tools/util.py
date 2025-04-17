@@ -16,7 +16,7 @@ JSON = Dict[str, Any]
 JSON_INDENT = 2
 
 
-def json_print(params, data: JSON):        
+def json_print(params, data: JSON):
     if not params['no_pprint']:
         json_str = json.dumps(data, indent=JSON_INDENT, sort_keys=True)
         print(highlight(json_str, JsonnetLexer(), TerminalFormatter()))
@@ -72,7 +72,7 @@ def parse_lat(lat: Any) -> float:
             deg = int(lat[:2])
             min = float(lat[2:])
             return sign*(deg + min/60.0)
-        
+
     # Something else
     return dms.parseDMS(lat)
 
@@ -94,7 +94,7 @@ def parse_lon(lon: Any) -> float:
             deg = int(lon[:3])
             min = float(lon[3:])
             return sign*(deg + min/60.0)
-        
+
     # Something else
     return dms.parseDMS(lon)
 

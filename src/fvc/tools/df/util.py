@@ -1,13 +1,12 @@
 import json
 from pathlib import Path
-from typing import Literal, Any
+from typing import Literal
 import logging as lg
-from datetime import UTC
 
 import boto3
-from pygeodesy.geoids import GeoidPGM
 
 from fvc.tools.util import JSON
+
 
 class JsonlinesIO:
     def __init__(self, filepath: Path, mode: Literal['r', 'w'], callback=None):
@@ -67,7 +66,6 @@ class JsonlinesIO:
             yield data
 
 
-
 def progress_bar(bytes_amount):
     lg.info(f'Downloaded {bytes_amount} bytes')
 
@@ -85,7 +83,7 @@ class Input:
 
         if not directory.is_dir():
             raise UserWarning(f'Input is not a directory: {self}')
-        
+
         return directory
 
     def fetch(self) -> Path:
@@ -134,7 +132,7 @@ class JsonQuery:
                 data = data.get(p) if data else None
 
             return data if data is not None else default
-        
+
         self.getter = getter
 
     def __call__(self, data):
