@@ -1,6 +1,6 @@
 [project]
 name = "fvctools"
-version = "1.0.1"
+version = "1.1.0"
 description = "Flyvercity CLI Tools Suite"
 authors = [
     { name = "Boris Resnick", email = "boris@flyver.city" }
@@ -37,5 +37,6 @@ packages = ["src/fvc"]
 
 [dependency-groups]
 dev = [
+    "flake8>=7.2.0",
     "twine>=6.1.0",
 ]

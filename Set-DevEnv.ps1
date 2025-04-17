@@ -5,7 +5,7 @@ function FvcToolsWrapper
         [string[]]$listArgs
     )
 
-    return $(rye run fvc @listArgs)
+    return $(uv run fvc @listArgs)
 }
 
 Set-Alias -Name fvc -Value FvcToolsWrapper

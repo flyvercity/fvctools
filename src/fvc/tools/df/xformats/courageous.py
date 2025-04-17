@@ -2,8 +2,6 @@ import json
 from pathlib import Path
 import logging as lg
 
-from toolz.dicttoolz import keyfilter
-
 import fvc.tools.util as u
 from fvc.tools.df.util import JsonlinesIO
 

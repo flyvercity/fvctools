@@ -12,7 +12,7 @@ LOCATION = {
         },
         'gspeed': {'type': 'number', '$comment': 'Ground speed in meters per second'}
     },
-    'required': ['lat', 'lon', 'alt'],
+    'required': ['lat', 'lon'],
     'optional': ['alt', 'amsl', 'height', 'bear', 'gspeed']
 }
 
@@ -46,6 +46,9 @@ IDENTIFICATION = {
         'icaohex': {'type': 'string', '$comment': 'ICAO 24-bit address'},
         'icaoreg': {'type': 'string', '$comment': 'ICAO registration'},
         'atm': {'type': 'string', '$comment': 'ATM callsign'},
+        'ip': {'type': 'string', '$comment': 'IP address'},
+        'imei': {'type': 'string', '$comment': 'IMEI number'},
+        'imsi': {'type': 'string', '$comment': 'IMSI number'}
     },
     'anyOf': [
         {'required': ['int']},
@@ -88,7 +91,8 @@ METADATA = {
                 'fusion.replay',
                 'artlog',
                 'datcon',
-                'agentfly'
+                'agentfly',
+                'gnettrack'
             ],
             '$comment': 'Original data format'
         },

@@ -2,10 +2,9 @@ from pathlib import Path
 import logging as lg
 import traceback
 
-from dateutil.parser import parse as dateparse
-
 import fvc.tools.util as u
 from fvc.tools.df.util import JsonlinesIO
+
 
 def from_safir_ids(safir_ids):
     ids = {}

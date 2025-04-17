@@ -16,7 +16,7 @@ def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
 
     if (content := metadata.get('content')) != 'fusion.replay':
         raise UserWarning(f'Unsupported content type: {content}')
-    
+
     out_metadata = {
         'origin': str(params['input']),
         'content': 'flightlog',
