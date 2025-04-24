@@ -2,9 +2,7 @@
 
 ## Installation
 
-```pwsh
-scripts/Install-FvcTools.ps1
-```
+Download and run the `scripts/Install-FvcTools.ps1` script in PowerShell.
 
 ## Getting Started
 
