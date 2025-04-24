@@ -79,6 +79,9 @@ class Input:
         return str(self._input_uri)
 
     def as_dir(self):
+        if not self._input_uri:
+            raise UserWarning('Input file or URI (--input-file) is not specified')
+
         directory = Path(self._input_uri)
 
         if not directory.is_dir():

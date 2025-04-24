@@ -39,17 +39,22 @@ def from_safir_loc(safir_loc, geoid):
     assert version == '1'
     assert lat is not None
     assert lon is not None
-    assert amsl is not None
 
-    alt = u.amsl_to_ellipsoidal(geoid, lat, lon, amsl)
-
-    return {
+    record = {
         'loc': {
             'lat': lat,
-            'lon': lon,
-            'alt': alt
+            'lon': lon
         }
     }
+
+    if amsl is not None:
+        alt = u.amsl_to_ellipsoidal(geoid, lat, lon, amsl)
+        record['loc']['alt'] = alt
+    else:
+        present = 'present' if 'altitudeAMSL' in safir_loc else 'also missing'
+        lg.warning(f'No AMSL found in safir location record (geodetic is {present})')
+
+    return record
 
 
 def flightlog_record(record, geoid):

@@ -84,7 +84,7 @@ Notes:
     '--cache-dir', help='Directory for caching external data',
     type=Path, envvar='FVC_CACHE', required=False
 )
-@click.argument('input', required=True)
+@click.option('--in', 'input', required=False)
 def df(params, input, **kwargs):
     params.update(kwargs)
     params['input'] = u.Input(params, input)
@@ -121,7 +121,7 @@ def do_convert(params, input_path: Path, output_path: Path):
         raise UserWarning(f'Unknown external format: {params["x_format"]}')
 
 
-@df.command(help='Convert an external data file to the FVC format')
+@df.command()
 @click.pass_obj
 @click.option(
     '--target', help='Target content type',
@@ -137,6 +137,21 @@ def do_convert(params, input_path: Path, output_path: Path):
 @click.argument('output-file', type=Path, required=False)
 @metadata.metadata_args
 def convert(params, x_format, output_file, **kwargs):
+    '''Convert an external data file to the FVC format
+
+    \b
+    Available formats:
+        - agentfly
+        - artlog
+        - courageous
+        - datcon
+        - gnettrack
+        - nmea
+        - robinradar
+        - safirmqtt
+        - senhive
+    '''
+
     params['x_format'] = x_format
     params.update(kwargs)
     input_path = params['input'].fetch()
@@ -167,10 +182,7 @@ def fetch(params):
 
 @df.command(help='Convert data to an external format')
 @click.pass_obj
-@click.option(
-    '--x-format', help='External data format',
-    type=click.Choice(['geojson', 'kml']), required=True
-)
+@click.option('--x-format', help='External data format', required=True)
 @click.option('--with-cellular', help='Require cellular signal data', is_flag=True)
 @click.argument('output-file', type=Path, required=False)
 def export(params, x_format, output_file, **kwargs):
