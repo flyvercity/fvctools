@@ -26,7 +26,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             [year, month, day] = date.split('.')
             [hour, minute, second] = time.split('.')
             dt = datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
-            timestamp = int(dt.timestamp())
+            timestamp = int(dt.timestamp() * 1000)
             lat = float(row['Latitude'])
             lon = float(row['Longitude'])
             device = row['DEVICE']
