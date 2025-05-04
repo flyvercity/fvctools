@@ -24,7 +24,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                             'alt': float(row['altitude_m'])
                         }
                     },
-                    'source': row['source_id']
+                    'sensor': row['source_id']
                 }
 
                 output.write(record)

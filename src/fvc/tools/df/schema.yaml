@@ -1,0 +1,291 @@
+LOCATION: &LOCATION
+  type: object
+  properties:
+    # Latitude in WGS-84
+    lat:
+      type: number
+    # Longitude in WGS-84
+    lon:
+      type: number
+    # Ellipsoidal altitude
+    alt:
+      type: number
+    # Altitude above mean sea level
+    amsl:
+      type: number
+    # Local height above ground
+    height:
+      type: number
+    # Bearing angle in degrees clockwise from the true north
+    bear:
+      type: number
+    # Ground speed in meters per second
+    gspeed:
+      type: number
+  required:
+    - lat
+    - lon
+  optional:
+    - alt
+    - amsl
+    - height
+    - bear
+    - gspeed
+
+POLAR: &POLAR
+  type: object
+  properties:
+    # Bearing angle in degrees clockwise from the true north
+    bear:
+      type: number
+    # Elevation angle in degrees above horizon
+    elev:
+      type: number
+
+# Polar sensor payload
+POLAR_SENSOR: &POLAR_SENSOR
+  type: object
+  properties:
+    loc: *LOCATION
+  required:
+    - loc
+
+IDENTIFICATION: &IDENTIFICATION
+  type: object
+  properties:
+    # Source-internal identifier
+    int:
+      type: string
+    # Flyvercity unique identifier
+    fvc:
+      type: string
+    # ICAO 24-bit address
+    icaohex:
+      type: string
+    # ICAO registration
+    icaoreg:
+      type: string
+    # ATM callsign
+    atm:
+      type: string
+    # IP address
+    ip:
+      type: string
+    # IMEI (International Mobile Equipment Identity) number
+    imei:
+      type: string
+    # IMSI (International Mobile Subscriber Identity) number
+    imsi:
+      type: string
+  anyOf:
+    - required:
+        - int
+    - required:
+        - fvc
+
+# Current file content descriptor
+CONTENT: &CONTENT
+  type: string
+  enum:
+    - flightlog
+    - radarlog
+    - fusion.replay
+    - capture.message
+
+METADATA: &METADATA
+  type: object
+  properties:
+    content:
+      oneOf:
+        - *CONTENT
+        - type: array
+          items: *CONTENT
+    # Original data format
+    source:
+      type: string
+      enum:
+        - airlink
+        - courageous
+        - csgroup
+        - nmea
+        - senhive
+        - robinradar
+        - safirmqtt
+        - fusion.replay
+        - artlog
+        - datcon
+        - agentfly
+        - gnettrack
+        - mqtt
+    # Original file name or originating system
+    origin:
+      type: string
+    polar_sensor: *POLAR_SENSOR
+    cycle_length:
+      type: number
+  required:
+    - content
+
+ATTITUDE: &ATTITUDE
+  type: object
+  properties:
+    # Roll angle in degrees
+    roll:
+      type: number
+    # Pitch angle in degrees
+    pitch:
+      type: number
+    # Yaw angle in degrees
+    yaw:
+      type: number
+  required:
+    - roll
+    - pitch
+    - yaw
+
+POSITION: &POSITION
+  type: object
+  properties:
+    loc: *LOCATION
+    att: *ATTITUDE
+  required:
+    - loc
+  optional:
+    - att
+
+RADAR_POSITION: &RADAR_POSITION
+  type: object
+  properties:
+    loc: *POLAR
+  required:
+    - loc
+
+TIMESTAMP: &TIMESTAMP
+  type: object
+  properties:
+    # Unix timestamp in milliseconds
+    unix:
+      type: number
+  required:
+    - unix
+
+CELLULAR_SIGNAL: &CELLULAR_SIGNAL
+  type: object
+  properties:
+    radio:
+      type: string
+      enum:
+        - 4G
+        - 5G
+    RSRP:
+      type:
+        - number
+        - null
+    RSRQ:
+      type:
+        - number
+        - null
+    RSSI:
+      type:
+        - number
+        - null
+    SINR:
+      type:
+        - number
+        - null
+
+FLIGHTLOG: &FLIGHTLOG
+  type: object
+  properties:
+    # Originating system
+    origin:
+      type: string
+    # Timestamp
+    time: *TIMESTAMP
+    # Unique identifier
+    uaid: *IDENTIFICATION
+    # Geodetic  position
+    pos: *POSITION
+    # Cellular signal
+    cellsig: *CELLULAR_SIGNAL
+  required:
+    - time
+    - pos
+  optional:
+    - tag
+    - uaid
+    - origin
+    - cellsig
+
+RADARLOG: &RADARLOG
+  type: object
+  properties:
+    # Originating system
+    origin:
+      type: string
+    # Timestamp
+    time: *TIMESTAMP
+    uaid: *IDENTIFICATION
+    pos: *RADAR_POSITION
+  required:
+    - time
+    - pos
+  optional:
+    - tag
+    - uaid
+    - origin
+
+FUSION_REPLAY: &FUSION_REPLAY
+  type: object
+  properties:
+    event:
+      type: string
+      enum:
+        - launch
+        - start
+        - stop
+        - input
+        - output
+        - error
+    cycle:
+      type: number
+    origin:
+      type: string
+    message:
+      type: object
+    eid:
+      type: string
+    metadata:
+      type: object
+  required:
+    - event
+    - cycle
+  optional:
+    - origin
+    - message
+    - eid
+    - metadata
+
+# Messages captured from MQTT topics (other sources may be added in the future)
+CAPTURE_MESSAGE: &CAPTURE_MESSAGE
+  type: object
+  properties:
+    # MQTT Metadata
+    mqtt:
+      type: object
+      properties:
+        # Timestamp
+        time: *TIMESTAMP
+        # Topic
+        topic:
+          type: string
+  required:
+    - mqtt
+  # Allow for any payload content
+  additionalProperties: true
+
+CONTENT_SCHEMA:
+  flightlog: *FLIGHTLOG
+  radarlog: *RADARLOG
+  fusion.replay: *FUSION_REPLAY 
+  capture.message: *CAPTURE_MESSAGE
