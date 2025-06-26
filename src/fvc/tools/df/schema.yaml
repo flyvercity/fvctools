@@ -177,19 +177,35 @@ CELLULAR_SIGNAL: &CELLULAR_SIGNAL
       enum:
         - 4G
         - 5G
-    RSRP:
+    CSI-RSRP:
       type:
         - number
         - null
-    RSRQ:
+    CSI-RSRQ:
       type:
         - number
         - null
-    RSSI:
+    CSI-RSSI:
       type:
         - number
         - null
-    SINR:
+    CSI-SINR:
+      type:
+        - number
+        - null
+    SS-RSRP:
+      type:
+        - number
+        - null
+    SS-RSRQ:
+      type:
+        - number
+        - null
+    SS-RSSI:
+      type:
+        - number
+        - null
+    SS-SINR:
       type:
         - number
         - null
@@ -207,7 +223,7 @@ FLIGHTLOG: &FLIGHTLOG
     # Geodetic  position
     pos: *POSITION
     # Cellular signal
-    cellsig: *CELLULAR_SIGNAL
+    cell-sig: *CELLULAR_SIGNAL
   required:
     - time
     - pos

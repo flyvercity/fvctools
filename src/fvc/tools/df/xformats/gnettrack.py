@@ -1,10 +1,9 @@
-
 from pathlib import Path
 import csv
 from datetime import datetime
 import uuid
 
-from fvc.tools.df.util import JsonlinesIO
+from fvc.tools.df.util import JsonlinesIO, dslice
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
@@ -27,51 +26,48 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             [hour, minute, second] = time.split('.')
             dt = datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
             timestamp = int(dt.timestamp() * 1000)
-            lat = float(row['Latitude'])
-            lon = float(row['Longitude'])
             device = row['DEVICE']
-            ipaddr = row['IP']
 
             uaid = {'int': f'{device}:{track_id}'}
+            uaid.update(dslice(row, 'IP', 'IMEI', 'IMSI'))
 
-            if ipaddr := row['IP']:
-                uaid['ip'] = ipaddr
+            maybe_float = lambda x: float(x) if x else None
+            maybe_int = lambda x: int(x) if x else None
 
-            if imei := row['IMEI']:
-                uaid['imei'] = imei
+            cellsig = dslice(
+                row,
+                {'k': 'NetworkTech', 'd': 'unknown', 'n': 'radio'},
+                {'k': 'CSI_PCI', 'c': maybe_float, 'd': 0.0, 'n': 'CSI-RSRP'},
+                {'k': 'CSI_RSRQ', 'c': maybe_float, 'd': 0.0, 'n': 'CSI-RSRQ'},
+                {'k': 'CSI_RSSI', 'c': maybe_float, 'd': 0.0, 'n': 'CSI-RSSI'},
+            )
 
-            if imsi := row['IMSI']:
-                uaid['imsi'] = imsi
+            loc = dslice(
+                row,
+                {'k': 'Latitude', 'c': maybe_float, 'n': 'lat'},
+                {'k': 'Longitude', 'c': maybe_float, 'n': 'lon'}
+            )
 
-            radio = row['NetworkTech']
-            rsrp = float(row.get('CSI_RSRP') or 0.0)
-            rsrq = float(row.get('CSI_RSRQ') or 0.0)
+            datalink = dslice(
+                row,
+                {'k': 'PINGMAX', 'c': maybe_int, 'n': 'rtt'},
+                {'k': 'PINGLOSS', 'c': maybe_int, 'n': 'loss'}
+            )
 
-            cellsig = {
-                'radio': radio,
-                'RSRP': rsrp,
-                'RSRQ': rsrq
-            }
+            row_metadata = dslice(row, 'Operatorname', 'BATTERY')
 
             record = {
+                'uaid': uaid,
                 'time': {
                     'unix': timestamp,
                     'original': row_ts
                 },
                 'pos': {
-                    'loc': {
-                        'lat': lat,
-                        'lon': lon
-                    }
+                    'loc': loc
                 },
-                'cellsig': cellsig
-            }
-
-            if uaid:
-                record['uaid'] = uaid
-
-            record['metadata'] = {
-                'raw': row
+                'cellsig': cellsig,
+                'datalink': datalink,
+                'metadata': row_metadata
             }
 
             output.write(record)
