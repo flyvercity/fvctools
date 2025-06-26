@@ -8,6 +8,7 @@ import boto3
 from rich.spinner import Spinner
 from rich.live import Live
 
+
 class JsonlinesIO:
     def __init__(self, filepath: Path, mode: Literal['r', 'w'], callback=None):
         self._filepath = filepath
@@ -65,6 +66,7 @@ class JsonlinesIO:
         while data := self.read():
             yield data
 
+
 class Input:
     def __init__(self, params, input_uri):
         self._params = params
@@ -75,7 +77,7 @@ class Input:
 
     def as_dir(self):
         if not self._input_uri:
-            raise UserWarning('Input file or URI (--input-file) is not specified')
+            raise UserWarning('Input file or URI (--in) is not specified')
 
         directory = Path(self._input_uri)
 
@@ -86,7 +88,7 @@ class Input:
 
     def fetch(self) -> Path:
         if not self._input_uri:
-            raise UserWarning('Input file or URI (--input-file) is not specified')
+            raise UserWarning('Input file or URI (--in) is not specified')
 
         path = Path(self._input_uri)
 
@@ -98,7 +100,7 @@ class Input:
 
             cache_dir_path = Path(cache_dir)
             cache_dir_path.mkdir(parents=True, exist_ok=True)
-            rel_path = path.relative_to('s3://')
+            rel_path = path.relative_to('s3://flyvercity.private/data')
             local_path = (cache_dir_path / rel_path).resolve()
 
             if local_path.exists():
@@ -112,10 +114,13 @@ class Input:
             lg.debug(f'Bucket: {bucket_name}, Key: {key}')
             s3 = boto3.client('s3')
 
-            with Live(Spinner('Downloading...'), refresh_per_second=10) as live:
+            lg.info(f'Downloading to {local_path}')
+            spinner = Spinner('aesthetic', 'Downloading...')
+
+            with Live(spinner, refresh_per_second=10):
                 s3.download_file(
                     bucket_name, key, str(local_path),
-                    Callback=lambda x: live.update(f'Downloading... {x}')
+                    Callback=lambda x: spinner.update(text=f'Downloaded {x} bytes')
                 )
 
             return local_path
