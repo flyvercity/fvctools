@@ -4,9 +4,7 @@ import logging as lg
 from pathlib import Path
 
 from typing import Any, Dict
-from pygments import highlight
-from pygments.lexers.jsonnet import JsonnetLexer
-from pygments.formatters import TerminalFormatter
+from rich import print_json
 from pygeodesy import dms
 from dateutil import parser as dateparser
 from pygeodesy.geoids import GeoidPGM
@@ -18,8 +16,7 @@ JSON_INDENT = 2
 
 def json_print(params, data: JSON):
     if not params['no_pprint']:
-        json_str = json.dumps(data, indent=JSON_INDENT, sort_keys=True)
-        print(highlight(json_str, JsonnetLexer(), TerminalFormatter()))
+        print_json(data=json.dumps(data, indent=JSON_INDENT, sort_keys=True))
     else:
         print(json.dumps(data))
 

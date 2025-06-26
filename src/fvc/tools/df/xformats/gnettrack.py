@@ -44,8 +44,8 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 uaid['imsi'] = imsi
 
             radio = row['NetworkTech']
-            rsrp = float(row['CSI_RSRP'])
-            rsrq = float(row['CSI_RSRQ'])
+            rsrp = float(row.get('CSI_RSRP') or 0.0)
+            rsrq = float(row.get('CSI_RSRQ') or 0.0)
 
             cellsig = {
                 'radio': radio,
@@ -69,5 +69,9 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
             if uaid:
                 record['uaid'] = uaid
+
+            record['metadata'] = {
+                'raw': row
+            }
 
             output.write(record)

@@ -3,10 +3,10 @@ from pathlib import Path
 from typing import Literal
 import logging as lg
 
+from benedict import benedict
 import boto3
-
-from fvc.tools.util import JSON
-
+from rich.spinner import Spinner
+from rich.live import Live
 
 class JsonlinesIO:
     def __init__(self, filepath: Path, mode: Literal['r', 'w'], callback=None):
@@ -31,7 +31,7 @@ class JsonlinesIO:
         if not self._file:
             raise UserWarning('Enter context before using the object')
 
-    def read(self) -> JSON | None:
+    def read(self) -> benedict | None:
         self._check_entered()
 
         if self._file:
@@ -48,7 +48,7 @@ class JsonlinesIO:
         if not line.strip():
             return None
 
-        return json.loads(line)
+        return benedict(json.loads(line))
 
     def in_line_no(self):
         return self._in_line_no
@@ -64,11 +64,6 @@ class JsonlinesIO:
     def iterate(self):
         while data := self.read():
             yield data
-
-
-def progress_bar(bytes_amount):
-    lg.info(f'Downloaded {bytes_amount} bytes')
-
 
 class Input:
     def __init__(self, params, input_uri):
@@ -116,7 +111,13 @@ class Input:
             key = '/'.join(path.parts[2:])
             lg.debug(f'Bucket: {bucket_name}, Key: {key}')
             s3 = boto3.client('s3')
-            s3.download_file(bucket_name, key, str(local_path), Callback=progress_bar)
+
+            with Live(Spinner('Downloading...'), refresh_per_second=10) as live:
+                s3.download_file(
+                    bucket_name, key, str(local_path),
+                    Callback=lambda x: live.update(f'Downloading... {x}')
+                )
+
             return local_path
 
         else:
@@ -124,19 +125,3 @@ class Input:
                 return path.resolve()
 
         raise UserWarning(f'Unable to resolve input file: {self}')
-
-
-class JsonQuery:
-    def __init__(self, query: str, default=None):
-        path = query.split('.')
-
-        def getter(data):
-            for p in path:
-                data = data.get(p) if data else None
-
-            return data if data is not None else default
-
-        self.getter = getter
-
-    def __call__(self, data):
-        return self.getter(data)

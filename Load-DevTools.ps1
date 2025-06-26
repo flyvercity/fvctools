@@ -1,1 +1,1 @@
-FvcToolsWrapper shell pwsh | Invoke-Expression
+fvc shell pwsh | Invoke-Expression

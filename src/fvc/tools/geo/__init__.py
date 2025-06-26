@@ -3,24 +3,24 @@ import os
 import pandas
 import geopandas
 
-from fvc.tools.df.util import Input, JsonlinesIO, JsonQuery
+from fvc.tools.df.util import Input, JsonlinesIO
 
 
 def fetch_geodata(file_name: str) -> geopandas.GeoDataFrame:
     input = Input({'cache_dir': os.getenv('FVC_CACHE')}, file_name)
-
-    qtime = JsonQuery('time.unix')
-    quaid = JsonQuery('uaid.int', 'unknown')
-    qlat = JsonQuery('pos.loc.lat')
-    qlon = JsonQuery('pos.loc.lon')
-    qalt = JsonQuery('pos.loc.alt')
 
     with JsonlinesIO(input.fetch(), 'r') as io:
         metadata = io.read()
         assert metadata and metadata['content'] == 'flightlog'
 
         def fetch(r):
-            return (qtime(r), quaid(r), qlat(r), qlon(r), qalt(r))
+            return (
+                r.get('time.unix'),
+                r.get('uaid.int'),
+                r.get('pos.loc.lat'),
+                r.get('pos.loc.lon'),
+                r.get('pos.loc.alt'),
+            )
 
         tuples = map(fetch, io.iterate())
         lists = list(zip(*tuples))
