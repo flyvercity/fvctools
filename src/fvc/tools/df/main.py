@@ -203,8 +203,11 @@ def export(params, x_format, output_file, **kwargs):
 @df.command(help='Scan for fvc.df.toml files and execute tasks')
 @click.pass_obj
 @click.option('--force', help='Reconvert files even if they exist', is_flag=True)
-def crawl(params, force):
+@click.option('--validate', help='Validate files after conversion', is_flag=True)
+def crawl(params, force, validate):
     input_dir = params['input'].as_dir()
+
+    errors = []
 
     for toml_file in input_dir.glob('**/fvc.df.toml'):
         lg.info(f'Found DF local config {toml_file}')
@@ -241,13 +244,28 @@ def crawl(params, force):
                             )
 
                             do_convert(params, in_file_path, output_path)
+
+                            if validate:
+                                lg.info(f'Validating {output_path.name}')
+
+                                if not isValid(output_path):
+                                    errors.append(f'Validation failed for {output_path}')
+
                         except Exception as e:
                             if params['verbose']:
                                 traceback.print_exc(file=sys.stderr)
 
-                            lg.error(f'Error converting {in_file_path}: {e}')
+                            errors.append(f'Error converting {in_file_path}: {e}')
                     else:
                         lg.info(f'Output file {output_path.name} exists, skipping')
+
+    if errors:
+        lg.error(f'{len(errors)} errors occurred')
+
+        for error in errors:
+            lg.error(error)
+    else:
+        lg.info('There were no errors')
 
 
 df.add_command(fusion.fusion)

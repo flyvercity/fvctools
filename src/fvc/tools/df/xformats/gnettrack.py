@@ -33,8 +33,8 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             uaid = {'int': f'{device}:{track_id}'}
             uaid.update(dslice(row, 'IP', 'IMEI', 'IMSI'))
 
-            maybe_float = lambda x: float(x) if x else None
-            maybe_int = lambda x: int(x) if x else None
+            maybe_float = lambda x: float(x) if x and x != '-' else None
+            maybe_int = lambda x: int(x) if x and x != '-' else None
 
             net_tech = row['NetworkTech']
             net_mode = row['NetworkMode']
