@@ -7,6 +7,7 @@ import traceback
 
 import click
 import jsonschema
+from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn
 
 from fvc.tools.util import json_print
 import fvc.tools.df.schema as schema
@@ -21,12 +22,18 @@ MAX_ERRORS = 100
 
 
 def isValid(input_path: Path):
-    with click.progressbar(
-        length=input_path.stat().st_size,
-        label='Validating data',
-        file=sys.stderr
-    ) as bar:
-        with u.JsonlinesIO(input_path, 'r', callback=lambda s: bar.update(s)) as f:
+    file_size = input_path.stat().st_size
+
+    with Progress(
+        TextColumn('[progress.description]{task.description}'),
+        BarColumn(),
+        "[progress.percentage]{task.percentage:>3.0f}%",
+        TimeRemainingColumn(),
+        transient=True
+    ) as progress:
+        task = progress.add_task('Validating data', total=file_size)
+
+        with u.JsonlinesIO(input_path, 'r', callback=lambda s: progress.update(task, advance=s)) as f:
             try:
                 metaline = f.read()
 

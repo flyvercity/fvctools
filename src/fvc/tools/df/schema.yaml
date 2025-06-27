@@ -175,40 +175,47 @@ CELLULAR_SIGNAL: &CELLULAR_SIGNAL
     radio:
       type: string
       enum:
-        - 4G
-        - 5G
+        - 4GLTE
+        - 5GNR
+    RSRP:
+      type:
+        - number
+    RSRQ:
+      type:
+        - number
+    RSSI:
+      type:
+        - number
+    SINR:
+      type:
+        - number
     CSI-RSRP:
       type:
         - number
-        - null
     CSI-RSRQ:
       type:
         - number
-        - null
     CSI-RSSI:
       type:
         - number
-        - null
     CSI-SINR:
       type:
         - number
-        - null
     SS-RSRP:
       type:
         - number
-        - null
     SS-RSRQ:
       type:
         - number
-        - null
     SS-RSSI:
       type:
         - number
-        - null
     SS-SINR:
       type:
         - number
-        - null
+    ARFCN:
+      type:
+        - number
 
 FLIGHTLOG: &FLIGHTLOG
   type: object
