@@ -7,18 +7,20 @@ $format_arg = "--format pypi"
 $repository_arg = "--repository common"
 $output_arg = "--output text"
 
-$token_command = "aws $profile_arg codeartifact get-authorization-token"
-$token_command += " --query authorizationToken"
-$token_command += " $domain_arg $domain_owner_arg $region_arg $output_arg" 
-$password = Invoke-Expression $token_command
+$token_command = @(
+    "aws $profile_arg codeartifact get-authorization-token"
+    "--query authorizationToken"
+    "$domain_arg $domain_owner_arg $region_arg $output_arg"
+)
+$password = Invoke-Expression ($token_command -join " ")
 if ($LASTEXITCODE -ne 0) { throw "Failed to get authorization token" }
 
-$endpoint_command = "aws $profile_arg codeartifact get-repository-endpoint"
-$endpoint_command += " --query repositoryEndpoint"
-$endpoint_command += " $repository_arg"
-$endpoint_command += " $format_arg"
-$endpoint_command += " $domain_arg $domain_owner_arg $region_arg $output_arg"
-$endpoint = Invoke-Expression $endpoint_command
+$endpoint_command = @(
+    "aws $profile_arg codeartifact get-repository-endpoint"
+    "--query repositoryEndpoint"
+    "$repository_arg $format_arg $domain_arg $domain_owner_arg $region_arg $output_arg"
+)
+$endpoint = Invoke-Expression ($endpoint_command -join " ")
 if ($LASTEXITCODE -ne 0) { throw "Failed to get repository endpoint" }
 
 $command = "uv run twine upload --repository-url $endpoint -u $username -p $password .\dist\*"
