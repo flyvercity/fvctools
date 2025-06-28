@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 import logging as lg
-
+from botobuddy.utils import dslice
 
 import fvc.tools.df.util as u
 
@@ -19,10 +19,7 @@ def generate_point(params, record):
         'properties': {}
     }
 
-    if params['with_cellular']:
-        if 'cellsig' not in record:
-            raise UserWarning('Cellular signal data not found')
-
+    if 'cellsig' in record:
         signal = record['cellsig']
         point['properties'] = {'rsrp': signal['RSRP']}
 
@@ -73,7 +70,7 @@ def export_from_fvc(params, output_path: Path | None):
     input_path = params['input'].fetch()
 
     if not output_path:
-        output = input_path.with_suffix('.geo.json')  # type: Path
+        output = input_path.with_suffix('.geojson')
     else:
         output = output_path
 
@@ -91,11 +88,12 @@ def export_from_fvc(params, output_path: Path | None):
         if not first:
             return
 
-        curr_pos = {
-            'lat': first['pos']['loc']['lat'],
-            'lon': first['pos']['loc']['lon'],
-            'alt': first['pos']['loc']['alt']
-        }
+        curr_pos = dslice(
+            first,
+            {'k': 'pos.loc.lat', 'n': 'lat'},
+            {'k': 'pos.loc.lon', 'n': 'lon'},
+            {'k': 'pos.loc.alt', 'n': 'alt'}
+        )
 
         features = []
 

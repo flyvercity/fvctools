@@ -92,6 +92,9 @@ class Input:
 
         path = Path(self._input_uri)
 
+        if suffix := self._params.get('suffix'):
+            path = path.with_suffix(suffix)
+
         if self._input_uri.startswith('s3://'):
             cache_dir = self._params.get('cache_dir')
 

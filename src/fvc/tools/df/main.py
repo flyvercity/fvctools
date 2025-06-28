@@ -91,7 +91,13 @@ Notes:
     '--cache-dir', help='Directory for caching external data',
     type=Path, envvar='FVC_CACHE', required=False
 )
-@click.option('--in', 'input', required=False)
+@click.option(
+    '--in', 'input', required=False
+)
+@click.option(
+    '--suffix', help='Suffix substitution for input files',
+    type=str, required=False
+)
 def df(params, input, **kwargs):
     params.update(kwargs)
     params['input'] = u.Input(params, input)
@@ -140,10 +146,17 @@ def do_convert(params, input_path: Path, output_path: Path):
     type=click.DateTime(['%d %b %Y', '%Y-%m-%d']),
     required=False
 )
+@click.option(
+    '--custom',
+    help='Custom parameters for the conversion, see xformats modules for details',
+    type=str,
+    multiple=True,
+    required=False
+)
 @click.argument('x_format', type=str, required=True)
 @click.argument('output-file', type=Path, required=False)
 @metadata.metadata_args
-def convert(params, x_format, output_file, **kwargs):
+def convert(params, output_file, **kwargs):
     '''Convert an external data file to the FVC format
 
     \b
@@ -159,7 +172,6 @@ def convert(params, x_format, output_file, **kwargs):
         - senhive
     '''
 
-    params['x_format'] = x_format
     params.update(kwargs)
     input_path = params['input'].fetch()
     output_path = output_file if output_file else input_path.with_suffix('.fvc')
@@ -189,8 +201,7 @@ def fetch(params):
 
 @df.command(help='Convert data to an external format')
 @click.pass_obj
-@click.option('--x-format', help='External data format', required=True)
-@click.option('--with-cellular', help='Require cellular signal data', is_flag=True)
+@click.argument('x_format', type=str, required=True)
 @click.argument('output-file', type=Path, required=False)
 def export(params, x_format, output_file, **kwargs):
     params.update(kwargs)

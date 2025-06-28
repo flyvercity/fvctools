@@ -1,3 +1,10 @@
+'''
+Gnettrack log format
+
+Custom parameters:
+    - gnettrack-allow-low-precision: Allow low precision time for Gnettrack log
+'''
+
 from pathlib import Path
 import csv
 from datetime import datetime
@@ -25,8 +32,26 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             row_ts = row['Timestamp']
             [date, time] = row_ts.split('_')
             [year, month, day] = date.split('.')
-            [hour, minute, second] = time.split('.')
-            dt = datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
+            time_parts = time.split('.')
+
+            if len(time_parts) != 4:
+                if 'gnettrack-allow-low-precision' in params.get('custom', []):
+                    lg.warning('Using low precision time for Gnettrack log')
+                    time_parts.append('0')
+                else:
+                    raise UserWarning(
+                        f'Invalid time setting for Gnettrack log {input_path.name}. '
+                        'Please enable enhanced logging in the Calibrator config'
+                    )
+
+            [hour, minute, second, ms] = time_parts
+
+            dt = datetime(
+                int(year), int(month), int(day),
+                int(hour), int(minute), int(second),
+                int(ms) * 1000
+            )
+
             timestamp = int(dt.timestamp() * 1000)
             device = row['DEVICE']
 
