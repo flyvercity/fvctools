@@ -113,7 +113,9 @@ def validate(params):
         json_print(params, {'valid': valid})
 
 
-def do_convert(params, input_path: Path, output_path: Path):
+def convert(params, output_path: Path):
+    input_path = params['input'].fetch()
+
     try:
         params['output_path'] = output_path
 
@@ -130,6 +132,7 @@ def do_convert(params, input_path: Path, output_path: Path):
             convert_fun(params, meta, input_path, io)
 
         lg.info(f'Conversion complete, output written to {output_path}')
+
     except ModuleNotFoundError as e:
         lg.error(f'Error importing external format module: {e}')
         raise UserWarning(f'Unknown external format: {params["x_format"]}')
@@ -151,7 +154,7 @@ def do_convert(params, input_path: Path, output_path: Path):
 @click.argument('x_format', type=str, required=True)
 @click.argument('output-file', type=Path, required=False)
 @metadata.metadata_args
-def convert(params, output_file, **kwargs):
+def convert_command(params, output_file, **kwargs):
     '''Convert an external data file to the FVC format
 
     \b
@@ -170,7 +173,7 @@ def convert(params, output_file, **kwargs):
     params.update(kwargs)
     input_path = params['input'].fetch()
     output_path = output_file if output_file else input_path.with_suffix('.fvc')
-    do_convert(params, input_path, output_path)
+    convert(params, output_path)
 
 
 @df.command(help='Calculate statistics for a FVC data file')
@@ -256,7 +259,8 @@ def crawl(params, force, validate):
                                 f'Converting {in_file_path.name} from {x_format} to {target}'
                             )
 
-                            do_convert(params, in_file_path, output_path)
+                            params['input'] = u.Input(params, in_file_path)
+                            convert(params, output_path)
 
                             if validate:
                                 lg.info(f'Validating {output_path.name}')
