@@ -39,7 +39,7 @@ class Courageous:
                 timestamp = {'unix': record['time']}
                 flog_record = {'time': timestamp, 'uaid': uaid}
                 position = self.build_position(record['location'])
-                
+
                 if position:
                     flog_record.update({'pos': position})
 
@@ -87,10 +87,12 @@ class CourageousPolar(Courageous):
         return 'radarlog'
 
     def build_position(self, loc):
-        if loc.get('t') == 'BearingElevation':
+        loc_format = loc.get('t')
+
+        if loc_format == 'BearingElevation':
             pos = loc['c']
         else:
-            lg.warning(f'Unused location format: {loc.get("t")}')
+            lg.warning(f'Unused location format: {loc_format}')
             return None
 
         position = {
@@ -112,5 +114,5 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
         Converter = CourageousPolar
     else:
         raise ValueError(f'Unsupported content type: {params.get("content")}')
-    
+
     Converter(params, metadata, input_path, output).convert()

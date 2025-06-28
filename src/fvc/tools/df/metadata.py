@@ -28,26 +28,28 @@ def initial_metadata(params) -> JSON:
     metadata = {}  # type: JSON
     metadata['origin'] = str(params['input'].fetch().name)
 
-    if not params.get('polar_sensor_source'):
+    polar_sensor_source = params.get('polar_sensor_source') or params.get('polar-sensor-source')
+    polar_sensor_format = params.get('polar_sensor_format') or params.get('polar-sensor-format')
+
+    if not polar_sensor_source:
         return metadata
 
-    if 'polar_sensor_format' not in params:
+    if not polar_sensor_format:
         raise UserWarning('Sensor format (--polar-sensor-format) must be provided')
 
-    filename = params['polar_sensor_source']
+    filename = polar_sensor_source
     source = Input(params, filename).fetch()
 
-    if format := params.get('polar_sensor_format'):
-        if format == 'nmea':
-            metadata['polar_sensor'] = {
-                'source': 'nmea',
-                'origin': source.name
-            }
+    if polar_sensor_format == 'nmea':
+        metadata['polar_sensor'] = {
+            'source': 'nmea',
+            'origin': source.name
+        }
 
-            metadata['polar_sensor'].update(
-                nmea.extract_sensor_data(params, source)
-            )
+        metadata['polar_sensor'].update(
+            nmea.extract_sensor_data(params, source)
+        )
 
-            return metadata
+        return metadata
 
     raise UserWarning(f'Unknown sensor format: {format}')
