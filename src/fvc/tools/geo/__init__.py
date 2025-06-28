@@ -3,7 +3,7 @@ import os
 import pandas
 import geopandas
 
-from fvc.tools.df.util import Input, JsonlinesIO
+from fvc.tools.df.utils import Input, JsonlinesIO
 
 
 def fetch_geodata(file_name: str) -> geopandas.GeoDataFrame:

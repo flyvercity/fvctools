@@ -9,9 +9,9 @@ import click
 import jsonschema
 from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn
 
-from fvc.tools.util import json_print
+from fvc.tools.utils import json_print
 import fvc.tools.df.schema as schema
-import fvc.tools.df.util as u
+import fvc.tools.df.utils as u
 
 import fvc.tools.df.flightlog as flightlog
 import fvc.tools.df.metadata as metadata

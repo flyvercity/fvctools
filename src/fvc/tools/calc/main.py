@@ -2,7 +2,7 @@ import click
 from datetime import datetime, UTC
 import logging as lg
 
-import fvc.tools.util as u
+import fvc.tools.utils as u
 
 
 @click.group(help='Specialized calculation tools')

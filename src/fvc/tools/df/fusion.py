@@ -3,9 +3,9 @@ import logging as lg
 
 import click
 
-import fvc.tools.util as u
-import fvc.tools.df.util as uf
-from fvc.tools.df.util import JsonlinesIO as JLIO
+import fvc.tools.utils as u
+import fvc.tools.df.utils as uf
+from fvc.tools.df.utils import JsonlinesIO as JLIO
 import fvc.tools.df.xformats.safirmqtt as smq
 
 

@@ -1,8 +1,8 @@
 import click
 from functools import wraps
 
-from fvc.tools.util import JSON
-from fvc.tools.df.util import Input
+from fvc.tools.utils import JSON
+from fvc.tools.df.utils import Input
 import fvc.tools.df.xformats.nmea as nmea
 
 

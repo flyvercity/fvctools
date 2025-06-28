@@ -3,7 +3,7 @@ from pathlib import Path
 import csv
 import logging as lg
 
-from fvc.tools.df.util import JsonlinesIO
+from fvc.tools.df.utils import JsonlinesIO
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):

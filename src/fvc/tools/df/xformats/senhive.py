@@ -3,8 +3,8 @@ import csv
 import logging as lg
 
 
-from fvc.tools.util import datestring_to_ts
-from fvc.tools.df.util import JsonlinesIO
+from fvc.tools.utils import datestring_to_ts
+from fvc.tools.df.utils import JsonlinesIO
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):

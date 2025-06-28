@@ -3,7 +3,7 @@ import json
 import logging as lg
 from botobuddy.utils import dslice
 
-import fvc.tools.df.util as u
+import fvc.tools.df.utils as u
 
 
 def generate_point(params, record):

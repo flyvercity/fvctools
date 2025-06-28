@@ -3,8 +3,8 @@ from xml.parsers.expat import ParserCreate
 from typing import TextIO
 import logging as lg
 
-import fvc.tools.util as u
-from fvc.tools.df.util import JsonlinesIO
+import fvc.tools.utils as u
+from fvc.tools.df.utils import JsonlinesIO
 
 
 def iterate_robin(f: TextIO):

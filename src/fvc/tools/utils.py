@@ -68,7 +68,7 @@ def parse_lat(lat: Any) -> float:
 
             deg = int(lat[:2])
             min = float(lat[2:])
-            return sign*(deg + min/60.0)
+            return sign * (deg + min / 60.0)
 
     # Something else
     return dms.parseDMS(lat)
@@ -90,7 +90,7 @@ def parse_lon(lon: Any) -> float:
 
             deg = int(lon[:3])
             min = float(lon[3:])
-            return sign*(deg + min/60.0)
+            return sign * (deg + min / 60.0)
 
     # Something else
     return dms.parseDMS(lon)

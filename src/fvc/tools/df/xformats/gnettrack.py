@@ -12,7 +12,7 @@ import uuid
 import logging as lg
 from botobuddy.utils import dslice
 
-from fvc.tools.df.util import JsonlinesIO
+from fvc.tools.df.utils import JsonlinesIO
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):

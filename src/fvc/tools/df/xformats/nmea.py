@@ -13,8 +13,8 @@ import statistics
 import pynmea2
 from dateutil.parser import parse as dateparse
 
-from fvc.tools.df.util import JsonlinesIO
-from fvc.tools.util import JSON
+from fvc.tools.df.utils import JsonlinesIO
+from fvc.tools.utils import JSON
 
 
 def iterate_nmea_file(input_path: Path):

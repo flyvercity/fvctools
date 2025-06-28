@@ -5,7 +5,7 @@ import math
 
 import simplekml
 
-import fvc.tools.df.util as u
+import fvc.tools.df.utils as u
 
 
 def generate_point(params, record, kml):
