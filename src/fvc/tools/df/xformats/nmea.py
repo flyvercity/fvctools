@@ -1,3 +1,10 @@
+'''
+NMEA log format
+
+Custom parameters:
+    - base-date=<datestring> is required for this format
+'''
+
 from pathlib import Path
 from datetime import datetime, UTC
 import logging as lg
@@ -23,21 +30,27 @@ def iterate_nmea_file(input_path: Path):
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
-    base_date = params.get('base_date')  # type: datetime
+    base_date = None
 
-    if not base_date:
-        raise UserWarning("This format requires the date to be set manually with '--base-date'")
+    for custom in params.get('custom', []):
+        if custom.startswith('base-date='):
+            base_date = custom.split('=')[1]
+            break
 
-    # NB: crawl mode 'extra' support
     if isinstance(base_date, str):
         base_date = dateparse(base_date)
+
+    if not base_date:
+        raise UserWarning(
+            'This format requires the date to be set manually with "base-date" custom parameter'
+        )
 
     lg.debug(f'Using base date: {base_date}')
 
     metadata.update({
         'content': 'flightlog',
         'source': 'nmea',
-        'base_date': base_date.date().isoformat()
+        'base-date': base_date.date().isoformat()
     })
 
     output.write(metadata)
@@ -55,7 +68,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
         alt = message.altitude + float(message.geo_sep)  # type: ignore
 
         record = {
-            'time': {'unix': int(timestamp.timestamp()*1000)},
+            'time': {'unix': int(timestamp.timestamp() * 1000)},
             'pos': {
                 'loc': {
                     'lat': message.latitude,

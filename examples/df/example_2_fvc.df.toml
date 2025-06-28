@@ -8,7 +8,5 @@
 [convert."**/*"]
 x-format = "nmea"	# x-format is external format to convert from (see --x-format option)
 target = "flightlog"    # default target is 'flightlog', but 'radarlog' is also supported
-
-# Some formats require additional data (see a corresponding --help). Pass this through 'extra' subtable.
-[convert."**/*".extra]
-base_date = "2023-10-02"
+# Some formats require additional data (see the corresponding conversion/export module for details).
+custom=["base-date=2023-10-02"]

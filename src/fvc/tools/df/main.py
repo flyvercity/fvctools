@@ -117,7 +117,8 @@ def do_convert(params, input_path: Path, output_path: Path):
     try:
         params['output_path'] = output_path
 
-        x_format = params['x_format']
+        # NB: support for 'crawl' file syntax
+        x_format = params.get('x-format') or params.get('x_format')
 
         lg.debug(f'Using external format module: {x_format}')
         ext_format_mod = importlib.import_module(f'fvc.tools.df.xformats.{x_format}')
@@ -139,12 +140,6 @@ def do_convert(params, input_path: Path, output_path: Path):
 @click.option(
     '--target', help='Target content type',
     type=click.Choice(['flightlog', 'radarlog']), default='flightlog'
-)
-@click.option(
-    '--base-date',
-    help='A base date should be given manually for formats without date info in timestamps',
-    type=click.DateTime(['%d %b %Y', '%Y-%m-%d']),
-    required=False
 )
 @click.option(
     '--custom',
@@ -223,18 +218,25 @@ def crawl(params, force, validate):
     for toml_file in input_dir.glob('**/fvc.df.toml'):
         lg.info(f'Found DF local config {toml_file}')
         crawl_config = tomllib.loads(toml_file.read_text())
+        lg.debug(f'Crawl config: {crawl_config}')
 
         if convert_task := crawl_config.get('convert'):
-            for file_def in convert_task:
-                x_format = convert_task[file_def]['x-format']
-                target = convert_task[file_def].get('target', 'flightlog')
+            for file_glob in convert_task:
+                file_def = convert_task[file_glob]
+                params.update(file_def)
 
-                params.update(convert_task[file_def].get('extra', {}))
-                params.update({'x_format': x_format, 'target': target})
+                if 'x-format' not in file_def:
+                    raise UserWarning(f'x-format is required for {file_glob}')
+                else:
+                    x_format = file_def['x-format']
 
+                if 'target' not in file_def:
+                    file_def['target'] = 'flightlog'
+
+                target = file_def['target']
                 task_dir = toml_file.parent
 
-                for in_file_path in task_dir.glob(file_def):
+                for in_file_path in task_dir.glob(file_glob):
                     if in_file_path.is_dir():
                         lg.info(f'Found directory {in_file_path}, skipping')
                         continue
