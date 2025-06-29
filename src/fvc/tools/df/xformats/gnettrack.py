@@ -91,7 +91,9 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 {'k': 'SS_Qual', 'c': maybe_float, 'n': 'SS-RSRQ'},
                 {'k': 'SS_RSSI', 'c': maybe_float, 'n': 'SS-RSSI'},
                 {'k': 'SS_SNR', 'c': maybe_float, 'n': 'SS-SINR'},
-                {'k': 'ARFCN', 'c': maybe_int}
+                {'k': 'ARFCN', 'c': maybe_int},
+                {'k': 'BAND', 'n': 'band'},
+                {'k': 'CGI'}
             ))
 
             loc = dslice(

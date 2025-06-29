@@ -217,6 +217,12 @@ CELLULAR_SIGNAL: &CELLULAR_SIGNAL
     ARFCN:
       type:
         - number
+    BAND:
+      type:
+        - number
+    CGI:
+      type:
+        - string
 
 FLIGHTLOG: &FLIGHTLOG
   type: object
