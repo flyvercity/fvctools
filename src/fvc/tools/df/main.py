@@ -4,10 +4,11 @@ import logging as lg
 import importlib
 import tomllib
 import traceback
+from typing import cast
 
 import click
 import jsonschema
-from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn
+from rich.progress import Progress
 
 from fvc.tools.utils import json_print
 import fvc.tools.df.schema as schema
@@ -24,13 +25,7 @@ MAX_ERRORS = 100
 def isValid(input_path: Path):
     file_size = input_path.stat().st_size
 
-    with Progress(
-        TextColumn('[progress.description]{task.description}'),
-        BarColumn(),
-        "[progress.percentage]{task.percentage:>3.0f}%",
-        TimeRemainingColumn(),
-        transient=True
-    ) as progress:
+    with Progress(transient=True) as progress:
         task = progress.add_task('Validating data', total=file_size)
 
         with u.JsonlinesIO(input_path, 'r', callback=lambda s: progress.update(task, advance=s)) as f:
@@ -283,6 +278,53 @@ def crawl(params, force, validate):
             lg.error(error)
     else:
         lg.info('There were no errors')
+
+
+@df.command(help='Upgrade a FVC file to the latest schema (volatile code)')
+@click.argument('infile', type=Path, required=True)
+def upgrade(infile):
+    infile = Path(infile)
+    outfile = infile.with_suffix('.fvc')
+
+    with Progress(transient=True) as progress:
+        read_task = progress.add_task('Reading...', total=infile.stat().st_size)
+        write_task = progress.add_task('Writing...', total=infile.stat().st_size)
+
+        with (
+            u.JsonlinesIO(
+                infile, 'r',
+                callback=lambda s: progress.update(read_task, advance=s)
+            ) as infile,
+            u.JsonlinesIO(
+                outfile, 'w',
+                callback=lambda s: progress.update(write_task, advance=s)
+            ) as outfile
+        ):
+            metaline = infile.read()
+            outfile.write(metaline)
+
+            for record in infile.iterate():
+                cell = record.get('cellsig')
+
+                if not cell:
+                    continue
+
+                cell = cast(dict, cell)
+
+                if 'RSRP_4G' in cell:
+                    del cell['RSRP_4G']
+
+                if 'RSRP_5G' in cell:
+                    del cell['RSRP_5G']
+
+                if 'RSRQ_4G' in cell:
+                    del cell['RSRQ_4G']
+
+                if 'RSRQ_5G' in cell:
+                    del cell['RSRQ_5G']
+
+                cell['radio'] = '4GLTE'
+                outfile.write(record)
 
 
 df.add_command(fusion.fusion)

@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Literal
+from typing import Generator, Literal
 import logging as lg
 
 from benedict import benedict
@@ -41,9 +41,9 @@ class JsonlinesIO:
             raise RuntimeError('File is not open')
 
         self._in_line_no += 1
-        last_read_bytes = len(line) + 2  # \n\r
 
         if self._callback:
+            last_read_bytes = len(line.encode('utf-8')) + 2  # \n\r
             self._callback(last_read_bytes)
 
         if not line.strip():
@@ -58,11 +58,15 @@ class JsonlinesIO:
         self._check_entered()
 
         if self._file:
-            self._file.write(json.dumps(data) + '\n')
+            line = json.dumps(data) + '\n'
+            self._file.write(line)
+
+            if self._callback:
+                self._callback(len(line.encode('utf-8')))
         else:
             raise RuntimeError('File is not open')
 
-    def iterate(self):
+    def iterate(self) -> Generator[benedict, None, None]:
         while data := self.read():
             yield data
 
