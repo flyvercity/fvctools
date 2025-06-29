@@ -64,13 +64,16 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             net_tech = row['NetworkTech']
             net_mode = row['NetworkMode']
 
-            if net_tech == '4G' and net_mode in ('4G', 'LTE'):
-                radio = '4GLTE'
-            elif net_tech == '5G' and net_mode == 'NR':
-                radio = '5GNR'
-            else:
-                lg.warning(f'Unknown network technology: {net_tech} {net_mode}')
-                continue
+            match (net_tech, net_mode):
+                case ('4G', 'LTE'):
+                    radio = '4GLTE'
+                case ('4G', '5G NSA') | ('5G', '5G NSA') | ('5G', 'LTE'):
+                    radio = '5GNSA'
+                case ('5G', 'NR'):
+                    radio = '5GNR'
+                case _:
+                    lg.warning(f'Unknown network technology: {net_tech} {net_mode}')
+                    continue
 
             cellsig = {'radio': radio}
 

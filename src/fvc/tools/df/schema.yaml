@@ -176,6 +176,7 @@ CELLULAR_SIGNAL: &CELLULAR_SIGNAL
       type: string
       enum:
         - 4GLTE
+        - 5GNSA
         - 5GNR
     RSRP:
       type:
