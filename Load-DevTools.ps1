@@ -1,1 +1,1 @@
-fvc shell pwsh | Invoke-Expression
+uv run fvc shell pwsh | Invoke-Expression
