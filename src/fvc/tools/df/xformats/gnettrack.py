@@ -16,20 +16,21 @@ from fvc.tools.df.utils import JsonlinesIO
 
 
 def module_help():
-    return '''
-    - gnettrack-allow-low-precision: Allow low precision time for Gnettrack log
-    '''
+    return '- gnettrack-allow-low-precision: Allow low precision time for Gnettrack log'
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     track_id = str(uuid.uuid4())
+
+    allow_low_precision = 'gnettrack-allow-low-precision' in params.get('custom', [])
 
     with input_path.open('rt') as input:
         reader = csv.DictReader(input, delimiter='\t')
 
         metadata.update({
             'content': 'flightlog',
-            'source': 'gnettrack'
+            'source': 'gnettrack',
+            'allow_low_precision': allow_low_precision
         })
 
         output.write(metadata)
@@ -40,10 +41,13 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             [year, month, day] = date.split('.')
             time_parts = time.split('.')
 
+            row_metadata = {}
+
             if len(time_parts) != 4:
-                if 'gnettrack-allow-low-precision' in params.get('custom', []):
+                if allow_low_precision:
                     lg.warning('Using low precision time for Gnettrack log')
                     time_parts.append('0')
+                    row_metadata['low_precision'] = True
                 else:
                     raise UserWarning(
                         f'Invalid time setting for Gnettrack log {input_path.name}. '
@@ -115,13 +119,13 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 {'k': 'PINGLOSS', 'c': maybe_int, 'n': 'loss'}
             )
 
-            row_metadata = dslice(
+            row_metadata.update(dslice(
                 row,
                 'Operatorname',
                 'BATTERY',
                 'Accuracy',
                 'Location',
-            )
+            ))
 
             record = {
                 'uaid': uaid,

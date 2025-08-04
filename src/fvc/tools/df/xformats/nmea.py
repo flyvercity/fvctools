@@ -18,9 +18,7 @@ from fvc.tools.utils import JSON
 
 
 def module_help():
-    return '''
-    - base-date=<datestring> is required for this format
-    '''
+    return '- base-date=<datestring> is required for this format'
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):

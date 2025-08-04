@@ -110,13 +110,14 @@ def validate(params):
 
 @df.command(name='help', help='Show help for a specific format')
 @click.argument('x_format', type=str, required=True)
-def format_help(x_format: str):
+def xformat_help(x_format: str):
     ext_format_mod = importlib.import_module(f'fvc.tools.df.xformats.{x_format}')
 
     help_text = getattr(ext_format_mod, 'module_help', None)
 
     if help_text:
-        print(help_text())
+        click.echo(f"Help for '{x_format}' additional parameters:")
+        click.echo(help_text())
     else:
         lg.error(f'No help text found for {x_format}')
 
