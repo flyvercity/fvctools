@@ -108,6 +108,19 @@ def validate(params):
         json_print(params, {'valid': valid})
 
 
+@df.command(name='help', help='Show help for a specific format')
+@click.argument('x_format', type=str, required=True)
+def format_help(x_format: str):
+    ext_format_mod = importlib.import_module(f'fvc.tools.df.xformats.{x_format}')
+
+    help_text = getattr(ext_format_mod, 'module_help', None)
+
+    if help_text:
+        print(help_text())
+    else:
+        lg.error(f'No help text found for {x_format}')
+
+
 def convert(params, output_path: Path):
     input_path = params['input'].fetch()
 
@@ -141,7 +154,7 @@ def convert(params, output_path: Path):
 )
 @click.option(
     '--custom',
-    help='Custom parameters for the conversion, see xformats modules for details',
+    help='Custom parameters for the conversion, use "fvc.df help <x_format>" for details',
     type=str,
     multiple=True,
     required=False

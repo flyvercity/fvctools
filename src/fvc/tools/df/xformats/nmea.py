@@ -17,16 +17,10 @@ from fvc.tools.df.utils import JsonlinesIO
 from fvc.tools.utils import JSON
 
 
-def iterate_nmea_file(input_path: Path):
-    with input_path.open() as f:
-        while line := f.readline():
-            try:
-                message = pynmea2.parse(line)
-
-                yield message
-
-            except ValueError as e:
-                lg.warning(f'Unable to parse line ({line}) with error: {e}')
+def module_help():
+    return '''
+    - base-date=<datestring> is required for this format
+    '''
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
@@ -79,6 +73,18 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
         }
 
         output.write(record)
+
+
+def iterate_nmea_file(input_path: Path):
+    with input_path.open() as f:
+        while line := f.readline():
+            try:
+                message = pynmea2.parse(line)
+
+                yield message
+
+            except ValueError as e:
+                lg.warning(f'Unable to parse line ({line}) with error: {e}')
 
 
 def extract_sensor_data(params, sensor_source: Path) -> JSON:

@@ -15,6 +15,12 @@ from botobuddy.utils import dslice
 from fvc.tools.df.utils import JsonlinesIO
 
 
+def module_help():
+    return '''
+    - gnettrack-allow-low-precision: Allow low precision time for Gnettrack log
+    '''
+
+
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     track_id = str(uuid.uuid4())
 
