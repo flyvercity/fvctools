@@ -5,17 +5,24 @@ import traceback
 import boto3
 import click
 
-import fvc.tools.calc.main
-import fvc.tools.df
-import fvc.tools.calc
+from fvc.tools.calc.cli import calc
+from fvc.tools.df.cli import df
 
 
 @click.group(help='Flyvercity CLI tools suite')
 @click.pass_context
-@click.option('--verbose', is_flag=True, help='sets logging level to debug')
-@click.option('--json', is_flag=True, help='Make JSON default output format instead of free form')
-@click.option('--no-pprint', is_flag=True, help='Disable colored pretty printing')
-@click.option('--aws-profile', help='AWS profile to use for S3 operations')
+@click.option(
+    '--verbose', is_flag=True, help='sets logging level to debug'
+)
+@click.option(
+    '--json', is_flag=True, help='Make JSON default output format instead of free form'
+)
+@click.option(
+    '--no-pprint', is_flag=True, help='Disable colored pretty printing'
+)
+@click.option(
+    '--aws-profile', help='AWS profile to use for S3 operations'
+)
 @click.option(
     '--egm', type=click.Path(exists=True), required=False,
     help='Custom EGM geoid data file (*.pgm). Default: egm96-5.pgm'
@@ -58,8 +65,8 @@ def pwsh():
     ))
 
 
-cli.add_command(fvc.tools.df.df)
-cli.add_command(fvc.tools.calc.calc)
+cli.add_command(df)
+cli.add_command(calc)
 
 
 def main():

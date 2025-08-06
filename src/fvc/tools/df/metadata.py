@@ -24,6 +24,7 @@ def metadata_args(command_func):
     return wrapper
 
 
+# TODO: move this to "custom" parameters
 def initial_metadata(params) -> JSON:
     metadata = {}  # type: JSON
     metadata['origin'] = str(params['input'].fetch().name)
