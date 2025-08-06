@@ -103,6 +103,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 {'k': 'SS_SNR', 'c': maybe_float, 'n': 'SS-SINR'},
                 {'k': 'ARFCN', 'c': maybe_int},
                 {'k': 'BAND', 'n': 'band'},
+                {'k': 'Operatorname', 'n': 'operator'},
                 {'k': 'CGI'}
             ))
 
@@ -121,7 +122,6 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
             row_metadata.update(dslice(
                 row,
-                'Operatorname',
                 'BATTERY',
                 'Accuracy',
                 'Location',
