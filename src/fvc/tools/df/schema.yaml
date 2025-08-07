@@ -217,12 +217,19 @@ CELLULAR_SIGNAL: &CELLULAR_SIGNAL
     ARFCN:
       type:
         - number
-    BAND:
+    band:
       type:
-        - number
+        - string
     CGI:
       type:
         - string
+    plmnid:
+      type:
+        - string
+    plmnname:
+      type:
+        - string
+  additionalProperties: false
 
 FLIGHTLOG: &FLIGHTLOG
   type: object
@@ -237,7 +244,19 @@ FLIGHTLOG: &FLIGHTLOG
     # Geodetic  position
     pos: *POSITION
     # Cellular signal
-    cell-sig: *CELLULAR_SIGNAL
+    cellsig: *CELLULAR_SIGNAL
+    datalink:
+      type: object
+      properties:
+        rtt:
+          type: number
+        loss:
+          type: number
+      optional:
+        - rtt
+        - loss
+    metadata:
+      type: object
   required:
     - time
     - pos
@@ -246,6 +265,7 @@ FLIGHTLOG: &FLIGHTLOG
     - uaid
     - origin
     - cellsig
+    - datalink
 
 RADARLOG: &RADARLOG
   type: object
