@@ -1,10 +1,6 @@
 import click
 import importlib
-import tomllib
-import sys
-import traceback
 from pathlib import Path
-from typing import cast
 import logging as lg
 
 from rich.progress import Progress
@@ -13,7 +9,7 @@ from fvc.tools.utils import json_print
 import fvc.tools.df.utils as u
 import fvc.tools.df.metadata as metadata
 import fvc.tools.df.flightlog as flightlog
-from fvc.tools.df.main import convert, isValid
+import fvc.tools.df.core as core
 
 
 DESCRIPTION = 'Data file conversion and manipulation tool'
@@ -57,7 +53,7 @@ def validate(params):
     with Progress(transient=True) as progress:
         task = progress.add_task('Validating data', total=file_size)
 
-        valid = isValid(
+        valid = core.isValid(
             input_path,
             callback=lambda s: progress.update(task, advance=s)
         )
@@ -118,7 +114,7 @@ def convert_command(params, output_file, **kwargs):
     input_path = params['input'].fetch()
     output_path = output_file if output_file else input_path.with_suffix('.fvc')
     params['output_path'] = output_path
-    convert(params)
+    core.convert(params)
 
 
 @df.command(help='Calculate statistics for a FVC data file')
@@ -146,12 +142,10 @@ def fetch(params):
 @click.pass_obj
 @click.argument('x_format', type=str, required=True)
 @click.argument('output-file', type=Path, required=False)
-def export(params, x_format, output_file, **kwargs):
+def export_command(params, output_file, **kwargs):
     params.update(kwargs)
-    export_module = importlib.import_module(f'fvc.tools.df.xformats.{x_format}')
-    export_fun = getattr(export_module, 'export_from_fvc')
-    real_output = export_fun(params, output_file)
-    lg.info(f'Export complete, output written to {real_output}')
+    params['output_path'] = output_file
+    core.export(params)
 
 
 @df.command(help='Scan for fvc.df.toml files and execute tasks')
@@ -159,123 +153,27 @@ def export(params, x_format, output_file, **kwargs):
 @click.option('--force', help='Reconvert files even if they exist', is_flag=True)
 @click.option('--validate', help='Validate files after conversion', is_flag=True)
 def crawl(params, force, validate):
-    input_dir = params['input'].as_dir()
-
-    errors = []
-
-    for toml_file in input_dir.glob('**/fvc.df.toml'):
-        lg.info(f'Found DF local config {toml_file}')
-        crawl_config = tomllib.loads(toml_file.read_text())
-        lg.debug(f'Crawl config: {crawl_config}')
-
-        if convert_task := crawl_config.get('convert'):
-            for file_glob in convert_task:
-                file_def = convert_task[file_glob]
-                params.update(file_def)
-
-                if 'x-format' not in file_def:
-                    raise UserWarning(f'x-format is required for {file_glob}')
-                else:
-                    x_format = file_def['x-format']
-
-                if 'target' not in file_def:
-                    file_def['target'] = 'flightlog'
-
-                target = file_def['target']
-                task_dir = toml_file.parent
-
-                for in_file_path in task_dir.glob(file_glob):
-                    if in_file_path.is_dir():
-                        lg.info(f'Found directory {in_file_path}, skipping')
-                        continue
-
-                    if in_file_path.name == 'fvc.df.toml':
-                        continue
-
-                    if in_file_path.suffix == '.fvc':
-                        lg.info(f'File {in_file_path.name} is already in FVC format, skipping')
-                        continue
-
-                    output_path = in_file_path.with_suffix('.fvc')
-
-                    if not output_path.exists() or force:
-                        try:
-                            lg.info(
-                                f'Converting {in_file_path.name} from {x_format} to {target}'
-                            )
-
-                            params['input'] = u.Input(params, in_file_path)
-                            params['output_path'] = output_path
-                            convert(params)
-
-                            if validate:
-                                lg.info(f'Validating {output_path.name}')
-
-                                if not isValid(output_path):
-                                    errors.append(f'Validation failed for {output_path}')
-
-                        except Exception as e:
-                            if params['verbose']:
-                                traceback.print_exc(file=sys.stderr)
-
-                            errors.append(f'Error converting {in_file_path}: {e}')
-                    else:
-                        lg.info(f'Output file {output_path.name} exists, skipping')
-
-    if errors:
-        lg.error(f'{len(errors)} errors occurred')
-
-        for error in errors:
-            lg.error(error)
-    else:
-        lg.info('There were no errors')
+    params['force'] = force
+    params['validate'] = validate
+    core.crawl(params)
 
 
 @df.command(help='Upgrade a FVC file to the latest schema (volatile code)')
-@click.argument('infile', type=Path, required=True)
-def upgrade(infile):
-    infile = Path(infile)
-    outfile = infile.with_suffix('.fvc')
+@click.argument('infile', type=click.Path(exists=True, path_type=Path), required=True)
+@click.pass_obj
+def upgrade(params, infile):
+    params['input'] = u.Input(params, infile)
+    params['output_path'] = infile.with_suffix('.fvc')
 
     with Progress(transient=True) as progress:
         read_task = progress.add_task('Reading...', total=infile.stat().st_size)
         write_task = progress.add_task('Writing...', total=infile.stat().st_size)
 
-        with (
-            u.JsonlinesIO(
-                infile, 'r',
-                callback=lambda s: progress.update(read_task, advance=s)
-            ) as infile,
-            u.JsonlinesIO(
-                outfile, 'w',
-                callback=lambda s: progress.update(write_task, advance=s)
-            ) as outfile
-        ):
-            metaline = infile.read()
-            outfile.write(metaline)
-
-            for record in infile.iterate():
-                cell = record.get('cellsig')
-
-                if not cell:
-                    continue
-
-                cell = cast(dict, cell)
-
-                if 'RSRP_4G' in cell:
-                    del cell['RSRP_4G']
-
-                if 'RSRP_5G' in cell:
-                    del cell['RSRP_5G']
-
-                if 'RSRQ_4G' in cell:
-                    del cell['RSRQ_4G']
-
-                if 'RSRQ_5G' in cell:
-                    del cell['RSRQ_5G']
-
-                cell['radio'] = '4GLTE'
-                outfile.write(record)
+        core.upgrade(
+            params,
+            lambda s: progress.update(read_task, advance=s),
+            lambda s: progress.update(write_task, advance=s)
+        )
 
 
 df.add_command(fusion.fusion)
