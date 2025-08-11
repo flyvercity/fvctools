@@ -244,6 +244,7 @@ dependencies = [
     { name = "pyparsing" },
     { name = "python-benedict" },
     { name = "python-dateutil" },
+    { name = "pyulog" },
     { name = "pyyaml" },
     { name = "scipy" },
     { name = "simplekml" },
@@ -271,6 +272,7 @@ requires-dist = [
     { name = "pyparsing", specifier = ">=3.2.0" },
     { name = "python-benedict", specifier = ">=0.34.1" },
     { name = "python-dateutil", specifier = ">=2.9.0.post0" },
+    { name = "pyulog", specifier = ">=1.2.2" },
     { name = "pyyaml", specifier = ">=6.0.2" },
     { name = "scipy", specifier = ">=1.14.1" },
     { name = "simplekml", specifier = ">=1.3.6" },
@@ -809,6 +811,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/f8/bf/abbd3cdfb8fbc7fb3d4d38d320f2441b1e7cbe29be4f23797b4a2b5d8aac/pytz-2025.2.tar.gz", hash = "sha256:360b9e3dbb49a209c21ad61809c7fb453643e048b38924c765813546746e81c3", size = 320884, upload-time = "2025-03-25T02:25:00.538Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/81/c4/34e93fe5f5429d7570ec1fa436f1986fb1f00c3e0f43a589fe2bbcd22c3f/pytz-2025.2-py2.py3-none-any.whl", hash = "sha256:5ddf76296dd8c44c26eb8f4b6f35488f3ccbf6fbbd7adee0b7262d43f0ec2f00", size = 509225, upload-time = "2025-03-25T02:24:58.468Z" },
+]
+
+[[package]]
+name = "pyulog"
+version = "1.2.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/1e/0e/45b1c8509a8ca943a8c74bc1879d4fc9bc4f23adc41e3d21f735dc9c27e4/pyulog-1.2.2.tar.gz", hash = "sha256:f6ffded4954c44f430a1125c28e81916966f8a3050d3d4db7fa07878c2d2de26", size = 77583, upload-time = "2025-07-10T07:59:47.579Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e1/7b/7e07895342827f5bbfe60bca810337c2e3cf24777a5bd6d095f3746850f2/pyulog-1.2.2-py3-none-any.whl", hash = "sha256:43cb20d493158226a6d309c45e23ffab47eebc69cfaafa15277463804c5338e1", size = 48952, upload-time = "2025-07-10T07:59:46.121Z" },
 ]
 
 [[package]]

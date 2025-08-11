@@ -31,6 +31,7 @@ LOCATION: &LOCATION
     - height
     - bear
     - gspeed
+  additionalProperties: false
 
 POLAR: &POLAR
   type: object
@@ -41,6 +42,7 @@ POLAR: &POLAR
     # Elevation angle in degrees above horizon
     elev:
       type: number
+  additionalProperties: false
 
 # Polar sensor payload
 POLAR_SENSOR: &POLAR_SENSOR
@@ -49,6 +51,7 @@ POLAR_SENSOR: &POLAR_SENSOR
     loc: *LOCATION
   required:
     - loc
+  additionalProperties: false
 
 IDENTIFICATION: &IDENTIFICATION
   type: object
@@ -82,6 +85,7 @@ IDENTIFICATION: &IDENTIFICATION
         - int
     - required:
         - fvc
+  additionalProperties: false
 
 # Current file content descriptor
 CONTENT: &CONTENT
@@ -117,6 +121,7 @@ METADATA: &METADATA
         - agentfly
         - gnettrack
         - mqtt
+        - ulog
     # Original file name or originating system
     origin:
       type: string
@@ -142,6 +147,7 @@ ATTITUDE: &ATTITUDE
     - roll
     - pitch
     - yaw
+  additionalProperties: false
 
 POSITION: &POSITION
   type: object
@@ -152,6 +158,7 @@ POSITION: &POSITION
     - loc
   optional:
     - att
+  additionalProperties: false
 
 RADAR_POSITION: &RADAR_POSITION
   type: object
@@ -159,6 +166,7 @@ RADAR_POSITION: &RADAR_POSITION
     loc: *POLAR
   required:
     - loc
+  additionalProperties: false
 
 TIMESTAMP: &TIMESTAMP
   type: object
@@ -168,6 +176,7 @@ TIMESTAMP: &TIMESTAMP
       type: number
   required:
     - unix
+  additionalProperties: false
 
 CELLULAR_SIGNAL: &CELLULAR_SIGNAL
   type: object
@@ -266,6 +275,8 @@ FLIGHTLOG: &FLIGHTLOG
     - origin
     - cellsig
     - datalink
+    - metadata
+  additionalProperties: false
 
 RADARLOG: &RADARLOG
   type: object
@@ -284,6 +295,7 @@ RADARLOG: &RADARLOG
     - tag
     - uaid
     - origin
+  additionalProperties: false
 
 FUSION_REPLAY: &FUSION_REPLAY
   type: object
@@ -315,6 +327,7 @@ FUSION_REPLAY: &FUSION_REPLAY
     - message
     - eid
     - metadata
+  additionalProperties: false
 
 # Messages captured from MQTT topics (other sources may be added in the future)
 CAPTURE_MESSAGE: &CAPTURE_MESSAGE

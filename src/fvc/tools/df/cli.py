@@ -110,13 +110,19 @@ def convert_command(params, output_file, **kwargs):
         - robinradar
         - safirmqtt
         - senhive
+        - ulog
     '''
 
     params.update(kwargs)
     input_path = params['input'].fetch()
     output_path = output_file if output_file else input_path.with_suffix('.fvc')
     params['output_path'] = output_path
-    core.convert(params)
+
+    with Progress(transient=True) as progress:
+        progress.add_task('Reading...', total=None)
+        core.convert(params)
+
+    lg.info(f'Conversion complete, output written to {output_path}')
 
 
 @df.command(help='Calculate statistics for a FVC data file')

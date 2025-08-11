@@ -41,8 +41,6 @@ def convert(params):
         with u.JsonlinesIO(output_path, 'w') as io:
             convert_fun(params, meta, input_path, io)
 
-        lg.info(f'Conversion complete, output written to {output_path}')
-
     except ModuleNotFoundError as e:
         lg.error(f'Error importing external format module: {e}')
         raise UserWarning(f'Unknown external format: {params["x_format"]}')
