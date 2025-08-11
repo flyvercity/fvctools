@@ -1,6 +1,7 @@
 import logging as lg
 from argparse import ArgumentParser
 import traceback
+from importlib.metadata import version
 
 import boto3
 import click
@@ -10,6 +11,7 @@ from fvc.tools.df.cli import df
 
 
 @click.group(help='Flyvercity CLI tools suite')
+@click.version_option(version('fvctools'))
 @click.pass_context
 @click.option(
     '--verbose', is_flag=True, help='sets logging level to debug'
