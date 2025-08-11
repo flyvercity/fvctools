@@ -1,15 +1,17 @@
-import click
 import importlib
 from pathlib import Path
 import logging as lg
 
 from rich.progress import Progress
-import fvc.tools.df.fusion as fusion
+import click
+
 from fvc.tools.utils import json_print
 import fvc.tools.df.utils as u
 import fvc.tools.df.metadata as metadata
 import fvc.tools.df.flightlog as flightlog
 import fvc.tools.df.core as core
+from fvc.tools.df.correlate import correlate
+from fvc.tools.df.fusion import fusion
 
 
 DESCRIPTION = 'Data file conversion and manipulation tool'
@@ -53,7 +55,7 @@ def validate(params):
     with Progress(transient=True) as progress:
         task = progress.add_task('Validating data', total=file_size)
 
-        valid = core.isValid(
+        valid = core.validate(
             input_path,
             callback=lambda s: progress.update(task, advance=s)
         )
@@ -176,4 +178,31 @@ def upgrade(params, infile):
         )
 
 
-df.add_command(fusion.fusion)
+@df.command(help='Correlate several flightlogs')
+@click.pass_obj
+@click.argument(
+    'infiles',
+    type=click.Path(exists=True, path_type=Path),
+    required=True,
+    nargs=-1
+)
+def correlate_command(params, infiles: tuple[Path, ...]):
+    with Progress() as progress:
+        check_tasks = [
+            progress.add_task(f'Checking {infile}...', total=infile.stat().st_size)
+            for infile in infiles
+        ]
+
+        merge_task = progress.add_task('Merging...', total=None)
+
+        correlate(
+            params, infiles,
+            [
+                lambda s: progress.update(check_tasks[i], advance=s)
+                for i in range(len(check_tasks))
+            ],
+            lambda s: progress.update(merge_task, advance=s)
+        )
+
+
+df.add_command(fusion)
