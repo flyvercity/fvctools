@@ -3,6 +3,49 @@ var map;
 var geo_bounds;
 var coordinates;
 
+function createTooltipContent(coord, index) {
+    var content = '<div style="font-family: monospace; font-size: 12px;">';
+    content += '<strong>Point ' + (index + 1) + '</strong><br>';
+    content += '<strong>Coordinates:</strong> ' + coord.lat.toFixed(6) + ', ' + coord.lon.toFixed(6) + '<br>';
+    
+    if (coord.time) {
+        var date = new Date(coord.time * 1000);
+        content += '<strong>Time:</strong> ' + date.toLocaleString() + '<br>';
+    }
+    
+    if (coord.altitude !== undefined && coord.altitude !== null) {
+        content += '<strong>Altitude:</strong> ' + coord.altitude + ' m<br>';
+    }
+    
+    if (coord.amsl !== undefined && coord.amsl !== null) {
+        content += '<strong>AMSL:</strong> ' + coord.amsl + ' m<br>';
+    }
+    
+    if (coord.height !== undefined && coord.height !== null) {
+        content += '<strong>Height:</strong> ' + coord.height + ' m<br>';
+    }
+    
+    // Cellular signal data
+    if (coord.rsrp !== undefined && coord.rsrp !== null) {
+        content += '<strong>RSRP:</strong> ' + coord.rsrp + ' dBm<br>';
+    }
+    
+    if (coord.rsrq !== undefined && coord.rsrq !== null) {
+        content += '<strong>RSRQ:</strong> ' + coord.rsrq + ' dB<br>';
+    }
+    
+    if (coord.plmnid !== undefined && coord.plmnid !== null) {
+        content += '<strong>PLMN ID:</strong> ' + coord.plmnid + '<br>';
+    }
+    
+    if (coord.plmnname !== undefined && coord.plmnname !== null) {
+        content += '<strong>PLMN Name:</strong> ' + coord.plmnname + '<br>';
+    }
+    
+    content += '</div>';
+    return content;
+}
+
 function initializeMap(boundsData, coordinatesData) {
     geo_bounds = boundsData;
     coordinates = coordinatesData;
@@ -31,6 +74,25 @@ function initializeMap(boundsData, coordinatesData) {
         weight: 3,
         opacity: 0.8
     }).addTo(map);
+
+    // Add tooltip markers for all trajectory points
+    coordinates.forEach(function(coord, index) {
+        var tooltipContent = createTooltipContent(coord, index);
+        
+        // Create a small, nearly invisible marker for tooltips
+        L.circleMarker([coord.lat, coord.lon], {
+            radius: 1,
+            fillColor: '#667eea',
+            color: '#667eea',
+            weight: 0,
+            opacity: 0.3,
+            fillOpacity: 0.3
+        }).addTo(map).bindTooltip(tooltipContent, {
+            permanent: false,
+            direction: 'top',
+            className: 'trajectory-tooltip'
+        });
+    });
 
     // Add markers for start and end points
     if (coordinates.length > 0) {
