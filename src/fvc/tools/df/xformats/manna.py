@@ -1,9 +1,9 @@
 '''Manna's data dump format'''
 
 import json
+import copy
 from pathlib import Path
 import csv
-from datetime import datetime
 import uuid
 import logging as lg
 from botobuddy.utils import dslice
@@ -15,16 +15,16 @@ from fvc.tools.df.utils import JsonlinesIO
 def module_help():
     return '''\
 - signal-select=<metric>: Select the signal metric to choose the best one. Options:
-    - rsrp: Reference Signal Received Power (default)
-    - rsrq: Reference Signal Received Quality
-    - rssi: Received Signal Strength Indicator
+    - RSRP: Reference Signal Received Power (default)
+    - RSRQ: Reference Signal Received Quality
+    - RSSI: Received Signal Strength Indicator
 '''
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     track_id = str(uuid.uuid4())
 
-    signal_select = params.get('signal-select', 'rsrp')
+    signal_select = params.get('signal-select', 'RSRP')
 
     with input_path.open('rt') as input:
         reader = csv.DictReader(input, delimiter=',')
@@ -40,13 +40,17 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
         output.write(metadata)
 
+        def maybe_float(x):
+            if x and x not in ('-', 'NULL'):
+                return float(x)
+
+            return None
+
         for row in reader:
             row_ts_str = row['utc_datetime']
             row_ts = parse(row_ts_str)
             timestamp = int(row_ts.timestamp() * 1000)
             uaid = {'int': track_id}
-
-            maybe_float = lambda x: float(x) if x and x != '-' else None
 
             loc = dslice(
                 row,
@@ -67,11 +71,24 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 }
             }
 
+            best_cellsig = None
+            best_signal = None
+            modem_data_dict = {}
+
             for modem_name in modems:
                 modem_data = _get_modem_data(row, modem_name, reader.line_num)
 
                 if modem_data:
-                    record['cellsig'] = modem_data
+                    modem_data_dict[modem_name] = modem_data
+                    signal = modem_data.get(signal_select)
+
+                    if signal is not None and (best_signal is None or signal > best_signal):
+                        best_signal = signal
+                        best_cellsig = copy.deepcopy(modem_data)
+
+            if best_cellsig:
+                record['cellsig'] = best_cellsig
+                record['cellsig']['modems'] = modem_data_dict
 
             output.write(record)
 
@@ -104,140 +121,16 @@ def _get_modem_data(row, modem_name, line_number):
             return None
 
         cell_id = modem_data.get('cell_id')
-        cgi = f'{plmnid}:{ac:05d}:{cell_id:05d}'
+        cgi = f'{plmnid}{ac:05d}{cell_id:05d}'
 
-        return cellsig.update({
+        cellsig.update({
             'radio': radio,
             'plmnid': plmnid,
             'CGI': cgi
         })
 
+        return cellsig
+
     except Exception as e:
-        lg.warning(f'Error getting modem data for {modem_name} at line {line_number}: {e}')
+        lg.debug(f'Error getting modem data for {modem_name} at line {line_number}: {e}')
         return None
-
-
-def old_convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
-    track_id = str(uuid.uuid4())
-
-    allow_low_precision = 'gnettrack-allow-low-precision' in params.get('custom', [])
-
-    with input_path.open('rt') as input:
-        reader = csv.DictReader(input, delimiter='\t')
-
-        metadata.update({
-            'content': 'flightlog',
-            'source': 'gnettrack',
-            'allow_low_precision': allow_low_precision
-        })
-
-        output.write(metadata)
-
-        for row in reader:
-            row_ts = row['Timestamp']
-            [date, time] = row_ts.split('_')
-            [year, month, day] = date.split('.')
-            time_parts = time.split('.')
-
-            row_metadata = {}
-
-            if len(time_parts) != 4:
-                if allow_low_precision:
-                    lg.warning('Using low precision time for Gnettrack log')
-                    time_parts.append('0')
-                    row_metadata['low_precision'] = True
-                else:
-                    raise UserWarning(
-                        f'Invalid time setting for Gnettrack log {input_path.name}. '
-                        'Please enable enhanced logging in the Calibrator config'
-                    )
-
-            [hour, minute, second, ms] = time_parts
-
-            dt = datetime(
-                int(year), int(month), int(day),
-                int(hour), int(minute), int(second),
-                int(ms) * 1000
-            )
-
-            timestamp = int(dt.timestamp() * 1000)
-            device = row['DEVICE']
-
-            uaid = {'int': f'{device}:{track_id}'}
-            uaid.update(dslice(row, 'IP', 'IMEI', 'IMSI'))
-
-            maybe_float = lambda x: float(x) if x and x != '-' else None
-            maybe_int = lambda x: int(x) if x and x != '-' else None
-
-            net_tech = row['NetworkTech']
-            net_mode = row['NetworkMode']
-
-            match (net_tech, net_mode):
-                case ('4G', 'LTE'):
-                    radio = '4GLTE'
-                case ('4G', '5G NSA') | ('5G', '5G NSA') | ('5G', 'LTE'):
-                    radio = '5GNSA'
-                case ('5G', 'NR'):
-                    radio = '5GNR'
-                case _:
-                    lg.warning(f'Unknown network technology: {net_tech} {net_mode}')
-                    continue
-
-            cellsig = {'radio': radio}
-
-            cellsig.update(dslice(
-                row,
-                {'k': 'Level', 'c': maybe_float, 'n': 'RSRP'},
-                {'k': 'Qual', 'c': maybe_float, 'n': 'RSRQ'},
-                {'k': 'LTERSSI', 'c': maybe_float, 'n': 'RSSI'},
-                {'k': 'SNR', 'c': maybe_float, 'n': 'SINR'},
-                {'k': 'CSI_PCI', 'c': maybe_float, 'n': 'CSI-RSRP'},
-                {'k': 'CSI_RSRQ', 'c': maybe_float, 'n': 'CSI-RSRQ'},
-                {'k': 'CSI_RSSI', 'c': maybe_float, 'n': 'CSI-RSSI'},
-                {'k': 'CSI_SNR', 'c': maybe_float, 'n': 'CSI-SINR'},
-                {'k': 'SS_Level', 'c': maybe_float, 'n': 'SS-RSRP'},
-                {'k': 'SS_Qual', 'c': maybe_float, 'n': 'SS-RSRQ'},
-                {'k': 'SS_RSSI', 'c': maybe_float, 'n': 'SS-RSSI'},
-                {'k': 'SS_SNR', 'c': maybe_float, 'n': 'SS-SINR'},
-                {'k': 'ARFCN', 'c': maybe_int},
-                {'k': 'BAND', 'n': 'band'},
-                {'k': 'Operator', 'n': 'plmnid'},
-                {'k': 'Operatorname', 'n': 'plmnname'},
-                {'k': 'CGI', 'n': 'CGI'}
-            ))
-
-            loc = dslice(
-                row,
-                {'k': 'Latitude', 'c': maybe_float, 'n': 'lat'},
-                {'k': 'Longitude', 'c': maybe_float, 'n': 'lon'},
-                {'k': 'Altitude', 'c': maybe_float, 'n': 'alt'}
-            )
-
-            datalink = dslice(
-                row,
-                {'k': 'PINGMAX', 'c': maybe_int, 'n': 'rtt'},
-                {'k': 'PINGLOSS', 'c': maybe_int, 'n': 'loss'}
-            )
-
-            row_metadata.update(dslice(
-                row,
-                'BATTERY',
-                'Accuracy',
-                'Location',
-            ))
-
-            record = {
-                'uaid': uaid,
-                'time': {
-                    'unix': timestamp,
-                    'original': row_ts
-                },
-                'pos': {
-                    'loc': loc
-                },
-                'cellsig': cellsig,
-                'datalink': datalink,
-                'metadata': row_metadata
-            }
-
-            output.write(record)
