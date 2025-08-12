@@ -1,0 +1,72 @@
+// FVC Tools Map Visualization JavaScript
+var map;
+var geo_bounds;
+var coordinates;
+
+function initializeMap(boundsData, coordinatesData) {
+    geo_bounds = boundsData;
+    coordinates = coordinatesData;
+    
+    var bounds = [
+        [geo_bounds.south, geo_bounds.west],
+        [geo_bounds.north, geo_bounds.east]
+    ];
+
+    map = L.map('map').fitBounds(bounds);
+
+    let attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: attribution
+    }).addTo(map);
+
+    // Create flight path line
+    var pathCoords = coordinates.map(function(coord) {
+        return [coord.lat, coord.lon];
+    });
+    
+    var flightPath = L.polyline(pathCoords, {
+        color: '#667eea',
+        weight: 3,
+        opacity: 0.8
+    }).addTo(map);
+
+    // Add markers for start and end points
+    if (coordinates.length > 0) {
+        var startPoint = coordinates[0];
+        var endPoint = coordinates[coordinates.length - 1];
+        
+        L.marker([startPoint.lat, startPoint.lon], {
+            icon: L.divIcon({
+                className: 'start-marker',
+                html: '<div style="background-color: #28a745; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+                iconSize: [12, 12]
+            })
+        }).addTo(map).bindPopup('Start Point');
+        
+        L.marker([endPoint.lat, endPoint.lon], {
+            icon: L.divIcon({
+                className: 'end-marker',
+                html: '<div style="background-color: #dc3545; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+                iconSize: [12, 12]
+            })
+        }).addTo(map).bindPopup('End Point');
+    }
+
+    // Add legend
+    var legend = L.control({position: 'bottomright'});
+    legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info legend');
+        div.innerHTML = '<h4>Flight Path</h4>' +
+                       '<div style="display: flex; align-items: center; margin: 5px 0;">' +
+                       '<div style="background-color: #28a745; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px;"></div> Start Point</div>' +
+                       '<div style="display: flex; align-items: center; margin: 5px 0;">' +
+                       '<div style="background-color: #dc3545; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px;"></div> End Point</div>' +
+                       '<div style="display: flex; align-items: center; margin: 5px 0;">' +
+                       '<div style="background-color: #667eea; width: 20px; height: 3px; margin-right: 8px;"></div> Flight Path</div>' +
+                       '<small>Total points: ' + coordinates.length + '</small>';
+        return div;
+    };
+    legend.addTo(map);
+}
