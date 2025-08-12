@@ -68,7 +68,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             }
 
             for modem_name in modems:
-                modem_data = _get_modem_data(row, modem_name)
+                modem_data = _get_modem_data(row, modem_name, reader.line_num)
 
                 if modem_data:
                     record['cellsig'] = modem_data
@@ -76,10 +76,9 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             output.write(record)
 
 
-def _get_modem_data(row, modem_name):
+def _get_modem_data(row, modem_name, line_number):
     try:
         modem_data_str = row[modem_name]
-        print(f'>>{modem_data_str}<<<')
         modem_data = json.loads(modem_data_str)
 
         cellsig = dslice(
@@ -114,8 +113,7 @@ def _get_modem_data(row, modem_name):
         })
 
     except Exception as e:
-        lg.warning(f'Error getting modem data for {modem_name}: {e}')
-        raise e
+        lg.warning(f'Error getting modem data for {modem_name} at line {line_number}: {e}')
         return None
 
 
