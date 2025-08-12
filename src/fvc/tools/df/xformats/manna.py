@@ -1,5 +1,6 @@
 '''Manna's data dump format'''
 
+import json
 from pathlib import Path
 import csv
 from datetime import datetime
@@ -27,6 +28,9 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
     with input_path.open('rt') as input:
         reader = csv.DictReader(input, delimiter=',')
+
+        modems = list(filter(lambda x: str(x).startswith('modem'), reader.fieldnames or []))
+        lg.debug(f'Modems found: {modems}')
 
         metadata.update({
             'content': 'flightlog',
@@ -63,7 +67,56 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 }
             }
 
+            for modem_name in modems:
+                modem_data = _get_modem_data(row, modem_name)
+
+                if modem_data:
+                    record['cellsig'] = modem_data
+
             output.write(record)
+
+
+def _get_modem_data(row, modem_name):
+    try:
+        modem_data_str = row[modem_name]
+        print(f'>>{modem_data_str}<<<')
+        modem_data = json.loads(modem_data_str)
+
+        cellsig = dslice(
+            modem_data,
+            {'k': 'rsrp', 'n': 'RSRP'},
+            {'k': 'rsrq', 'n': 'RSRQ'},
+            {'k': 'rssi', 'n': 'RSSI'},
+            {'k': 'operator_name', 'n': 'plmnname'},
+        )
+
+        plmnid = modem_data.get('operator_num')
+        cell_lac = modem_data.get('cell_lac')
+        cell_tac = modem_data.get('cell_tac')
+
+        if cell_lac != 0:
+            ac = cell_lac
+            radio = '2G3G'
+        elif cell_tac != 0:
+            ac = cell_tac
+            radio = '4GLTE'
+        else:
+            lg.warning(f'Unknown network technology: {plmnid} {cell_lac} {cell_tac}')
+            return None
+
+        cell_id = modem_data.get('cell_id')
+        cgi = f'{plmnid}:{ac:05d}:{cell_id:05d}'
+
+        return cellsig.update({
+            'radio': radio,
+            'plmnid': plmnid,
+            'CGI': cgi
+        })
+
+    except Exception as e:
+        lg.warning(f'Error getting modem data for {modem_name}: {e}')
+        raise e
+        return None
 
 
 def old_convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
