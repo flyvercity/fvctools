@@ -15,6 +15,7 @@ class JsonlinesIO:
         self._mode = mode
         self._file = None  # IO | None
         self._callback = callback
+        self._pos = 0
 
     def stat_size(self):
         return self._filepath.stat().st_size
@@ -43,8 +44,9 @@ class JsonlinesIO:
         self._in_line_no += 1
 
         if self._callback:
-            last_read_bytes = len(line.encode('utf-8')) + 2  # \n\r
-            self._callback(last_read_bytes)
+            new_pos = self._file.tell()
+            self._callback(new_pos - self._pos)
+            self._pos = new_pos
 
         if not line.strip():
             return None
