@@ -8,6 +8,7 @@ import click
 
 from fvc.tools.calc.cli import calc
 from fvc.tools.df.cli import df
+from fvc.tools.render.cli import render
 
 
 @click.group(help='Flyvercity CLI tools suite')
@@ -69,6 +70,7 @@ def pwsh():
 
 cli.add_command(df)
 cli.add_command(calc)
+cli.add_command(render)
 
 
 def main():
