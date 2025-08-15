@@ -184,6 +184,7 @@ CELLULAR_SIGNAL: &CELLULAR_SIGNAL
     radio:
       type: string
       enum:
+        - 2G3G
         - 4GLTE
         - 5GNSA
         - 5GNR
