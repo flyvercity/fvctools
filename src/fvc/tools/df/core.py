@@ -17,15 +17,20 @@ import fvc.tools.df.metadata as metadata
 MAX_ERRORS = 100
 
 
-def convert(params):
-    ''' Parameters:
-        - input: input file path
-        - output_path: output file path
-        - x_format: external format
+def convert(params: dict, input_path: Path, callback: Callable[[int], None] | None = None):
+    '''
+    Convert a file from an external format to FVC format.
+
+    Args:
+        params: Parameters for the conversion:
+            - `output_path`: Output file path
+            - `x_format`: External format
+        input_path: Path to the input file
+        callback: Callback function to update the progress
+            - `bytes_read`: Number of bytes read
     '''
 
     output_path = params['output_path']
-    input_path = params['input'].fetch()
 
     try:
 
@@ -38,7 +43,7 @@ def convert(params):
         convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
         meta = metadata.initial_metadata(params)
 
-        with u.JsonlinesIO(output_path, 'w') as io:
+        with u.JsonlinesIO(output_path, 'w', callback=callback) as io:
             convert_fun(params, meta, input_path, io)
 
     except ModuleNotFoundError as e:
@@ -155,9 +160,9 @@ def crawl(params):
                                 f'Converting {in_file_path.name} from {x_format} to {target}'
                             )
 
-                            params['input'] = u.Input(params, in_file_path)
+                            input = u.Input(params, in_file_path)
                             params['output_path'] = output_path
-                            convert(params)
+                            convert(params, input_path=input.fetch())
 
                             if validate:
                                 lg.info(f'Validating {output_path.name}')
