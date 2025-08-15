@@ -63,7 +63,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             )
 
             timestamp = int(dt.timestamp() * 1000)
-            device = row['DEVICE']
+            device = row.get('DEVICE', 'unknown-device')
 
             uaid = {'int': f'{device}:{track_id}'}
             uaid.update(dslice(row, 'IP', 'IMEI', 'IMSI'))
@@ -75,6 +75,8 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             net_mode = row['NetworkMode']
 
             match (net_tech, net_mode):
+                case ('2G', 'EDGE') | ('2G', 'LTE') | ('2G', 'GPRS'):
+                    radio = '2G`'
                 case ('4G', 'LTE'):
                     radio = '4GLTE'
                 case ('4G', '5G NSA') | ('5G', '5G NSA') | ('5G', 'LTE'):
@@ -82,6 +84,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 case ('5G', 'NR'):
                     radio = '5GNR'
                 case _:
+                    raise RuntimeError(f'Unknown network technology: {net_tech} {net_mode}')
                     lg.warning(f'Unknown network technology: {net_tech} {net_mode}')
                     continue
 

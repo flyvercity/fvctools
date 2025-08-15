@@ -118,7 +118,7 @@ def convert_command(params, output_file, **kwargs):
     output_path = output_file if output_file else input_path.with_suffix('.fvc')
     params['output_path'] = output_path
 
-    with Progress(transient=False) as progress:
+    with Progress(transient=True) as progress:
         fetch_task = progress.add_task('Fetching input file...', total=None)
         input_path = params['input'].fetch()
         progress.update(fetch_task, completed=1)
