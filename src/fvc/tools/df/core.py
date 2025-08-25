@@ -36,8 +36,11 @@ def convert(params: dict, input_path: Path, callback: Callable[[int], None] | No
         x_format = params.get('x-format') or params.get('x_format')
 
         lg.debug(f'Using external format module: {x_format}')
+
         ext_format_mod = importlib.import_module(f'fvc.tools.df.xformats.{x_format}')
+
         lg.debug('Imported external format function')
+
         convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
         meta = metadata.initial_metadata(input_path.name, params)
 
