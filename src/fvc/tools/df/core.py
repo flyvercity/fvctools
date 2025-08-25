@@ -33,15 +33,13 @@ def convert(params: dict, input_path: Path, callback: Callable[[int], None] | No
     output_path = params['output_path']
 
     try:
-
-        # NB: support for 'crawl' file syntax
         x_format = params.get('x-format') or params.get('x_format')
 
         lg.debug(f'Using external format module: {x_format}')
         ext_format_mod = importlib.import_module(f'fvc.tools.df.xformats.{x_format}')
         lg.debug('Imported external format function')
         convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
-        meta = metadata.initial_metadata(params)
+        meta = metadata.initial_metadata(input_path.name, params)
 
         with u.JsonlinesIO(output_path, 'w', callback=callback) as io:
             convert_fun(params, meta, input_path, io)

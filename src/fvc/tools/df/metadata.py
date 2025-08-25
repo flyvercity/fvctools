@@ -25,9 +25,9 @@ def metadata_args(command_func):
 
 
 # TODO: move this to "custom" parameters
-def initial_metadata(params) -> JSON:
+def initial_metadata(origin, params) -> JSON:
     metadata = {}  # type: JSON
-    metadata['origin'] = str(params['input'].fetch().name)
+    metadata['origin'] = origin
 
     polar_sensor_source = params.get('polar_sensor_source') or params.get('polar-sensor-source')
     polar_sensor_format = params.get('polar_sensor_format') or params.get('polar-sensor-format')

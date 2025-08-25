@@ -36,18 +36,19 @@ wheels = [
 
 [[package]]
 name = "botobuddy"
-version = "0.3.0"
+version = "0.3.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "boto3" },
     { name = "click" },
+    { name = "python-benedict", extra = ["s3", "toml", "yaml"] },
     { name = "randomname" },
     { name = "rich" },
     { name = "types-boto3", extra = ["cognito-idp", "essential", "route53", "sagemaker", "sts"] },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/35/ce/0190a99881c4778b94891bf99b3e93b5ec47111a5b6c4102b76908e42642/botobuddy-0.3.0.tar.gz", hash = "sha256:5800f69c9236f32c4351597a5eefa736b4ec06fd74b3e46df13eb176a4ca116c", size = 30262, upload-time = "2025-06-27T16:41:33.284Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/1b/36/f1d03a654eb004ac3649920678929259984d98f4f319b7099a0c55889abf/botobuddy-0.3.5.tar.gz", hash = "sha256:edd0477cb203248912471fa5cd5c1738ce7b7fd5aa6fdf21866d7b6be4e57786", size = 12148, upload-time = "2025-08-19T12:33:06.693Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b8/1c/413ffa25e233e91a5db31cd4ff0f177969a279c9ae21d1c379a24c8b647b/botobuddy-0.3.0-py3-none-any.whl", hash = "sha256:959caa5fe8a8c4625891fa1673a7b1752924114f4e2e298bb33ac92474e07f4f", size = 12735, upload-time = "2025-06-27T16:41:32.224Z" },
+    { url = "https://files.pythonhosted.org/packages/53/b0/5df502919a214c048e175433702f48807ae3fb535852acb46a0774efafaa/botobuddy-0.3.5-py3-none-any.whl", hash = "sha256:f6dd25ba5c76f123fb33d7ca03332459d0a4a297315fad09e7425e15dd6138a5", size = 13731, upload-time = "2025-08-19T12:33:05.403Z" },
 ]
 
 [[package]]
@@ -262,7 +263,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "boto3", specifier = ">=1.35.76" },
-    { name = "botobuddy", specifier = ">=0.3.0" },
+    { name = "botobuddy", specifier = ">=0.3.5" },
     { name = "click", specifier = ">=8.1.7" },
     { name = "geopandas", specifier = ">=1.0.1" },
     { name = "gitpython", specifier = ">=3.1.43" },
@@ -823,6 +824,17 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/94/65/c59fb6eec8859047394ccd73eaf1623ce9fd82c48d880d9a072045669bc5/python_benedict-0.34.1-py3-none-any.whl", hash = "sha256:f09711ca2d8e716ca40440f1e26dfa3ccff15e08f1baa88de594fbba799cf87a", size = 51308, upload-time = "2025-01-18T14:52:01.886Z" },
 ]
 
+[package.optional-dependencies]
+s3 = [
+    { name = "boto3" },
+]
+toml = [
+    { name = "toml" },
+]
+yaml = [
+    { name = "pyyaml" },
+]
+
 [[package]]
 name = "python-dateutil"
 version = "2.9.0.post0"
@@ -1183,6 +1195,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/ab/e2/e9a00f0ccb71718418230718b3d900e71a5d16e701a3dae079a21e9cd8f8/text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93", size = 76885, upload-time = "2019-08-30T21:36:45.405Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a6/a5/c0b6468d3824fe3fde30dbb5e1f687b291608f9473681bbf7dabbf5a87d7/text_unidecode-1.3-py2.py3-none-any.whl", hash = "sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8", size = 78154, upload-time = "2019-08-30T21:37:03.543Z" },
+]
+
+[[package]]
+name = "toml"
+version = "0.10.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/be/ba/1f744cdc819428fc6b5084ec34d9b30660f6f9daaf70eead706e3203ec3c/toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f", size = 22253, upload-time = "2020-11-01T01:40:22.204Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/44/6f/7120676b6d73228c96e17f1f794d8ab046fc910d781c8d151120c3f1569e/toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b", size = 16588, upload-time = "2020-11-01T01:40:20.672Z" },
 ]
 
 [[package]]

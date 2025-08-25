@@ -4,9 +4,9 @@ from typing import Generator, Literal
 import logging as lg
 
 from benedict import benedict
-import boto3
 from rich.spinner import Spinner
 from rich.live import Live
+import boto3
 
 
 class JsonlinesIO:
@@ -92,16 +92,40 @@ class Input:
 
         return directory
 
+    def _resolve_rec_uri(self, uri: str) -> str:
+        lg.info(f'Resolving recording URI: {uri}')
+
+        metadata = benedict.from_yaml('s3://flyvercity.private/data/recordings.yaml')
+        metadata_indexpath = uri.lstrip('rec://')
+        metadata_index = metadata.get_dict(f'recordings.{metadata_indexpath}')
+
+        if not metadata_index:
+            raise UserWarning(f'Recording not found: {uri}')
+
+        path_list = ['s3://flyvercity.private/data/']
+        path_list.extend(metadata_index['path'])  # type: ignore
+
+        s3_path = '/'.join(path_list)
+
+        lg.info(f'Resolved recording URI: {s3_path}')
+
+        return s3_path
+
     def fetch(self) -> Path:
         if not self._input_uri:
             raise UserWarning('Input file or URI (--in) is not specified')
 
-        path = Path(self._input_uri)
+        if str(self._input_uri).startswith('rec://'):
+            url = self._resolve_rec_uri(self._input_uri)
+        else:
+            url = self._input_uri
+
+        path = Path(url)
 
         if suffix := self._params.get('suffix'):
             path = path.with_suffix(suffix)
 
-        if str(self._input_uri).startswith('s3://'):
+        if str(url).startswith('s3://'):
             cache_dir = self._params.get('cache_dir')
 
             if not cache_dir:
@@ -117,16 +141,20 @@ class Input:
                 return local_path
 
             lg.info(f'Fetching to {local_path}')
+
             local_path.parent.mkdir(parents=True, exist_ok=True)
             bucket_name = path.parts[1]
             key = '/'.join(path.parts[2:])
+
             lg.debug(f'Bucket: {bucket_name}, Key: {key}')
+
             s3 = boto3.client('s3')
 
             lg.info(f'Downloading to {local_path}')
+
             spinner = Spinner('aesthetic', 'Downloading...')
 
-            with Live(spinner, refresh_per_second=10):
+            with Live(spinner):
                 s3.download_file(
                     bucket_name, key, str(local_path),
                     Callback=lambda x: spinner.update(text=f'Downloaded {x} bytes')

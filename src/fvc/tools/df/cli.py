@@ -119,10 +119,6 @@ def convert_command(params, output_file, **kwargs):
     params['output_path'] = output_path
 
     with Progress(transient=True) as progress:
-        fetch_task = progress.add_task('Fetching input file...', total=None)
-        input_path = params['input'].fetch()
-        progress.update(fetch_task, completed=1)
-
         read_task = progress.add_task('Converting...', total=input_path.stat().st_size)
         callback = lambda s: progress.update(read_task, advance=s)
         core.convert(params, input_path, callback)
