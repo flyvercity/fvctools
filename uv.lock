@@ -36,7 +36,7 @@ wheels = [
 
 [[package]]
 name = "botobuddy"
-version = "0.3.5"
+version = "0.3.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "boto3" },
@@ -46,9 +46,9 @@ dependencies = [
     { name = "rich" },
     { name = "types-boto3", extra = ["cognito-idp", "essential", "route53", "sagemaker", "sts"] },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1b/36/f1d03a654eb004ac3649920678929259984d98f4f319b7099a0c55889abf/botobuddy-0.3.5.tar.gz", hash = "sha256:edd0477cb203248912471fa5cd5c1738ce7b7fd5aa6fdf21866d7b6be4e57786", size = 12148, upload-time = "2025-08-19T12:33:06.693Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f4/bb/ce3a4584651985501c85183ed774452ba3c79f75a51fc87919ede260b0e0/botobuddy-0.3.6.tar.gz", hash = "sha256:e3a6c714c81a3beb87f5e1f2dab0de48c4212e7949e5b8ab22c3e819e1f96f3d", size = 12431, upload-time = "2025-08-26T21:17:53.31Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/53/b0/5df502919a214c048e175433702f48807ae3fb535852acb46a0774efafaa/botobuddy-0.3.5-py3-none-any.whl", hash = "sha256:f6dd25ba5c76f123fb33d7ca03332459d0a4a297315fad09e7425e15dd6138a5", size = 13731, upload-time = "2025-08-19T12:33:05.403Z" },
+    { url = "https://files.pythonhosted.org/packages/c4/34/7536aa96ae1d6476317f4dab72d589ca49051df5c9081036813c730fd6cd/botobuddy-0.3.6-py3-none-any.whl", hash = "sha256:f9b119b7c8a634aae3403bb6d33949a9dca0347a66c49de67257946b885fb31b", size = 14012, upload-time = "2025-08-26T21:17:51.746Z" },
 ]
 
 [[package]]
@@ -244,10 +244,11 @@ dependencies = [
     { name = "pygeodesy" },
     { name = "pynmea2" },
     { name = "pyparsing" },
-    { name = "python-benedict" },
+    { name = "python-benedict", extra = ["s3", "toml", "yaml"] },
     { name = "python-dateutil" },
     { name = "pyulog" },
     { name = "pyyaml" },
+    { name = "rich" },
     { name = "scipy" },
     { name = "simplekml" },
     { name = "toolz" },
@@ -263,7 +264,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "boto3", specifier = ">=1.35.76" },
-    { name = "botobuddy", specifier = ">=0.3.5" },
+    { name = "botobuddy", specifier = ">=0.3.6" },
     { name = "click", specifier = ">=8.1.7" },
     { name = "geopandas", specifier = ">=1.0.1" },
     { name = "gitpython", specifier = ">=3.1.43" },
@@ -273,10 +274,11 @@ requires-dist = [
     { name = "pygeodesy", specifier = ">=24.11.11" },
     { name = "pynmea2", specifier = ">=1.19.0" },
     { name = "pyparsing", specifier = ">=3.2.0" },
-    { name = "python-benedict", specifier = ">=0.34.1" },
+    { name = "python-benedict", extras = ["s3", "toml", "yaml"], specifier = ">=0.34.1" },
     { name = "python-dateutil", specifier = ">=2.9.0.post0" },
     { name = "pyulog", specifier = ">=1.2.2" },
     { name = "pyyaml", specifier = ">=6.0.2" },
+    { name = "rich", specifier = ">=14.0.0" },
     { name = "scipy", specifier = ">=1.14.1" },
     { name = "simplekml", specifier = ">=1.3.6" },
     { name = "toolz", specifier = ">=1.0.0" },

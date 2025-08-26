@@ -5,13 +5,15 @@ from importlib.metadata import version
 
 import boto3
 import click
+from rich.logging import RichHandler
+from benedict import benedict
 
 from fvc.tools.calc.cli import calc
 from fvc.tools.df.cli import df
 from fvc.tools.render.cli import render
 
 
-@click.group(help='Flyvercity CLI tools suite')
+@click.group(help='Flyvercity CLI Tools Suite')
 @click.version_option(version('fvctools'))
 @click.pass_context
 @click.option(
@@ -31,21 +33,29 @@ from fvc.tools.render.cli import render
     help='Custom EGM geoid data file (*.pgm). Default: egm96-5.pgm'
 )
 def cli(ctx, verbose, json, no_pprint, aws_profile, egm):
-    ctx.ensure_object(dict)
+    ctx.ensure_object(benedict)
     ctx.obj['verbose'] = verbose
     ctx.obj['EGM'] = egm
 
-    lg.basicConfig(level=lg.DEBUG if verbose else lg.INFO)
+    lg.basicConfig(
+        level=lg.DEBUG if verbose else lg.INFO,
+        handlers=[RichHandler(
+            rich_tracebacks=verbose,
+            show_path=verbose
+        )]
+    )
+
     lg.debug(f'Verbose mode is {"on" if verbose else "off"}')
 
     lg.debug(
         f'JSON mode is {"on" if json else "off"} (pprint: {"off" if no_pprint else "on"})'
     )
+
     ctx.obj['JSON'] = json
     ctx.obj['no_pprint'] = no_pprint
 
     if aws_profile:
-        lg.debug(f'Using AWS profile: {aws_profile}')
+        lg.info(f'Using AWS profile: {aws_profile}')
         boto3.setup_default_session(profile_name=aws_profile)
 
 
