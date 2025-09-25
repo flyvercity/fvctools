@@ -116,11 +116,19 @@ def convert_command(params, output_file, **kwargs):
     params.update(kwargs)
     input_path = params['input'].fetch()
     output_path = output_file if output_file else input_path.with_suffix('.fvc')
+
+    if output_path.absolute() == input_path.absolute():
+        lg.error('Input and output paths are the same')
+        return
+
     params['output_path'] = output_path
 
     with Progress(transient=True) as progress:
         read_task = progress.add_task('Converting...', total=input_path.stat().st_size)
-        callback = lambda s: progress.update(read_task, advance=s)
+
+        def callback(s):
+            progress.update(read_task, advance=s)
+
         core.convert(params, input_path, callback)
 
     lg.info(f'Conversion complete, output written to {output_path}')
