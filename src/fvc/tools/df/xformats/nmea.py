@@ -1,14 +1,14 @@
-'''
+"""
 NMEA log format
 
 Custom parameters:
     - base-date=<datestring> is required for this format
-'''
+"""
 
-from pathlib import Path
-from datetime import datetime, UTC
 import logging as lg
 import statistics
+from datetime import UTC, datetime
+from pathlib import Path
 
 import pynmea2
 from dateutil.parser import parse as dateparse
@@ -39,11 +39,13 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
     lg.debug(f'Using base date: {base_date}')
 
-    metadata.update({
-        'content': 'flightlog',
-        'source': 'nmea',
-        'base-date': base_date.date().isoformat()
-    })
+    metadata.update(
+        {
+            'content': 'flightlog',
+            'source': 'nmea',
+            'base-date': base_date.date().isoformat(),
+        }
+    )
 
     output.write(metadata)
 
@@ -65,9 +67,9 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 'loc': {
                     'lat': message.latitude,
                     'lon': message.longitude,
-                    'alt': alt
+                    'alt': alt,
                 }
-            }
+            },
         }
 
         output.write(record)
@@ -99,6 +101,6 @@ def extract_sensor_data(params, sensor_source: Path) -> JSON:
         'loc': {
             'lat': statistics.median(latitudes),
             'lon': statistics.median(longitudes),
-            'alt': statistics.median(altitudes)
+            'alt': statistics.median(altitudes),
         }
     }

@@ -1,6 +1,7 @@
 from pathlib import Path
+from typing import Any, Dict
+
 import yaml
-from typing import Dict, Any
 
 
 def load_schema() -> Dict[str, Any]:

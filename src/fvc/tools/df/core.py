@@ -1,24 +1,26 @@
-from pathlib import Path
-import logging as lg
 import importlib
-import tomllib
-from typing import Callable
-import traceback
+import logging as lg
 import sys
+import tomllib
+import traceback
+from pathlib import Path
+from typing import Callable
 
 import jsonschema
 
+import fvc.tools.df.metadata as metadata
 import fvc.tools.df.schema as schema
 import fvc.tools.df.utils as u
-
-import fvc.tools.df.metadata as metadata
-
 
 MAX_ERRORS = 100
 
 
-def convert(params: dict, input_path: Path, callback: Callable[[int], None] | None = None):
-    '''
+def convert(
+    params: dict,
+    input_path: Path,
+    callback: Callable[[int], None] | None = None,
+):
+    """
     Convert a file from an external format to FVC format.
 
     Args:
@@ -28,7 +30,7 @@ def convert(params: dict, input_path: Path, callback: Callable[[int], None] | No
         input_path: Path to the input file
         callback: Callback function to update the progress
             - `bytes_read`: Number of bytes read
-    '''
+    """
 
     output_path = params['output_path']
 
@@ -37,7 +39,9 @@ def convert(params: dict, input_path: Path, callback: Callable[[int], None] | No
 
         lg.debug(f'Using external format module: {x_format}')
 
-        ext_format_mod = importlib.import_module(f'fvc.tools.df.xformats.{x_format}')
+        ext_format_mod = importlib.import_module(
+            f'fvc.tools.df.xformats.{x_format}'
+        )
 
         lg.debug('Imported external format function')
 
@@ -52,7 +56,9 @@ def convert(params: dict, input_path: Path, callback: Callable[[int], None] | No
         raise UserWarning(f'Unknown external format: {params["x_format"]}')
 
 
-def validate(input_path: Path, callback: Callable[[int], None] | None = None) -> bool:
+def validate(
+    input_path: Path, callback: Callable[[int], None] | None = None
+) -> bool:
     with u.JsonlinesIO(input_path, 'r', callback=callback) as f:
         try:
             metaline = f.read()
@@ -83,7 +89,9 @@ def validate(input_path: Path, callback: Callable[[int], None] | None = None) ->
                 error_count += 1
 
             if error_count >= MAX_ERRORS:
-                lg.error(f'Maximum number of errors reached ({MAX_ERRORS}), stopping')
+                lg.error(
+                    f'Maximum number of errors reached ({MAX_ERRORS}), stopping'
+                )
                 return False
 
     success = error_count == 0
@@ -91,11 +99,11 @@ def validate(input_path: Path, callback: Callable[[int], None] | None = None) ->
 
 
 def export(params):
-    ''' Parameters:
-        - input: input file path
-        - output_path: output file path
-        - x_format: external format
-    '''
+    """Parameters:
+    - input: input file path
+    - output_path: output file path
+    - x_format: external format
+    """
 
     output_path = params['output_path']
     x_format = params.get('x_format')
@@ -108,11 +116,11 @@ def export(params):
 
 
 def crawl(params):
-    ''' Parameters:
-        - input: input file path
-        - force: force conversion even if output file exists
-        - validate: validate output file after conversion
-    '''
+    """Parameters:
+    - input: input file path
+    - force: force conversion even if output file exists
+    - validate: validate output file after conversion
+    """
 
     input_dir = params['input'].as_dir()
     force = params.get('force')
@@ -150,7 +158,9 @@ def crawl(params):
                         continue
 
                     if in_file_path.suffix == '.fvc':
-                        lg.info(f'File {in_file_path.name} is already in FVC format, skipping')
+                        lg.info(
+                            f'File {in_file_path.name} is already in FVC format, skipping'
+                        )
                         continue
 
                     output_path = in_file_path.with_suffix('.fvc')
@@ -169,15 +179,21 @@ def crawl(params):
                                 lg.info(f'Validating {output_path.name}')
 
                                 if not validate(output_path):
-                                    errors.append(f'Validation failed for {output_path}')
+                                    errors.append(
+                                        f'Validation failed for {output_path}'
+                                    )
 
                         except Exception as e:
                             if params['verbose']:
                                 traceback.print_exc(file=sys.stderr)
 
-                            errors.append(f'Error converting {in_file_path}: {e}')
+                            errors.append(
+                                f'Error converting {in_file_path}: {e}'
+                            )
                     else:
-                        lg.info(f'Output file {output_path.name} exists, skipping')
+                        lg.info(
+                            f'Output file {output_path.name} exists, skipping'
+                        )
 
     if errors:
         lg.error(f'{len(errors)} errors occurred')
@@ -193,14 +209,8 @@ def upgrade(params, read_callback, write_callback):
     outfile = params['output_path']
 
     with (
-        u.JsonlinesIO(
-            infile, 'r',
-            callback=read_callback
-        ) as infile,
-        u.JsonlinesIO(
-            outfile, 'w',
-            callback=write_callback
-        ) as outfile
+        u.JsonlinesIO(infile, 'r', callback=read_callback) as infile,
+        u.JsonlinesIO(outfile, 'w', callback=write_callback) as outfile,
     ):
         for record in infile.iterate():
             ...

@@ -1,11 +1,12 @@
-'''Manna's data dump format'''
+"""Manna's data dump format"""
 
-import json
 import copy
-from pathlib import Path
 import csv
-import uuid
+import json
 import logging as lg
+import uuid
+from pathlib import Path
+
 from botobuddy.utils import dslice
 from dateutil.parser import parse
 
@@ -13,12 +14,12 @@ from fvc.tools.df.utils import JsonlinesIO
 
 
 def module_help():
-    return '''\
+    return """\
 - signal-select=<metric>: Select the signal metric to choose the best one. Options:
     - RSRP: Reference Signal Received Power (default)
     - RSRQ: Reference Signal Received Quality
     - RSSI: Received Signal Strength Indicator
-'''
+"""
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
@@ -29,14 +30,20 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     with input_path.open('rt') as input:
         reader = csv.DictReader(input, delimiter=',')
 
-        modems = list(filter(lambda x: str(x).startswith('modem'), reader.fieldnames or []))
+        modems = list(
+            filter(
+                lambda x: str(x).startswith('modem'), reader.fieldnames or []
+            )
+        )
         lg.debug(f'Modems found: {modems}')
 
-        metadata.update({
-            'content': 'flightlog',
-            'source': 'manna',
-            'signal_select': signal_select
-        })
+        metadata.update(
+            {
+                'content': 'flightlog',
+                'source': 'manna',
+                'signal_select': signal_select,
+            }
+        )
 
         output.write(metadata)
 
@@ -62,13 +69,8 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
             record = {
                 'uaid': uaid,
-                'time': {
-                    'unix': timestamp,
-                    'original': row_ts_str
-                },
-                'pos': {
-                    'loc': loc
-                }
+                'time': {'unix': timestamp, 'original': row_ts_str},
+                'pos': {'loc': loc},
             }
 
             best_cellsig = None
@@ -82,7 +84,9 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                     modem_data_dict[modem_name] = modem_data
                     signal = modem_data.get(signal_select)
 
-                    if signal is not None and (best_signal is None or signal > best_signal):
+                    if signal is not None and (
+                        best_signal is None or signal > best_signal
+                    ):
                         best_signal = signal
                         best_cellsig = copy.deepcopy(modem_data)
 
@@ -117,20 +121,20 @@ def _get_modem_data(row, modem_name, line_number):
             ac = cell_tac
             radio = '4GLTE'
         else:
-            lg.warning(f'Unknown network technology: {plmnid} {cell_lac} {cell_tac}')
+            lg.warning(
+                f'Unknown network technology: {plmnid} {cell_lac} {cell_tac}'
+            )
             return None
 
         cell_id = modem_data.get('cell_id')
         cgi = f'{plmnid}{ac:05d}{cell_id:05d}'
 
-        cellsig.update({
-            'radio': radio,
-            'plmnid': plmnid,
-            'CGI': cgi
-        })
+        cellsig.update({'radio': radio, 'plmnid': plmnid, 'CGI': cgi})
 
         return cellsig
 
     except Exception as e:
-        lg.debug(f'Error getting modem data for {modem_name} at line {line_number}: {e}')
+        lg.debug(
+            f'Error getting modem data for {modem_name} at line {line_number}: {e}'
+        )
         return None

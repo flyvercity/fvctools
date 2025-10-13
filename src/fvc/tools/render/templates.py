@@ -1,5 +1,6 @@
-from typing import List, Dict, Any
 from pathlib import Path
+from typing import Any, Dict, List
+
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -8,9 +9,9 @@ def generate_html_template(
     generation_time: str,
     file_path: str,
     coordinates: List[Dict[str, Any]],
-    bounds: Dict[str, float]
+    bounds: Dict[str, float],
 ) -> str:
-    '''Generate the HTML template for the map visualization.
+    """Generate the HTML template for the map visualization.
 
     Args:
         title: Title for the visualization
@@ -21,7 +22,7 @@ def generate_html_template(
 
     Returns:
         HTML content as string
-    '''
+    """
     env = _get_template_env()
     template = env.get_template('report.html.j2')
 
@@ -30,16 +31,16 @@ def generate_html_template(
         generation_time=generation_time,
         file_path=file_path,
         coordinates=coordinates,
-        bounds=bounds
+        bounds=bounds,
     )
 
 
 def generate_js_template() -> str:
-    '''Generate the JavaScript template for the map functionality.
+    """Generate the JavaScript template for the map functionality.
 
     Returns:
         JavaScript content as string
-    '''
+    """
     env = _get_template_env()
     template = env.get_template('map.js.j2')
 
@@ -47,10 +48,10 @@ def generate_js_template() -> str:
 
 
 def _get_template_env() -> Environment:
-    '''Get Jinja2 environment for template loading.
+    """Get Jinja2 environment for template loading.
 
     Returns:
         Jinja2 Environment instance
-    '''
+    """
     template_dir = Path(__file__).parent / 'templates'
     return Environment(loader=FileSystemLoader(str(template_dir)))

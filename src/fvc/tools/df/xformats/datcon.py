@@ -1,5 +1,6 @@
-from pathlib import Path
 import csv
+from pathlib import Path
+
 import pyparsing as pp
 
 from fvc.tools.df.utils import JsonlinesIO
@@ -31,7 +32,8 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
             record = {
                 'time': {
-                    'unix': int(row['TS']) // 1_000_000,  # nanoseconds to milliseconds
+                    # nanoseconds to milliseconds
+                    'unix': int(row['TS']) // 1_000_000,
                 },
                 'uaid': {
                     'int': row['GUID'] if row['GUID'] != 'N/A' else row['ID']
@@ -40,9 +42,9 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                     'loc': {
                         'lat': float(row['Latitude']),
                         'lon': float(row['Longitude']),
-                        'alt': float(row['Altitude'])
+                        'alt': float(row['Altitude']),
                     }
-                }
+                },
             }
 
             output.write(record)

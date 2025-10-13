@@ -1,6 +1,7 @@
-from pathlib import Path
 import json
 import logging as lg
+from pathlib import Path
+
 from botobuddy.utils import dslice
 
 import fvc.tools.df.utils as u
@@ -14,9 +15,9 @@ def generate_point(params, record):
         'type': 'Feature',
         'geometry': {
             'type': 'Point',
-            'coordinates': [loc['lon'], loc['lat'], loc['alt']]
+            'coordinates': [loc['lon'], loc['lat'], loc['alt']],
         },
-        'properties': {}
+        'properties': {},
     }
 
     if 'cellsig' in record:
@@ -36,10 +37,10 @@ def generate_line(params, record, curr_pos):
             'type': 'LineString',
             'coordinates': [
                 [curr_pos['lon'], curr_pos['lat'], curr_pos['alt']],
-                [loc['lon'], loc['lat'], loc['alt']]
-            ]
+                [loc['lon'], loc['lat'], loc['alt']],
+            ],
         },
-        'properties': {}
+        'properties': {},
     }
 
     curr_pos['lat'] = loc['lat']
@@ -52,16 +53,12 @@ def generate_line(params, record, curr_pos):
 def generate_features(params, record, curr_pos):
     return [
         generate_point(params, record),
-        generate_line(params, record, curr_pos)
-
+        generate_line(params, record, curr_pos),
     ]
 
 
 def generate_geojson(features):
-    collection = {
-        'type': 'FeatureCollection',
-        'features': features
-    }
+    collection = {'type': 'FeatureCollection', 'features': features}
 
     return json.dumps(collection, indent=2)
 
@@ -92,7 +89,7 @@ def export_from_fvc(params, output_path: Path | None):
             first,
             {'k': 'pos.loc.lat', 'n': 'lat'},
             {'k': 'pos.loc.lon', 'n': 'lon'},
-            {'k': 'pos.loc.alt', 'n': 'alt'}
+            {'k': 'pos.loc.alt', 'n': 'alt'},
         )
 
         features = []

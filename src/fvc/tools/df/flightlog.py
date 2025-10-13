@@ -1,8 +1,8 @@
 import json
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
+from pygeodesy.dms import F_DMS, latDMS, lonDMS
 from toolz.itertoolz import accumulate, last
-from pygeodesy.dms import latDMS, lonDMS, F_DMS
 
 from fvc.tools.df.utils import JsonlinesIO
 
@@ -27,14 +27,11 @@ def stats(params, io: JsonlinesIO):
         'time': lambda rec: rec['time']['unix'],
         'lat': fetch_loc('lat'),
         'lon': fetch_loc('lon'),
-        'alt': fetch_loc('alt')
+        'alt': fetch_loc('alt'),
     }
 
     init = {
-        key: {
-            'min': float('inf'),
-            'max': float('-inf')
-        }
+        key: {'min': float('inf'), 'max': float('-inf')}
         for key in targets.keys()
     }
 
@@ -51,8 +48,11 @@ def stats(params, io: JsonlinesIO):
     if params['JSON']:
         print(json.dumps(stats, indent=2))
     else:
+
         def ftime(ts):
-            return datetime.fromtimestamp(ts/1000.0, tz=UTC).strftime('%Y-%m-%d %H:%M:%S UTC')
+            return datetime.fromtimestamp(ts / 1000.0, tz=UTC).strftime(
+                '%Y-%m-%d %H:%M:%S UTC'
+            )
 
         def flat(lat):
             return latDMS(lat, form=F_DMS)
@@ -63,6 +63,12 @@ def stats(params, io: JsonlinesIO):
         print(f'Start: {ftime(stats["time"]["min"])}')
         print(f'End: {ftime(stats["time"]["max"])}')
 
-        print(f'From latutude {flat(stats["lat"]["min"])} to {flat(stats["lat"]["max"])}')
-        print(f'From longitude {flon(stats["lon"]["min"])} to {flon(stats["lon"]["max"])}')
-        print(f'From altitude {stats["alt"]["min"]:.2f} to {stats["alt"]["max"]:.2f}')
+        print(
+            f'From latutude {flat(stats["lat"]["min"])} to {flat(stats["lat"]["max"])}'
+        )
+        print(
+            f'From longitude {flon(stats["lon"]["min"])} to {flon(stats["lon"]["max"])}'
+        )
+        print(
+            f'From altitude {stats["alt"]["min"]:.2f} to {stats["alt"]["max"]:.2f}'
+        )

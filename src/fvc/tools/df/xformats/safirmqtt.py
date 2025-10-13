@@ -1,6 +1,6 @@
-from pathlib import Path
 import logging as lg
 import traceback
+from pathlib import Path
 
 import fvc.tools.utils as u
 from fvc.tools.df.utils import JsonlinesIO
@@ -46,21 +46,12 @@ def from_safir_loc(safir_loc, geoid):
         )
 
     if lat is None:
-        raise UserWarning(
-            'No latitude found in SAFIR location record'
-        )
+        raise UserWarning('No latitude found in SAFIR location record')
 
     if lon is None:
-        raise UserWarning(
-            'No longitude found in SAFIR location record'
-        )
+        raise UserWarning('No longitude found in SAFIR location record')
 
-    record = {
-        'loc': {
-            'lat': lat,
-            'lon': lon
-        }
-    }
+    record = {'loc': {'lat': lat, 'lon': lon}}
 
     if amsl is not None:
         alt = u.amsl_to_ellipsoidal(geoid, lat, lon, amsl)
@@ -82,29 +73,20 @@ def flightlog_record(record, geoid):
         )
 
     if 'timestamp' not in record:
-        raise UserWarning(
-            'No timestamp found in SAFIR record'
-        )
+        raise UserWarning('No timestamp found in SAFIR record')
 
     time = u.datestring_to_ts(record.get('timestamp', ''))
     rec_ids = record.get('identifiers')
 
     if rec_ids is None:
-        raise UserWarning(
-            'No identifiers found in SAFIR record'
-        )
+        raise UserWarning('No identifiers found in SAFIR record')
 
     ids = from_safir_ids(rec_ids)
     rec_loc = record.get('location')
     pos = from_safir_loc(rec_loc, geoid)
     origin = record.get('origin')
 
-    record = {
-        'time': {'unix': time},
-        'uaid': ids,
-        'pos': pos,
-        'origin': origin
-    }
+    record = {'time': {'unix': time}, 'uaid': ids, 'pos': pos, 'origin': origin}
 
     return record
 

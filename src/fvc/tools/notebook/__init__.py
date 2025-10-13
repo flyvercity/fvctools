@@ -1,7 +1,7 @@
 import os
 
-import pandas
 import geopandas
+import pandas
 
 from fvc.tools.df.utils import Input, JsonlinesIO
 
@@ -25,20 +25,22 @@ def fetch_geodata(file_name: str) -> geopandas.GeoDataFrame:
         tuples = map(fetch, io.iterate())
         lists = list(zip(*tuples))
 
-        df = pandas.DataFrame({
-            'Time': lists[0],
-            'ID': lists[1],
-            'Latitude': lists[2],
-            'Longitude': lists[3],
-            'Altitude': lists[4]
-        })
+        df = pandas.DataFrame(
+            {
+                'Time': lists[0],
+                'ID': lists[1],
+                'Latitude': lists[2],
+                'Longitude': lists[3],
+                'Altitude': lists[4],
+            }
+        )
 
-    gdf = geopandas.GeoDataFrame(                    # type: ignore
+    gdf = geopandas.GeoDataFrame(  # type: ignore
         df,
         geometry=geopandas.points_from_xy(
             df.Longitude, df.Latitude, z=df.Altitude
         ),
-        crs="EPSG:4326"
+        crs='EPSG:4326',
     )
 
     return gdf

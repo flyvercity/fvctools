@@ -1,7 +1,7 @@
 import logging as lg
-from pathlib import Path
-from typing import Callable, Any
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+from typing import Any, Callable
 
 from fvc.tools.df.utils import JsonlinesIO
 
@@ -10,7 +10,7 @@ def correlate(
     params: dict[str, Any],
     infiles: tuple[Path, ...],
     check_callbacks: list[Callable[[int], None]],
-    merge_callback: Callable[[int], None]
+    merge_callback: Callable[[int], None],
 ):
     with ThreadPoolExecutor() as executor:
         futures = [

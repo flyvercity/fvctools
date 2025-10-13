@@ -1,7 +1,7 @@
-from pathlib import Path
-from xml.parsers.expat import ParserCreate
-from typing import TextIO
 import logging as lg
+from pathlib import Path
+from typing import TextIO
+from xml.parsers.expat import ParserCreate
 
 import fvc.tools.utils as u
 from fvc.tools.df.utils import JsonlinesIO
@@ -26,7 +26,7 @@ def iterate_robin(f: TextIO):
                     lines.append(line)
                 else:
                     return
-            
+
             yield (line_no, ''.join(lines))
 
 
@@ -39,7 +39,7 @@ class Converter:
     class Top:
         pass
 
-    class Dummy():
+    class Dummy:
         def __init__(self, parent):
             self.parent = parent
 
@@ -82,11 +82,7 @@ class Converter:
 
             if type(self.parent) is Converter.Track:
                 self.parent.record['pos'] = {
-                    'loc': {
-                        'lat': self.lat,
-                        'lon': self.lon,
-                        'alt': self.alt
-                    }
+                    'loc': {'lat': self.lat, 'lon': self.lon, 'alt': self.alt}
                 }
 
     class Latitude:
@@ -170,7 +166,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     with input_path.open('rt') as f:
         block_no = 0
 
-        for (line_no, block) in iterate_robin(f):
+        for line_no, block in iterate_robin(f):
             block_no += 1
 
             try:
@@ -182,4 +178,6 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 parser.Parse(block, True)
 
             except Exception as e:
-                lg.warning(f'Error parsing block {block_no} line {line_no}: {e}')
+                lg.warning(
+                    f'Error parsing block {block_no} line {line_no}: {e}'
+                )

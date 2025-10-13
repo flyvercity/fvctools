@@ -1,6 +1,6 @@
 import json
-from pathlib import Path
 import logging as lg
+from pathlib import Path
 
 import fvc.tools.utils as u
 from fvc.tools.df.utils import JsonlinesIO
@@ -21,7 +21,9 @@ class Courageous:
         pass
 
     def convert(self):
-        self.metadata.update({'content': self.content(), 'source': 'courageous'})
+        self.metadata.update(
+            {'content': self.content(), 'source': 'courageous'}
+        )
         self.output.write(self.metadata)
         data = json.loads(self.input_path.read_text())
 
@@ -71,13 +73,7 @@ class CourageousCartesian(Courageous):
         amsl = pos['height_amsl']
         alt = u.amsl_to_ellipsoidal(self.geoid, lat, lon, amsl)
 
-        position = {
-            'loc': {
-                'lat': lat,
-                'lon': lon,
-                'alt': alt
-            }
-        }
+        position = {'loc': {'lat': lat, 'lon': lon, 'alt': alt}}
 
         return position
 
@@ -96,12 +92,7 @@ class CourageousPolar(Courageous):
             return None
 
         position = {
-            'loc': {
-                'polar': {
-                    'bear': pos['bearing'],
-                    'elev': pos['elevation']
-                }
-            }
+            'loc': {'polar': {'bear': pos['bearing'], 'elev': pos['elevation']}}
         }
 
         return position

@@ -1,20 +1,23 @@
-from pathlib import Path
-from datetime import datetime, UTC
 import logging as lg
-from typing import List, Dict, Any
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any, Dict, List
 
 from fvc.tools.df.utils import JsonlinesIO
-from fvc.tools.render.templates import generate_html_template, generate_js_template
+from fvc.tools.render.templates import (
+    generate_html_template,
+    generate_js_template,
+)
 
 
 def generate_html_map(file_path: Path, output_dir: Path, title: str):
-    '''Generate an interactive map visualization for FVC data files.
+    """Generate an interactive map visualization for FVC data files.
 
     Args:
         file_path: Path to the FVC data file (jsonlines format)
         output_dir: Directory to save the visualization files
         title: Title for the visualization
-    '''
+    """
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -34,7 +37,7 @@ def generate_html_map(file_path: Path, output_dir: Path, title: str):
         generation_time=datetime.now(tz=UTC).strftime('%Y-%m-%d %H:%M:%S'),
         file_path=file_path.name,
         coordinates=coordinates,
-        bounds=bounds
+        bounds=bounds,
     )
 
     lg.info('Generating HTML file...')
@@ -50,14 +53,14 @@ def generate_html_map(file_path: Path, output_dir: Path, title: str):
 
 
 def extract_coordinates(file_path: Path) -> List[Dict[str, Any]]:
-    '''Extract latitude and longitude coordinates from FVC data file.
+    """Extract latitude and longitude coordinates from FVC data file.
 
     Args:
         file_path: Path to the FVC data file
 
     Returns:
         List of coordinate dictionaries with lat, lon, and metadata
-    '''
+    """
 
     coordinates = []
 
@@ -81,12 +84,14 @@ def extract_coordinates(file_path: Path) -> List[Dict[str, Any]]:
 
                         # Add cellular signal data if available
                         if record.get('cellsig'):
-                            coord_data.update({
-                                'rsrp': record.get('cellsig.RSRP'),
-                                'rsrq': record.get('cellsig.RSRQ'),
-                                'plmnid': record.get('cellsig.plmnid'),
-                                'plmnname': record.get('cellsig.plmnname')
-                            })
+                            coord_data.update(
+                                {
+                                    'rsrp': record.get('cellsig.RSRP'),
+                                    'rsrq': record.get('cellsig.RSRQ'),
+                                    'plmnid': record.get('cellsig.plmnid'),
+                                    'plmnname': record.get('cellsig.plmnname'),
+                                }
+                            )
 
                         coordinates.append(coord_data)
 
@@ -98,14 +103,14 @@ def extract_coordinates(file_path: Path) -> List[Dict[str, Any]]:
 
 
 def calculate_bounds(coordinates: List[Dict[str, Any]]) -> Dict[str, float]:
-    '''Calculate the bounding box for the map.
+    """Calculate the bounding box for the map.
 
     Args:
         coordinates: List of coordinate dictionaries
 
     Returns:
         Dictionary with north, south, east, west bounds
-    '''
+    """
 
     if not coordinates:
         return {'north': 0, 'south': 0, 'east': 0, 'west': 0}
@@ -117,5 +122,5 @@ def calculate_bounds(coordinates: List[Dict[str, Any]]) -> Dict[str, float]:
         'north': max(lats),
         'south': min(lats),
         'east': max(lons),
-        'west': min(lons)
+        'west': min(lons),
     }

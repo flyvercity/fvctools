@@ -1,6 +1,6 @@
-from pathlib import Path
 import logging as lg
 import traceback
+from pathlib import Path
 
 import fvc.tools.utils as u
 from fvc.tools.df.utils import JsonlinesIO
@@ -35,21 +35,12 @@ def from_safir_loc(safir_loc, geoid):
     amsl = safir_loc.get('altitudeAMSL')
 
     if lat is None:
-        raise UserWarning(
-            'No latitude found in SAFIR location record'
-        )
+        raise UserWarning('No latitude found in SAFIR location record')
 
     if lon is None:
-        raise UserWarning(
-            'No longitude found in SAFIR location record'
-        )
+        raise UserWarning('No longitude found in SAFIR location record')
 
-    record = {
-        'loc': {
-            'lat': lat,
-            'lon': lon
-        }
-    }
+    record = {'loc': {'lat': lat, 'lon': lon}}
 
     if amsl is not None:
         alt = u.amsl_to_ellipsoidal(geoid, lat, lon, amsl)
@@ -70,23 +61,17 @@ def flightlog_record(record, geoid):
     payload = record.get('payload')
 
     if payload is None:
-        raise UserWarning(
-            'No payload found in MQTT record'
-        )
+        raise UserWarning('No payload found in MQTT record')
 
     if 'timestamp' not in payload:
-        raise UserWarning(
-            'No timestamp found in SAFIR record'
-        )
+        raise UserWarning('No timestamp found in SAFIR record')
 
     time = u.datestring_to_ts(payload.get('timestamp', ''))
 
     rec_ids = payload.get('identifiers')
 
     if rec_ids is None:
-        raise UserWarning(
-            'No identifiers found in MQTT record'
-        )
+        raise UserWarning('No identifiers found in MQTT record')
 
     ids = from_safir_ids(rec_ids)
     rec_loc = payload.get('location')
@@ -97,7 +82,7 @@ def flightlog_record(record, geoid):
         'time': {'unix': time},
         'uaid': ids,
         'pos': pos,
-        'origin': origin
+        'origin': origin,
     }
 
     return fvc_record
@@ -113,9 +98,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             metadata = input.read()
 
             if metadata.get('content') != 'capture.message':
-                raise UserWarning(
-                    'Incoming content is not "capture.message"'
-                )
+                raise UserWarning('Incoming content is not "capture.message"')
 
             for record in input.iterate():
                 fl_record = flightlog_record(record, geoid)

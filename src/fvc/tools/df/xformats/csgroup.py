@@ -1,5 +1,5 @@
-from pathlib import Path
 import csv
+from pathlib import Path
 
 from fvc.tools.df.utils import JsonlinesIO
 
@@ -8,10 +8,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     with input_path.open('rt') as input:
         reader = csv.DictReader(input)
 
-        metadata.update({
-            'content': 'flightlog',
-            'source': 'csgroup'
-        })
+        metadata.update({'content': 'flightlog', 'source': 'csgroup'})
 
         output.write(metadata)
 
@@ -27,26 +24,14 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             lon = row['longitude']
             alt = row['altitude']
 
-            uaid = {
-                'int': track_id
-            }
+            uaid = {'int': track_id}
 
-            time = {
-                'unix': int(timestamp)
-            }
+            time = {'unix': int(timestamp)}
 
             position = {
-                'loc': {
-                    'lat': float(lat),
-                    'lon': float(lon),
-                    'alt': float(alt)
-                }
+                'loc': {'lat': float(lat), 'lon': float(lon), 'alt': float(alt)}
             }
 
-            record = {
-                'time': time,
-                'uaid': uaid,
-                'pos': position
-            }
+            record = {'time': time, 'uaid': uaid, 'pos': position}
 
             output.write(record)

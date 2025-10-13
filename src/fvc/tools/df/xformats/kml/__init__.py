@@ -1,7 +1,6 @@
-from pathlib import Path
 import logging as lg
+from pathlib import Path
 from zipfile import ZipFile
-import math
 
 import simplekml
 
@@ -14,7 +13,7 @@ def generate_point(params, record, kml):
     pnt = kml.newpoint(
         coords=[(loc['lon'], loc['lat'], loc['alt'])],
         extrude=1,
-        altitudemode = simplekml.AltitudeMode.absolute
+        altitudemode=simplekml.AltitudeMode.absolute,
     )
 
     pnt.style.iconstyle.scale = 1
@@ -24,7 +23,7 @@ def generate_point(params, record, kml):
         pnt.style.iconstyle.icon.href = 'images/arrow.png'
     else:
         pnt.style.iconstyle.icon.href = 'images/circle.png'
-    
+
 
 def generate_line(params, record, curr_pos, kml):
     pos = record['pos']
@@ -33,12 +32,11 @@ def generate_line(params, record, curr_pos, kml):
     kml.newlinestring(
         coords=[
             (curr_pos['lon'], curr_pos['lat'], curr_pos['alt']),
-            (loc['lon'], loc['lat'], loc['alt'])
+            (loc['lon'], loc['lat'], loc['alt']),
         ],
-        altitudemode = simplekml.AltitudeMode.absolute
+        altitudemode=simplekml.AltitudeMode.absolute,
     )
 
-    
     curr_pos['lat'] = loc['lat']
     curr_pos['lon'] = loc['lon']
     curr_pos['alt'] = loc['alt']
@@ -76,7 +74,7 @@ def export_from_fvc(params, output_path: Path | None):
         curr_pos = {
             'lat': first['pos']['loc']['lat'],
             'lon': first['pos']['loc']['lon'],
-            'alt': first['pos']['loc']['alt']
+            'alt': first['pos']['loc']['alt'],
         }
 
         for record in io.iterate():
@@ -90,7 +88,7 @@ def export_from_fvc(params, output_path: Path | None):
         arrow = Path(__file__).parent / 'images' / 'arrow.png'
         arrow = Path(__file__).parent / 'images' / 'circle.png'
         output.parent.mkdir(parents=True, exist_ok=True)
-        
+
         with ZipFile(output, 'w') as kmz:
             kmz.writestr('doc.kml', kml_string)
             kmz.write(arrow, 'images/arrow.png')

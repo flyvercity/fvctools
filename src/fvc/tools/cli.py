@@ -1,12 +1,12 @@
 import logging as lg
-from argparse import ArgumentParser
 import traceback
+from argparse import ArgumentParser
 from importlib.metadata import version
 
 import boto3
 import click
-from rich.logging import RichHandler
 from benedict import benedict
+from rich.logging import RichHandler
 
 from fvc.tools.calc.cli import calc
 from fvc.tools.df.cli import df
@@ -16,21 +16,21 @@ from fvc.tools.render.cli import render
 @click.group(help='Flyvercity CLI Tools Suite')
 @click.version_option(version('fvctools'))
 @click.pass_context
+@click.option('--verbose', is_flag=True, help='sets logging level to debug')
 @click.option(
-    '--verbose', is_flag=True, help='sets logging level to debug'
-)
-@click.option(
-    '--json', is_flag=True, help='Make JSON default output format instead of free form'
+    '--json',
+    is_flag=True,
+    help='Make JSON default output format instead of free form',
 )
 @click.option(
     '--no-pprint', is_flag=True, help='Disable colored pretty printing'
 )
+@click.option('--aws-profile', help='AWS profile to use for S3 operations')
 @click.option(
-    '--aws-profile', help='AWS profile to use for S3 operations'
-)
-@click.option(
-    '--egm', type=click.Path(exists=True), required=False,
-    help='Custom EGM geoid data file (*.pgm). Default: egm96-5.pgm'
+    '--egm',
+    type=click.Path(exists=True),
+    required=False,
+    help='Custom EGM geoid data file (*.pgm). Default: egm96-5.pgm',
 )
 def cli(ctx, verbose, json, no_pprint, aws_profile, egm):
     ctx.ensure_object(benedict)
@@ -39,10 +39,7 @@ def cli(ctx, verbose, json, no_pprint, aws_profile, egm):
 
     lg.basicConfig(
         level=lg.DEBUG if verbose else lg.INFO,
-        handlers=[RichHandler(
-            rich_tracebacks=verbose,
-            show_path=verbose
-        )]
+        handlers=[RichHandler(rich_tracebacks=verbose, show_path=verbose)],
     )
 
     lg.debug(f'Verbose mode is {"on" if verbose else "off"}')
@@ -64,18 +61,23 @@ def shell():
     pass
 
 
-POWERSHELL_SCRIPT = '''#powershell
+POWERSHELL_SCRIPT = """#powershell
 function FvcTool {
     return $(fvc --json --no-pprint @args) | ConvertFrom-Json
 }
-'''
+"""
 
 
 @shell.command(help='Powershell Integration Script')
 def pwsh():
-    click.echo(''.join(
-        filter(lambda line: not line.startswith('#'), POWERSHELL_SCRIPT.splitlines())
-    ))
+    click.echo(
+        ''.join(
+            filter(
+                lambda line: not line.startswith('#'),
+                POWERSHELL_SCRIPT.splitlines(),
+            )
+        )
+    )
 
 
 cli.add_command(df)

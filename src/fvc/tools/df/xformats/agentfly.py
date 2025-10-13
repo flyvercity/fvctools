@@ -1,7 +1,6 @@
-
-from pathlib import Path
 import csv
 import logging as lg
+from pathlib import Path
 
 from fvc.tools.df.utils import JsonlinesIO
 
@@ -31,10 +30,10 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                         'loc': {
                             'lat': float(row['latitude_deg']),
                             'lon': float(row['longitude_deg']),
-                            'alt': float(row['altitude_m'])
+                            'alt': float(row['altitude_m']),
                         }
                     },
-                    'sensor': row['source_id']
+                    'sensor': row['source_id'],
                 }
 
                 if origin := row.get('origin'):

@@ -1,15 +1,16 @@
-'''
+"""
 Gnettrack log format
 
 Custom parameters:
     - gnettrack-allow-low-precision: Allow low precision time for Gnettrack log
-'''
+"""
 
-from pathlib import Path
 import csv
-from datetime import datetime
-import uuid
 import logging as lg
+import uuid
+from datetime import datetime
+from pathlib import Path
+
 from botobuddy.utils import dslice
 
 from fvc.tools.df.utils import JsonlinesIO
@@ -22,16 +23,20 @@ def module_help():
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     track_id = str(uuid.uuid4())
 
-    allow_low_precision = 'gnettrack-allow-low-precision' in params.get('custom', [])
+    allow_low_precision = 'gnettrack-allow-low-precision' in params.get(
+        'custom', []
+    )
 
     with input_path.open('rt') as input:
         reader = csv.DictReader(input, delimiter='\t')
 
-        metadata.update({
-            'content': 'flightlog',
-            'source': 'gnettrack',
-            'allow_low_precision': allow_low_precision
-        })
+        metadata.update(
+            {
+                'content': 'flightlog',
+                'source': 'gnettrack',
+                'allow_low_precision': allow_low_precision,
+            }
+        )
 
         output.write(metadata)
 
@@ -57,9 +62,13 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             [hour, minute, second, ms] = time_parts
 
             dt = datetime(
-                int(year), int(month), int(day),
-                int(hour), int(minute), int(second),
-                int(ms) * 1000
+                int(year),
+                int(month),
+                int(day),
+                int(hour),
+                int(minute),
+                int(second),
+                int(ms) * 1000,
             )
 
             timestamp = int(dt.timestamp() * 1000)
@@ -68,8 +77,11 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             uaid = {'int': f'{device}:{track_id}'}
             uaid.update(dslice(row, 'IP', 'IMEI', 'IMSI'))
 
-            maybe_float = lambda x: float(x) if x and x != '-' else None
-            maybe_int = lambda x: int(x) if x and x != '-' else None
+            def maybe_float(x):
+                return float(x) if x and x != '-' else None
+
+            def maybe_int(x):
+                return int(x) if x and x != '-' else None
 
             net_tech = row['NetworkTech']
             net_mode = row['NetworkMode']
@@ -84,65 +96,68 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 case ('5G', 'NR'):
                     radio = '5GNR'
                 case _:
-                    raise RuntimeError(f'Unknown network technology: {net_tech} {net_mode}')
-                    lg.warning(f'Unknown network technology: {net_tech} {net_mode}')
+                    raise RuntimeError(
+                        f'Unknown network technology: {net_tech} {net_mode}'
+                    )
+                    lg.warning(
+                        f'Unknown network technology: {net_tech} {net_mode}'
+                    )
                     continue
 
             cellsig = {'radio': radio}
 
-            cellsig.update(dslice(
-                row,
-                {'k': 'Level', 'c': maybe_float, 'n': 'RSRP'},
-                {'k': 'Qual', 'c': maybe_float, 'n': 'RSRQ'},
-                {'k': 'LTERSSI', 'c': maybe_float, 'n': 'RSSI'},
-                {'k': 'SNR', 'c': maybe_float, 'n': 'SINR'},
-                {'k': 'CSI_PCI', 'c': maybe_float, 'n': 'CSI-RSRP'},
-                {'k': 'CSI_RSRQ', 'c': maybe_float, 'n': 'CSI-RSRQ'},
-                {'k': 'CSI_RSSI', 'c': maybe_float, 'n': 'CSI-RSSI'},
-                {'k': 'CSI_SNR', 'c': maybe_float, 'n': 'CSI-SINR'},
-                {'k': 'SS_Level', 'c': maybe_float, 'n': 'SS-RSRP'},
-                {'k': 'SS_Qual', 'c': maybe_float, 'n': 'SS-RSRQ'},
-                {'k': 'SS_RSSI', 'c': maybe_float, 'n': 'SS-RSSI'},
-                {'k': 'SS_SNR', 'c': maybe_float, 'n': 'SS-SINR'},
-                {'k': 'ARFCN', 'c': maybe_int},
-                {'k': 'BAND', 'n': 'band'},
-                {'k': 'Operator', 'n': 'plmnid'},
-                {'k': 'Operatorname', 'n': 'plmnname'},
-                {'k': 'CGI', 'n': 'CGI'}
-            ))
+            cellsig.update(
+                dslice(
+                    row,
+                    {'k': 'Level', 'c': maybe_float, 'n': 'RSRP'},
+                    {'k': 'Qual', 'c': maybe_float, 'n': 'RSRQ'},
+                    {'k': 'LTERSSI', 'c': maybe_float, 'n': 'RSSI'},
+                    {'k': 'SNR', 'c': maybe_float, 'n': 'SINR'},
+                    {'k': 'CSI_PCI', 'c': maybe_float, 'n': 'CSI-RSRP'},
+                    {'k': 'CSI_RSRQ', 'c': maybe_float, 'n': 'CSI-RSRQ'},
+                    {'k': 'CSI_RSSI', 'c': maybe_float, 'n': 'CSI-RSSI'},
+                    {'k': 'CSI_SNR', 'c': maybe_float, 'n': 'CSI-SINR'},
+                    {'k': 'SS_Level', 'c': maybe_float, 'n': 'SS-RSRP'},
+                    {'k': 'SS_Qual', 'c': maybe_float, 'n': 'SS-RSRQ'},
+                    {'k': 'SS_RSSI', 'c': maybe_float, 'n': 'SS-RSSI'},
+                    {'k': 'SS_SNR', 'c': maybe_float, 'n': 'SS-SINR'},
+                    {'k': 'ARFCN', 'c': maybe_int},
+                    {'k': 'BAND', 'n': 'band'},
+                    {'k': 'Operator', 'n': 'plmnid'},
+                    {'k': 'Operatorname', 'n': 'plmnname'},
+                    {'k': 'CGI', 'n': 'CGI'},
+                )
+            )
 
             loc = dslice(
                 row,
                 {'k': 'Latitude', 'c': maybe_float, 'n': 'lat'},
                 {'k': 'Longitude', 'c': maybe_float, 'n': 'lon'},
-                {'k': 'Altitude', 'c': maybe_float, 'n': 'alt'}
+                {'k': 'Altitude', 'c': maybe_float, 'n': 'alt'},
             )
 
             datalink = dslice(
                 row,
                 {'k': 'PINGMAX', 'c': maybe_int, 'n': 'rtt'},
-                {'k': 'PINGLOSS', 'c': maybe_int, 'n': 'loss'}
+                {'k': 'PINGLOSS', 'c': maybe_int, 'n': 'loss'},
             )
 
-            row_metadata.update(dslice(
-                row,
-                'BATTERY',
-                'Accuracy',
-                'Location',
-            ))
+            row_metadata.update(
+                dslice(
+                    row,
+                    'BATTERY',
+                    'Accuracy',
+                    'Location',
+                )
+            )
 
             record = {
                 'uaid': uaid,
-                'time': {
-                    'unix': timestamp,
-                    'original': row_ts
-                },
-                'pos': {
-                    'loc': loc
-                },
+                'time': {'unix': timestamp, 'original': row_ts},
+                'pos': {'loc': loc},
                 'cellsig': cellsig,
                 'datalink': datalink,
-                'metadata': row_metadata
+                'metadata': row_metadata,
             }
 
             output.write(record)

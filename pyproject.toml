@@ -39,5 +39,31 @@ fvc = "fvc.tools.cli:main"
 dev = [
     "flake8>=7.2.0",
     "ptpython>=3.0.30",
+    "ruff>=0.14.0",
     "twine>=6.1.0",
 ]
+
+[tool.ruff]
+line-length = 80
+src = ["src"]
+
+[tool.ruff.format]
+# Expand readability a bit.
+quote-style = "single"
+indent-style = "space"
+docstring-code-format = true
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+# Avoid rules that fight the formatter or push compactness.
+ignore = [
+  "COM812",     # Trailing comma nitpicks
+  "ISC001",     # Implicit str concat strictness
+  "C4",         # flake8-comprehensions (keeps simple loops acceptable)
+]
+
+# Treat `_` and `_unused`-style names as intentional.
+dummy-variable-rgx = "^(_+|unused_.*)$"

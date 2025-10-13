@@ -1,7 +1,7 @@
-from pathlib import Path
 import logging as lg
 import re
 from datetime import datetime, timezone
+from pathlib import Path
 
 from pyulog import ULog
 
@@ -21,12 +21,11 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             f'Falling back to boot time.'
         )
 
-        start_dt = datetime.fromtimestamp(ulog.start_timestamp / 1e6, tz=timezone.utc)
+        start_dt = datetime.fromtimestamp(
+            ulog.start_timestamp / 1e6, tz=timezone.utc
+        )
 
-    metadata.update({
-        'content': 'flightlog',
-        'source': 'ulog'
-    })
+    metadata.update({'content': 'flightlog', 'source': 'ulog'})
 
     output.write(metadata)
 
@@ -39,19 +38,15 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
     records = [
         {
-            'uaid': {
-                'int': uaid
-            },
-            'time': {
-                'unix': int(gps_times[i])
-            },
+            'uaid': {'int': uaid},
+            'time': {'unix': int(gps_times[i])},
             'pos': {
                 'loc': {
                     'lat': float(latitudes[i] / 1e7),
                     'lon': float(longitudes[i] / 1e7),
-                    'height': float(altitudes[i] / 1000.0)
+                    'height': float(altitudes[i] / 1000.0),
                 }
-            }
+            },
         }
         for i in range(len(gps_times))
     ]
@@ -61,14 +56,14 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
 
 def extract_datetime_from_filename(filename):
-    ''' Extracts the datetime from PX4 Ulog filenames.'''
+    """Extracts the datetime from PX4 Ulog filenames."""
     match = re.search(r'(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2}-\d{2})', filename)
 
     if not match:
         return None
 
     date_str, time_str = match.groups()
-    datetime_str = f"{date_str} {time_str.replace('-', ':')}"
+    datetime_str = f'{date_str} {time_str.replace("-", ":")}'
 
-    dt = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+    dt = datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
     return dt.replace(tzinfo=timezone.utc)

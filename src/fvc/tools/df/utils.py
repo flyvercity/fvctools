@@ -1,12 +1,12 @@
 import json
+import logging as lg
 from pathlib import Path
 from typing import Generator, Literal
-import logging as lg
 
-from benedict import benedict
-from rich.spinner import Spinner
-from rich.live import Live
 import boto3
+from benedict import benedict
+from rich.live import Live
+from rich.spinner import Spinner
 
 
 class JsonlinesIO:
@@ -21,7 +21,9 @@ class JsonlinesIO:
         return self._filepath.stat().st_size
 
     def __enter__(self):
-        self._file = self._filepath.open(f'{self._mode}t', encoding='utf-8', newline=None)
+        self._file = self._filepath.open(
+            f'{self._mode}t', encoding='utf-8', newline=None
+        )
         self._in_line_no = 0
         return self
 
@@ -105,7 +107,9 @@ class Input:
             cache_dir = self._params.get('cache_dir')
 
             if not cache_dir:
-                raise UserWarning('Cache directory should be specified for external data')
+                raise UserWarning(
+                    'Cache directory should be specified for external data'
+                )
 
             cache_dir_path = Path(cache_dir)
             cache_dir_path.mkdir(parents=True, exist_ok=True)
@@ -132,8 +136,12 @@ class Input:
 
             with Live(spinner):
                 s3.download_file(
-                    bucket_name, key, str(local_path),
-                    Callback=lambda x: spinner.update(text=f'Downloaded {x} bytes')
+                    bucket_name,
+                    key,
+                    str(local_path),
+                    Callback=lambda x: spinner.update(
+                        text=f'Downloaded {x} bytes'
+                    ),
                 )
 
             return local_path

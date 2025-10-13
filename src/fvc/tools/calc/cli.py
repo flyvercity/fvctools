@@ -1,6 +1,7 @@
-import click
-from datetime import datetime, UTC
 import logging as lg
+from datetime import UTC, datetime
+
+import click
 
 import fvc.tools.utils as u
 
@@ -12,7 +13,11 @@ def calc():
 
 @calc.command(help='Convert UNIX timestamps to human-readable format')
 @click.pass_obj
-@click.option('--nanoseconds', is_flag=True, help='Use nanoseconds instead of milliseconds')
+@click.option(
+    '--nanoseconds',
+    is_flag=True,
+    help='Use nanoseconds instead of milliseconds',
+)
 @click.argument('epoch', type=int, required=True)
 def epoch(params, epoch, nanoseconds):
     if nanoseconds:

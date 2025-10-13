@@ -1,12 +1,12 @@
-from pathlib import Path
 import logging as lg
+from pathlib import Path
 
 import click
 
-import fvc.tools.utils as u
 import fvc.tools.df.utils as uf
-from fvc.tools.df.utils import JsonlinesIO as JLIO
 import fvc.tools.df.xformats.safirmqtt as smq
+import fvc.tools.utils as u
+from fvc.tools.df.utils import JsonlinesIO as JLIO
 
 
 def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
@@ -21,7 +21,7 @@ def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
     out_metadata = {
         'origin': str(params['input']),
         'content': 'flightlog',
-        'source': 'fusion.replay'
+        'source': 'fusion.replay',
     }
 
     geoid = u.load_geoid(params, out_metadata)
