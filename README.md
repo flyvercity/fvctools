@@ -12,7 +12,7 @@ fvc --help
 
 ## Development Environment
 
-Requires `uv` project and package management tool.
+Requires the `uv` package and project management tool.
 
 Generic invocation:
 
@@ -20,18 +20,12 @@ Generic invocation:
 uv run fvc --help
 ```
 
-### PowerShell
+## PowerShell
 
-Load for PowerShell and create `fvc` alias:
-
-```pwsh
-. .\Set-DevEnv.ps1
-```
-
-Invoke:
+Load as a PowerShell function:
 
 ```pwsh
-fvc --help
+. .\Load-FvcTools.ps1
 ```
 
 Use as an object:
