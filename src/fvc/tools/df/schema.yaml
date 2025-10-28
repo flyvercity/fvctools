@@ -122,6 +122,7 @@ METADATA: &METADATA
         - gnettrack
         - mqtt
         - ulog
+        - fvcgen
     # Original file name or originating system
     origin:
       type: string
