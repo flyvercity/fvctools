@@ -1,85 +1,105 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$title: "Flyvercity Data Format Schema"
+$comment: "Schema version 1.0 - Enhanced with documentation fields for automatic documentation generation"
+
 LOCATION: &LOCATION
+  $title: "Geographic Location"
   type: object
   properties:
-    # Latitude in WGS-84
     lat:
       type: number
-    # Longitude in WGS-84
+      description: "Latitude in WGS-84"
+      examples: [55.7558, -74.0060]
     lon:
       type: number
-    # Ellipsoidal altitude
+      description: "Longitude in WGS-84"
+      examples: [37.6176, 40.7128]
     alt:
       type: number
-    # Altitude above mean sea level
+      description: "Ellipsoidal altitude"
+      examples: [100.5, 250.0]
     amsl:
       type: number
-    # Local height above ground
+      description: "Altitude above mean sea level"
+      examples: [95.2, 245.8]
     height:
       type: number
-    # Bearing angle in degrees clockwise from the true north
+      description: "Local height above ground"
+      examples: [10.5, 25.0]
     bear:
       type: number
-    # Ground speed in meters per second
+      description: "Bearing angle in degrees clockwise from the true north"
+      examples: [45.0, 180.0, 270.0]
     gspeed:
       type: number
+      description: "Ground speed in meters per second"
+      examples: [15.5, 50.0, 120.0]
   required:
     - lat
     - lon
-  optional:
-    - alt
-    - amsl
-    - height
-    - bear
-    - gspeed
   additionalProperties: false
 
 POLAR: &POLAR
+  $title: "Polar Coordinates"
   type: object
   properties:
-    # Bearing angle in degrees clockwise from the true north
     bear:
       type: number
-    # Elevation angle in degrees above horizon
+      description: "Bearing angle in degrees clockwise from the true north"
+      examples: [0.0, 90.0, 180.0, 270.0]
     elev:
       type: number
+      description: "Elevation angle in degrees above horizon"
+      examples: [0.0, 15.0, 45.0, 90.0]
   additionalProperties: false
 
-# Polar sensor payload
 POLAR_SENSOR: &POLAR_SENSOR
+  $title: "Polar Sensor Payload"
   type: object
   properties:
-    loc: *LOCATION
+    loc:
+      description: "Geographic location of the polar sensor"
+      allOf: [*LOCATION]
   required:
     - loc
   additionalProperties: false
 
 IDENTIFICATION: &IDENTIFICATION
+  $title: "Aircraft Identification"
   type: object
   properties:
-    # Source-internal identifier
     int:
       type: string
-    # Flyvercity unique identifier
+      description: "Source-internal identifier"
+      examples: ["FL001", "AC-12345"]
     fvc:
       type: string
-    # ICAO 24-bit address
+      description: "Flyvercity unique identifier"
+      examples: ["fvc-abc123", "fvc-xyz789"]
     icaohex:
       type: string
-    # ICAO registration
+      description: "ICAO 24-bit address"
+      examples: ["ABC123", "4CA123"]
     icaoreg:
       type: string
-    # ATM callsign
+      description: "ICAO registration"
+      examples: ["N123AB", "G-ABCD"]
     atm:
       type: string
-    # IP address
+      description: "ATM callsign"
+      examples: ["UAL123", "BAW456"]
     ip:
       type: string
-    # IMEI (International Mobile Equipment Identity) number
+      description: "IP address"
+      examples: ["192.168.1.100", "10.0.0.5"]
     imei:
       type: string
-    # IMSI (International Mobile Subscriber Identity) number
+      description: "IMEI (International Mobile Equipment Identity) number"
+      examples: ["123456789012345", "987654321098765"]
     imsi:
       type: string
+      description: "IMSI (International Mobile Subscriber Identity) number"
+      examples: ["310150123456789", "310260987654321"]
   anyOf:
     - required:
         - int
@@ -87,9 +107,10 @@ IDENTIFICATION: &IDENTIFICATION
         - fvc
   additionalProperties: false
 
-# Current file content descriptor
 CONTENT: &CONTENT
+  $title: "Content Type"
   type: string
+  description: "Current file content descriptor"
   enum:
     - flightlog
     - radarlog
@@ -97,16 +118,19 @@ CONTENT: &CONTENT
     - capture.message
 
 METADATA: &METADATA
+  $title: "File Metadata"
   type: object
   properties:
     content:
+      description: "Content type or array of content types"
       oneOf:
-        - *CONTENT
+        - allOf: [*CONTENT]
         - type: array
-          items: *CONTENT
-    # Original data format
+          items: 
+            allOf: [*CONTENT]
     source:
       type: string
+      description: "Original data format"
       enum:
         - airlink
         - courageous
@@ -123,27 +147,37 @@ METADATA: &METADATA
         - mqtt
         - ulog
         - fvcgen
-    # Original file name or originating system
+      examples: ["nmea", "safirmqtt", "fusion.replay"]
     origin:
       type: string
-    polar_sensor: *POLAR_SENSOR
+      description: "Original file name or originating system"
+      examples: ["flight_data_20231201.log", "radar_system_alpha"]
+    polar_sensor:
+      description: "Polar sensor configuration"
+      allOf: [*POLAR_SENSOR]
     cycle_length:
       type: number
+      description: "Cycle length in seconds"
+      examples: [1.0, 5.0, 10.0]
   required:
     - content
 
 ATTITUDE: &ATTITUDE
+  $title: "Aircraft Attitude"
   type: object
   properties:
-    # Roll angle in degrees
     roll:
       type: number
-    # Pitch angle in degrees
+      description: "Roll angle in degrees"
+      examples: [-30.0, 0.0, 15.5]
     pitch:
       type: number
-    # Yaw angle in degrees
+      description: "Pitch angle in degrees"
+      examples: [-10.0, 0.0, 20.0]
     yaw:
       type: number
+      description: "Yaw angle in degrees"
+      examples: [0.0, 90.0, 180.0, 270.0]
   required:
     - roll
     - pitch
@@ -151,159 +185,195 @@ ATTITUDE: &ATTITUDE
   additionalProperties: false
 
 POSITION: &POSITION
+  $title: "Aircraft Position"
   type: object
   properties:
-    loc: *LOCATION
-    att: *ATTITUDE
+    loc:
+      description: "Geographic location of the aircraft"
+      allOf: [*LOCATION]
+    att:
+      description: "Aircraft attitude information"
+      allOf: [*ATTITUDE]
   required:
     - loc
-  optional:
-    - att
   additionalProperties: false
 
 RADAR_POSITION: &RADAR_POSITION
+  $title: "Radar Position"
   type: object
   properties:
-    loc: *POLAR
+    loc:
+      description: "Polar coordinates for radar position"
+      allOf: [*POLAR]
   required:
     - loc
   additionalProperties: false
 
 TIMESTAMP: &TIMESTAMP
+  $title: "Timestamp"
   type: object
   properties:
-    # Unix timestamp in milliseconds
     unix:
       type: number
+      description: "Unix timestamp in milliseconds"
+      examples: [1704067200000, 1704153600000]
   required:
     - unix
   additionalProperties: false
 
 CELLULAR_SIGNAL: &CELLULAR_SIGNAL
+  $title: "Cellular Signal Information"
   type: object
   properties:
     radio:
       type: string
+      description: "Radio technology type"
       enum:
         - 2G3G
         - 4GLTE
         - 5GNSA
         - 5GNR
+      examples: ["4GLTE", "5GNR"]
     RSRP:
-      type:
-        - number
+      type: number
+      description: "Reference Signal Received Power (dBm)"
+      examples: [-80, -100, -120]
     RSRQ:
-      type:
-        - number
+      type: number
+      description: "Reference Signal Received Quality (dB)"
+      examples: [-10, -15, -20]
     RSSI:
-      type:
-        - number
+      type: number
+      description: "Received Signal Strength Indicator (dBm)"
+      examples: [-70, -90, -110]
     SINR:
-      type:
-        - number
+      type: number
+      description: "Signal-to-Interference-plus-Noise Ratio (dB)"
+      examples: [10, 15, 20]
     CSI-RSRP:
-      type:
-        - number
+      type: number
+      description: "CSI Reference Signal Received Power (dBm)"
+      examples: [-85, -105, -125]
     CSI-RSRQ:
-      type:
-        - number
+      type: number
+      description: "CSI Reference Signal Received Quality (dB)"
+      examples: [-12, -17, -22]
     CSI-RSSI:
-      type:
-        - number
+      type: number
+      description: "CSI Received Signal Strength Indicator (dBm)"
+      examples: [-75, -95, -115]
     CSI-SINR:
-      type:
-        - number
+      type: number
+      description: "CSI Signal-to-Interference-plus-Noise Ratio (dB)"
+      examples: [8, 13, 18]
     SS-RSRP:
-      type:
-        - number
+      type: number
+      description: "Synchronization Signal Reference Signal Received Power (dBm)"
+      examples: [-82, -102, -122]
     SS-RSRQ:
-      type:
-        - number
+      type: number
+      description: "Synchronization Signal Reference Signal Received Quality (dB)"
+      examples: [-11, -16, -21]
     SS-RSSI:
-      type:
-        - number
+      type: number
+      description: "Synchronization Signal Received Signal Strength Indicator (dBm)"
+      examples: [-72, -92, -112]
     SS-SINR:
-      type:
-        - number
+      type: number
+      description: "Synchronization Signal Signal-to-Interference-plus-Noise Ratio (dB)"
+      examples: [9, 14, 19]
     ARFCN:
-      type:
-        - number
+      type: number
+      description: "Absolute Radio Frequency Channel Number"
+      examples: [100, 500, 1000]
     band:
-      type:
-        - string
+      type: string
+      description: "Frequency band identifier"
+      examples: ["B1", "B3", "B7", "n78"]
     CGI:
-      type:
-        - string
+      type: string
+      description: "Cell Global Identity"
+      examples: ["310-150-123456-789", "310-260-987654-321"]
     plmnid:
-      type:
-        - string
+      type: string
+      description: "Public Land Mobile Network Identifier"
+      examples: ["310-150", "310-260"]
     plmnname:
-      type:
-        - string
+      type: string
+      description: "Public Land Mobile Network Name"
+      examples: ["Verizon", "AT&T", "T-Mobile"]
   additionalProperties: false
 
 FLIGHTLOG: &FLIGHTLOG
+  $title: "Flight Log Entry"
   type: object
   properties:
-    # Originating system
     origin:
       type: string
-    # Timestamp
-    time: *TIMESTAMP
-    # Unique identifier
-    uaid: *IDENTIFICATION
-    # Geodetic  position
-    pos: *POSITION
-    # Cellular signal
-    cellsig: *CELLULAR_SIGNAL
+      description: "Originating system"
+      examples: ["airlink", "courageous", "nmea"]
+    time:
+      description: "Timestamp of the flight log entry"
+      allOf: [*TIMESTAMP]
+    uaid:
+      description: "Unique aircraft identification"
+      allOf: [*IDENTIFICATION]
+    pos:
+      description: "Aircraft position and attitude"
+      allOf: [*POSITION]
+    cellsig:
+      description: "Cellular signal information"
+      allOf: [*CELLULAR_SIGNAL]
     datalink:
       type: object
+      description: "Data link performance metrics"
       properties:
         rtt:
           type: number
+          description: "Round-trip time in milliseconds"
+          examples: [50, 100, 200]
         loss:
           type: number
-      optional:
-        - rtt
-        - loss
+          description: "Packet loss percentage"
+          examples: [0.0, 1.5, 5.0]
+      additionalProperties: false
     metadata:
       type: object
+      description: "Additional metadata"
   required:
     - time
     - pos
-  optional:
-    - tag
-    - uaid
-    - origin
-    - cellsig
-    - datalink
-    - metadata
   additionalProperties: false
 
 RADARLOG: &RADARLOG
+  $title: "Radar Log Entry"
   type: object
   properties:
-    # Originating system
     origin:
       type: string
-    # Timestamp
-    time: *TIMESTAMP
-    uaid: *IDENTIFICATION
-    pos: *RADAR_POSITION
+      description: "Originating system"
+      examples: ["robinradar", "csgroup", "senhive"]
+    time:
+      description: "Timestamp of the radar log entry"
+      allOf: [*TIMESTAMP]
+    uaid:
+      description: "Unique aircraft identification"
+      allOf: [*IDENTIFICATION]
+    pos:
+      description: "Radar position information"
+      allOf: [*RADAR_POSITION]
   required:
     - time
     - pos
-  optional:
-    - tag
-    - uaid
-    - origin
   additionalProperties: false
 
 FUSION_REPLAY: &FUSION_REPLAY
+  $title: "Fusion Replay Event"
   type: object
   properties:
     event:
       type: string
+      description: "Event type"
       enum:
         - launch
         - start
@@ -311,46 +381,69 @@ FUSION_REPLAY: &FUSION_REPLAY
         - input
         - output
         - error
+      examples: ["start", "input", "output"]
     cycle:
       type: number
+      description: "Cycle number"
+      examples: [1, 100, 1000]
     origin:
       type: string
+      description: "Originating system"
+      examples: ["fusion.replay", "system-alpha"]
     message:
       type: object
+      description: "Event message payload"
     eid:
       type: string
+      description: "Event identifier"
+      examples: ["evt-123", "evt-abc456"]
     metadata:
       type: object
+      description: "Event metadata"
   required:
     - event
     - cycle
-  optional:
-    - origin
-    - message
-    - eid
-    - metadata
   additionalProperties: false
 
-# Messages captured from MQTT topics (other sources may be added in the future)
 CAPTURE_MESSAGE: &CAPTURE_MESSAGE
+  $title: "Captured Message"
   type: object
+  description: "Messages captured from MQTT topics (other sources may be added in the future)"
   properties:
-    # MQTT Metadata
     mqtt:
       type: object
+      description: "MQTT Metadata"
       properties:
-        # Timestamp
-        time: *TIMESTAMP
-        # Topic
+        time:
+          description: "MQTT message timestamp"
+          allOf: [*TIMESTAMP]
         topic:
           type: string
+          description: "MQTT topic"
+          examples: ["/aircraft/position", "/radar/track", "/system/status"]
+      required:
+        - time
+        - topic
+      additionalProperties: false
   required:
     - mqtt
-  # Allow for any payload content
   additionalProperties: true
 
 CONTENT_SCHEMA:
-  flightlog: *FLIGHTLOG
-  radarlog: *RADARLOG
-  fusion.replay: *FUSION_REPLAY 
-  capture.message: *CAPTURE_MESSAGE
+  $title: "Content Schema Registry"
+  $comment: "Registry of all supported content types and their schemas"
+  type: object
+  properties:
+    flightlog:
+      description: "Flight log entry schema"
+      allOf: [*FLIGHTLOG]
+    radarlog:
+      description: "Radar log entry schema"
+      allOf: [*RADARLOG]
+    "fusion.replay":
+      description: "Fusion replay event schema"
+      allOf: [*FUSION_REPLAY]
+    "capture.message":
+      description: "Captured message schema"
+      allOf: [*CAPTURE_MESSAGE]
+  additionalProperties: false
