@@ -157,8 +157,8 @@ METADATA: &METADATA
       allOf: [*POLAR_SENSOR]
     cycle_length:
       type: number
-      description: "Cycle length in seconds"
-      examples: [1.0, 5.0, 10.0]
+      description: "Cycle length in milliseconds"
+      examples: [1000]
   required:
     - content
 
@@ -339,9 +339,9 @@ FLIGHTLOG: &FLIGHTLOG
           description: "Round-trip time in milliseconds"
           examples: [50, 100, 200]
         loss:
-          type: number
-          description: "Packet loss percentage"
-          examples: [0.0, 1.5, 5.0]
+          type: boolean
+          description: "Packet loss flag"
+          examples: [true, false]
       additionalProperties: false
     metadata:
       type: object
@@ -394,15 +394,11 @@ FUSION_REPLAY: &FUSION_REPLAY
       examples: [1, 100, 1000]
     origin:
       type: string
-      description: "Originating system"
-      examples: ["fusion.replay", "system-alpha"]
+      description: "Originating network or system"
+      examples: ["safesky"]
     message:
       type: object
       description: "Event message payload"
-    eid:
-      type: string
-      description: "Event identifier"
-      examples: ["evt-123", "evt-abc456"]
     metadata:
       type: object
       description: "Event metadata"
