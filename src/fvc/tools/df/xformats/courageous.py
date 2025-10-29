@@ -1,9 +1,8 @@
 import json
-import logging as lg
 from pathlib import Path
 
 import fvc.tools.utils as u
-from fvc.tools.df.utils import JsonlinesIO
+from fvc.tools.df.utils import JsonlinesIO, lg
 
 
 class Courageous:

@@ -1,10 +1,10 @@
 import json
-import logging as lg
 from pathlib import Path
 
 from botobuddy.utils import dslice
 
 import fvc.tools.df.utils as u
+from fvc.tools.df.utils import lg
 
 
 def generate_point(params, record):

@@ -1,11 +1,10 @@
-import logging as lg
 import re
 from datetime import datetime, timezone
 from pathlib import Path
 
 from pyulog import ULog
 
-from fvc.tools.df.utils import JsonlinesIO
+from fvc.tools.df.utils import JsonlinesIO, lg
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):

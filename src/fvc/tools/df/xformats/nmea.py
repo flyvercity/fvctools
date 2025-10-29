@@ -5,7 +5,6 @@ Custom parameters:
     - base-date=<datestring> is required for this format
 """
 
-import logging as lg
 import statistics
 from datetime import UTC, datetime
 from pathlib import Path
@@ -13,7 +12,7 @@ from pathlib import Path
 import pynmea2
 from dateutil.parser import parse as dateparse
 
-from fvc.tools.df.utils import JsonlinesIO
+from fvc.tools.df.utils import JsonlinesIO, lg
 from fvc.tools.utils import JSON
 
 

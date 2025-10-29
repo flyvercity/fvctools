@@ -1,5 +1,5 @@
 import json
-import logging as lg
+import logging
 from pathlib import Path
 from typing import Generator, Literal
 
@@ -7,6 +7,9 @@ import boto3
 from benedict import benedict
 from rich.live import Live
 from rich.spinner import Spinner
+
+
+lg = logging.getLogger('fvc.tools.df')
 
 
 class JsonlinesIO:
@@ -95,6 +98,7 @@ class Input:
         return directory
 
     def fetch(self) -> Path:
+
         if not self._input_uri:
             raise UserWarning('Input file or URI (--in) is not specified')
 

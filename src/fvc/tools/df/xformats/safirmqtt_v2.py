@@ -1,9 +1,8 @@
-import logging as lg
 import traceback
 from pathlib import Path
 
 import fvc.tools.utils as u
-from fvc.tools.df.utils import JsonlinesIO
+from fvc.tools.df.utils import JsonlinesIO, lg
 
 
 def from_safir_ids(safir_ids):

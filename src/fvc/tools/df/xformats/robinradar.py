@@ -1,10 +1,9 @@
-import logging as lg
 from pathlib import Path
 from typing import TextIO
 from xml.parsers.expat import ParserCreate
 
 import fvc.tools.utils as u
-from fvc.tools.df.utils import JsonlinesIO
+from fvc.tools.df.utils import JsonlinesIO, lg
 
 
 def iterate_robin(f: TextIO):
