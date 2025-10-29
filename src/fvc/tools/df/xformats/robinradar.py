@@ -63,14 +63,19 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                         lon_elem = pos_elem.find('Longitude')
                         alt_elem = pos_elem.find('Altitude')
 
-                        if lat_elem is not None and lat_elem.text and \
-                           lon_elem is not None and lon_elem.text and \
-                           alt_elem is not None and alt_elem.text:
+                        if (
+                            lat_elem is not None
+                            and lat_elem.text
+                            and lon_elem is not None
+                            and lon_elem.text
+                            and alt_elem is not None
+                            and alt_elem.text
+                        ):
                             record['pos'] = {
                                 'loc': {
                                     'lat': float(lat_elem.text),
                                     'lon': float(lon_elem.text),
-                                    'alt': float(alt_elem.text)
+                                    'alt': float(alt_elem.text),
                                 }
                             }
                         else:
@@ -81,6 +86,4 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                     output.write(record)
 
             except Exception as e:
-                lg.warning(
-                    f'Error parsing block {block_no} line {line_no}: {e}'
-                )
+                lg.warning(f'Error parsing block {block_no} line {line_no}: {e}')

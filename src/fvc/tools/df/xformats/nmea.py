@@ -34,9 +34,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
         base_date = dateparse(base_date)
 
     if not base_date:
-        raise UserWarning(
-            'This format requires the date to be set manually with "base-date" custom parameter'
-        )
+        raise UserWarning('This format requires the date to be set manually with "base-date" custom parameter')
 
     lg.debug(f'Using base date: {base_date}')
 
@@ -88,9 +86,7 @@ def iterate_nmea_file(input_path: Path, strict: bool = False):
 
             except pynmea2.ParseError as e:
                 if strict:
-                    raise ValueError(
-                        f'Unable to parse line {line_no} ({line}) with error: {e}'
-                    ) from e
+                    raise ValueError(f'Unable to parse line {line_no} ({line}) with error: {e}') from e
 
                 lg.warning(f'Unable to parse line {line_no} ({line}) with error: {e}')
                 continue

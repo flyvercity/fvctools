@@ -3,14 +3,13 @@
 import copy
 import csv
 import json
-import logging as lg
 import uuid
 from pathlib import Path
 
 from botobuddy.utils import dslice
 from dateutil.parser import parse
 
-from fvc.tools.df.utils import JsonlinesIO
+from fvc.tools.df.utils import JsonlinesIO, lg
 
 
 def module_help():

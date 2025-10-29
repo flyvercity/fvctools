@@ -1,5 +1,4 @@
 import importlib
-import logging as lg
 from pathlib import Path
 
 import click
@@ -12,6 +11,7 @@ import fvc.tools.df.utils as u
 from fvc.tools.df.correlate import correlate
 from fvc.tools.df.fusion import fusion
 from fvc.tools.utils import json_print
+from fvc.tools.df.utils import lg
 
 DESCRIPTION = 'Data file conversion and manipulation tool'
 
@@ -126,6 +126,7 @@ def convert_command(params, output_file, **kwargs):
         lg.error('Input and output paths are the same')
         return
 
+    params['input_path'] = input_path
     params['output_path'] = output_path
 
     with Progress(transient=True) as progress:
@@ -136,7 +137,7 @@ def convert_command(params, output_file, **kwargs):
         def callback(s):
             progress.update(read_task, advance=s)
 
-        core.convert(params, input_path, callback)
+        core.convert(params, callback)
 
     lg.info(f'Conversion complete, output written to {output_path}')
 
@@ -170,20 +171,6 @@ def export_command(params, output_file, **kwargs):
     params.update(kwargs)
     params['output_path'] = output_file
     core.export(params)
-
-
-@df.command(help='Scan for fvc.df.toml files and execute tasks')
-@click.pass_obj
-@click.option(
-    '--force', help='Reconvert files even if they exist', is_flag=True
-)
-@click.option(
-    '--validate', help='Validate files after conversion', is_flag=True
-)
-def crawl(params, force, validate):
-    params['force'] = force
-    params['validate'] = validate
-    core.crawl(params)
 
 
 @df.command(help='Upgrade a FVC file to the latest schema (volatile code)')

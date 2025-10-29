@@ -6,14 +6,13 @@ Custom parameters:
 """
 
 import csv
-import logging as lg
 import uuid
 from datetime import datetime
 from pathlib import Path
 
 from botobuddy.utils import dslice
 
-from fvc.tools.df.utils import JsonlinesIO
+from fvc.tools.df.utils import JsonlinesIO, lg
 
 
 def module_help():
@@ -26,6 +25,11 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     allow_low_precision = 'gnettrack-allow-low-precision' in params.get(
         'custom', []
     )
+
+    if allow_low_precision:
+        lg.debug('Allowing low precision time for Gnettrack log')
+    else:
+        lg.debug('Not allowing low precision time for Gnettrack log')
 
     with input_path.open('rt') as input:
         reader = csv.DictReader(input, delimiter='\t')

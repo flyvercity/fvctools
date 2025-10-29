@@ -1,4 +1,3 @@
-import logging as lg
 from pathlib import Path
 
 import click
@@ -6,7 +5,7 @@ import click
 import fvc.tools.df.utils as uf
 import fvc.tools.df.xformats.safirmqtt as smq
 import fvc.tools.utils as u
-from fvc.tools.df.utils import JsonlinesIO as JLIO
+from fvc.tools.df.utils import JsonlinesIO as JLIO, lg
 
 
 def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
