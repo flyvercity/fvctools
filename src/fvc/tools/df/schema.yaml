@@ -88,15 +88,15 @@ IDENTIFICATION: &IDENTIFICATION
       type: string
       description: "ATM callsign"
       examples: ["UAL123", "BAW456"]
-    ip:
+    IP:
       type: string
       description: "IP address"
       examples: ["192.168.1.100", "10.0.0.5"]
-    imei:
+    IMEI:
       type: string
       description: "IMEI (International Mobile Equipment Identity) number"
       examples: ["123456789012345", "987654321098765"]
-    imsi:
+    IMSI:
       type: string
       description: "IMSI (International Mobile Subscriber Identity) number"
       examples: ["310150123456789", "310260987654321"]
@@ -216,9 +216,15 @@ TIMESTAMP: &TIMESTAMP
     unix:
       type: number
       description: "Unix timestamp in milliseconds"
-      examples: [1704067200000, 1704153600000]
+      examples: [1756033206882]
+    original:
+      type: string
+      description: "Original timestamp string"
+      examples: ["2025-01-01 12:00:00", "2025-01-01 12:00:00.123"]
   required:
     - unix
+  optional:
+    - original
   additionalProperties: false
 
 CELLULAR_SIGNAL: &CELLULAR_SIGNAL
@@ -430,20 +436,7 @@ CAPTURE_MESSAGE: &CAPTURE_MESSAGE
   additionalProperties: true
 
 CONTENT_SCHEMA:
-  $title: "Content Schema Registry"
-  $comment: "Registry of all supported content types and their schemas"
-  type: object
-  properties:
-    flightlog:
-      description: "Flight log entry schema"
-      allOf: [*FLIGHTLOG]
-    radarlog:
-      description: "Radar log entry schema"
-      allOf: [*RADARLOG]
-    "fusion.replay":
-      description: "Fusion replay event schema"
-      allOf: [*FUSION_REPLAY]
-    "capture.message":
-      description: "Captured message schema"
-      allOf: [*CAPTURE_MESSAGE]
-  additionalProperties: false
+  flightlog: *FLIGHTLOG
+  radarlog: *RADARLOG
+  fusion.replay: *FUSION_REPLAY 
+  capture.message: *CAPTURE_MESSAGE
