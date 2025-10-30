@@ -1,74 +1,83 @@
 import json
 from datetime import UTC, datetime
 
+from benedict import benedict
 from pygeodesy.dms import F_DMS, latDMS, lonDMS
 from toolz.itertoolz import accumulate, last
+from rich.progress import Progress
+import rich
 
-from fvc.tools.df.utils import JsonlinesIO
+import fvc.tools.df.utils as u
 
 
-def stats(params, io: JsonlinesIO):
-    metadata = io.read()
+def stats(params):
+    input_path = u.input_path(params)
 
-    if not metadata:
-        raise UserWarning('No metadata found')
+    with Progress(transient=True) as progress:
+        total_size = input_path.stat().st_size
+        task = progress.add_task('Analyzing...', total=total_size)
 
-    if (content := metadata.get('content')) != 'flightlog':
-        raise UserWarning(f'Unsupported content type: {content}')
+        def callback(s):
+            progress.update(task, advance=s)
 
-    def fetch_loc(field):
-        def inner(rec):
-            pos = rec['pos']
-            return pos['loc'][field] if 'loc' in pos else None
+        with u.JsonlinesIO(input_path, 'r', callback=callback) as io:
+            metadata = io.read()
 
-        return inner
+            if not metadata:
+                raise UserWarning('No metadata found')
 
-    targets = {
-        'time': lambda rec: rec['time']['unix'],
-        'lat': fetch_loc('lat'),
-        'lon': fetch_loc('lon'),
-        'alt': fetch_loc('alt'),
-    }
+            if (content := metadata.get('content')) != 'flightlog':
+                raise UserWarning(f'Unsupported content type: {content}')
 
-    init = {
-        key: {'min': float('inf'), 'max': float('-inf')}
-        for key in targets.keys()
-    }
+            targets = [
+                'time.unix',
+                'pos.loc.lat',
+                'pos.loc.lon',
+                'pos.loc.alt',
+            ]
 
-    def stat_acc(stats, rec):
-        for key, fetch in targets.items():
-            if val := fetch(rec):
-                stats[key]['min'] = min(stats[key]['min'], val)
-                stats[key]['max'] = max(stats[key]['max'], val)
+            init = {
+                key: {'min': float('inf'), 'max': float('-inf')}
+                for key in targets
+            }
 
-        return stats
+            def stat_acc(stats, rec: benedict):
+                for key in targets:
+                    if val := rec.get_float(key):
+                        stats[key]['min'] = min(stats[key]['min'], val)
+                        stats[key]['max'] = max(stats[key]['max'], val)
 
-    stats = last(accumulate(stat_acc, io.iterate(), initial=init))  # type: ignore
+                return stats
 
-    if params['JSON']:
-        print(json.dumps(stats, indent=2))
-    else:
+            stats = last(accumulate(stat_acc, io.iterate(), initial=init))
 
-        def ftime(ts):
-            return datetime.fromtimestamp(ts / 1000.0, tz=UTC).strftime(
-                '%Y-%m-%d %H:%M:%S UTC'
-            )
+            if params['JSON']:
+                print(json.dumps(stats, indent=2))
+            else:
+                _print_stats(stats)
 
-        def flat(lat):
-            return latDMS(lat, form=F_DMS)
 
-        def flon(lon):
-            return lonDMS(lon, form=F_DMS)
-
-        print(f'Start: {ftime(stats["time"]["min"])}')
-        print(f'End: {ftime(stats["time"]["max"])}')
-
-        print(
-            f'From latutude {flat(stats["lat"]["min"])} to {flat(stats["lat"]["max"])}'
+def _print_stats(stats):
+    def ftime(ts):
+        return datetime.fromtimestamp(ts / 1000.0, tz=UTC).strftime(
+            '%Y-%m-%d %H:%M:%S UTC'
         )
-        print(
-            f'From longitude {flon(stats["lon"]["min"])} to {flon(stats["lon"]["max"])}'
-        )
-        print(
-            f'From altitude {stats["alt"]["min"]:.2f} to {stats["alt"]["max"]:.2f}'
-        )
+
+    def flat(lat):
+        return latDMS(lat, form=F_DMS)
+
+    def flon(lon):
+        return lonDMS(lon, form=F_DMS)
+
+    rich.print(f'Start: {ftime(stats["time.unix"]["min"])}')
+    rich.print(f'End: {ftime(stats["time.unix"]["max"])}')
+
+    rich.print(
+        f'From latutude {flat(stats["pos.loc.lat"]["min"])} to {flat(stats["pos.loc.lat"]["max"])}'
+    )
+    rich.print(
+        f'From longitude {flon(stats["pos.loc.lon"]["min"])} to {flon(stats["pos.loc.lon"]["max"])}'
+    )
+    rich.print(
+        f'From altitude {stats["pos.loc.alt"]["min"]:.2f} to {stats["pos.loc.alt"]["max"]:.2f}'
+    )

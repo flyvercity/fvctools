@@ -144,10 +144,7 @@ def convert_command(params, output_file, **kwargs):
 @df.command(help='Calculate statistics for a FVC data file')
 @click.pass_obj
 def stats(params):
-    input_path = u.input_path(params)
-
-    with u.JsonlinesIO(input_path, 'r') as io:
-        flightlog.stats(params, io)
+    flightlog.stats(params)
 
 
 @df.command(help='Just download and cache external data')
