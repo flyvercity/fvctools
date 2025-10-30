@@ -17,13 +17,10 @@ DESCRIPTION = 'Data file conversion and manipulation tool'
 
 EPILOG = """
 Notes:
-
     For EGM geoid data download, visit:
     https://geographiclib.sourceforge.io/C++/doc/geoid.html#geoidinst
 
     To set a default cache directory, use the FVC_CACHE environment variable.
-
-    From examples of 'fvc.df.toml' files, see 'examples/df' directory in the source code.
 """
 
 
@@ -36,22 +33,24 @@ Notes:
     envvar='FVC_CACHE',
     required=False,
 )
-@click.option('--in', 'input', required=False)
+@click.option(
+    '--in', 'input_path', required=False,
+    type=click.Path(exists=True, path_type=Path),
+)
 @click.option(
     '--suffix',
     help='Suffix substitution for input files',
     type=str,
     required=False,
 )
-def df(params, input, **kwargs):
+def df(params, **kwargs):
     params.update(kwargs)
-    params['input'] = u.Input(params, input)
 
 
 @df.command(help='Validate a FVC file against the known schema')
 @click.pass_obj
 def validate(params):
-    input_path = params['input'].fetch()
+    input_path = u.input_path(params)
     file_size = input_path.stat().st_size
 
     with Progress(transient=True) as progress:
@@ -119,7 +118,7 @@ def convert_command(params, output_file, **kwargs):
     """
 
     params.update(kwargs)
-    input_path = params['input'].fetch()
+    input_path = u.input_path(params)
     output_path = output_file if output_file else input_path.with_suffix('.fvc')
 
     if output_path.absolute() == input_path.absolute():
@@ -145,7 +144,7 @@ def convert_command(params, output_file, **kwargs):
 @df.command(help='Calculate statistics for a FVC data file')
 @click.pass_obj
 def stats(params):
-    input_path = params['input'].fetch()
+    input_path = u.input_path(params)
 
     with u.JsonlinesIO(input_path, 'r') as io:
         flightlog.stats(params, io)
@@ -154,13 +153,7 @@ def stats(params):
 @df.command(help='Just download and cache external data')
 @click.pass_obj
 def fetch(params):
-    params['input'].fetch()
-
-    if not params['JSON']:
-        lg.info('This file is available in the cache')
-    else:
-        path = str(params['input'].fetch().resolve())
-        json_print(params, {'path': path})
+    raise NotImplementedError('Fetch is not implemented')
 
 
 @df.command(help='Convert data to an external format')
@@ -179,7 +172,7 @@ def export_command(params, output_file, **kwargs):
 )
 @click.pass_obj
 def upgrade(params, infile):
-    params['input'] = u.Input(params, infile)
+    params['input_path'] = infile
     params['output_path'] = infile.with_suffix('.fvc')
 
     with Progress(transient=True) as progress:
