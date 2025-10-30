@@ -1,9 +1,9 @@
 from functools import wraps
+from pathlib import Path
 
 import click
 
 import fvc.tools.df.xformats.nmea as nmea
-from fvc.tools.df.utils import Input
 from fvc.tools.utils import JSON
 
 
@@ -45,8 +45,7 @@ def initial_metadata(origin, params) -> JSON:
             'Sensor format (--polar-sensor-format) must be provided'
         )
 
-    filename = polar_sensor_source
-    source = Input(params, filename).fetch()
+    source = Path(polar_sensor_source)
 
     if polar_sensor_format == 'nmea':
         metadata['polar_sensor'] = {'source': 'nmea', 'origin': source.name}

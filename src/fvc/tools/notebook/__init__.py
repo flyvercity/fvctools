@@ -1,13 +1,14 @@
 import os
+from pathlib import Path
 
 import geopandas
 import pandas
 
-from fvc.tools.df.utils import Input, JsonlinesIO
+from fvc.tools.df.utils import JsonlinesIO
 
 
 def fetch_geodata(file_name: str) -> geopandas.GeoDataFrame:
-    input = Input({'cache_dir': os.getenv('FVC_CACHE')}, file_name)
+    input = Path(os.getenv('FVC_CACHE'), file_name)
 
     with JsonlinesIO(input.fetch(), 'r') as io:
         metadata = io.read()
