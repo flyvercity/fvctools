@@ -134,6 +134,8 @@ def print_stats(params: StatsParams):
         stats = calculate_stats(frame, vdim=params.get('vdim'))
         _print_stats(stats)
 
+    rich.print(f'Number of segments: {len(frames)}')
+
 
 def _print_stats(stats: dict):
     def ftime(ts):
