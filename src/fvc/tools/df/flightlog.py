@@ -2,63 +2,62 @@ from datetime import UTC, datetime
 
 import polars as pl
 from pygeodesy.dms import F_DMS, latDMS, lonDMS
-from rich.live import Live
-from rich.spinner import Spinner
 import rich
 
 import fvc.tools.df.utils as u
 
 
-def stats(params):
+def calculate_stats(params):
     input_path = u.input_path(params)
+    dataset = u.FvcDataset.read(input_path)
 
-    with Live(
-        Spinner('aesthetic', 'Analyzing...'),
-        transient=True,
-    ):
-        dataset = u.FvcDataset.read(input_path)
+    if dataset.metadata.get('content') != 'flightlog':
+        raise UserWarning(f'File {input_path} is not a flightlog')
 
-        if dataset.metadata.get('content') != 'flightlog':
-            raise UserWarning(f'File {input_path} is not a flightlog')
+    df = dataset.df
+    df = df.select(
+        pl.col('time').struct.field('unix').alias('time'),
+        pl.col('pos').struct.field('loc').struct.field('lat').alias('lat'),
+        pl.col('pos').struct.field('loc').struct.field('lon').alias('lon'),
+        pl.col('pos').struct.field('loc').struct.field('alt').alias('alt'),
+    )
 
-        df = dataset.df
-        df = df.select(
-            pl.col('time').struct.field('unix').alias('time'),
-            pl.col('pos').struct.field('loc').struct.field('lat').alias('lat'),
-            pl.col('pos').struct.field('loc').struct.field('lon').alias('lon'),
-            pl.col('pos').struct.field('loc').struct.field('alt').alias('alt'),
-        )
+    diff = df['time'].diff().alias('time_diff')
+    df = df.with_columns(diff)
 
-        diff = df['time'].diff().alias('time_diff')
-        df = df.with_columns(diff)
+    stats = {
+        'time': {
+            'min': df['time'].min(),
+            'max': df['time'].max(),
+        },
+        'lon': {
+            'min': df['lon'].min(),
+            'max': df['lon'].max(),
+        },
+        'lat': {
+            'min': df['lat'].min(),
+            'max': df['lat'].max(),
+        },
+        'alt': {
+            'min': df['alt'].min(),
+            'max': df['alt'].max(),
+        },
+        'time_diff': {
+            'min': df['time_diff'].min(),
+            'max': df['time_diff'].max(),
+        },
+    }
 
-        stats = {
-            'time': {
-                'min': df['time'].min(),
-                'max': df['time'].max(),
-            },
-            'lon': {
-                'min': df['lon'].min(),
-                'max': df['lon'].max(),
-            },
-            'lat': {
-                'min': df['lat'].min(),
-                'max': df['lat'].max(),
-            },
-            'alt': {
-                'min': df['alt'].min(),
-                'max': df['alt'].max(),
-            },
-            'time_diff': {
-                'min': df['time_diff'].min(),
-                'max': df['time_diff'].max(),
-            },
-        }
+    return stats
 
-        if params['JSON']:
-            u.json_print(params, stats)
-        else:
-            _print_stats(stats)
+
+def print_stats(params):
+    stats = calculate_stats(params)
+
+    if params['JSON']:
+        u.json_print(params, stats)
+    else:
+        _print_stats(stats)
 
 
 def _print_stats(stats):
