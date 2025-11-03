@@ -39,6 +39,33 @@ def load_frame(params: StatsParams):
     return df.sort('timestamp')
 
 
+def segment_airborne(df, params: StatsParams):
+    segment = float(params['segment'])
+    vdim = params['vdim']
+
+    df = df.with_columns(
+        pl.col('pos').struct.field('loc').struct.field(vdim).alias('vdim')
+    )
+
+    df = df.filter(
+        pl.col('vdim').is_not_null()
+    )
+
+    df = df.with_columns(
+        df['vdim'].gt(float(segment)).alias('airborne')
+    )
+
+    change_idx = (df['airborne'].shift(1) != df['airborne']).fill_null(True).to_numpy().nonzero()[0]
+
+    boundaries = list(change_idx) + [len(df)]
+
+    frames = [df.slice(start, stop - start) for start, stop in zip(boundaries, boundaries[1:])]
+
+    u.lg.info(f'Segmented into {len(frames)} frames')
+
+    return frames
+
+
 def calculate_stats(df, vdim: Optional[str] = None):
     projection = df.select(
         pl.col('time').struct.field('unix').alias('time'),
@@ -80,8 +107,8 @@ def calculate_stats(df, vdim: Optional[str] = None):
             'max': vdim_projection[vdim].max(),
         }
 
-    if 'on_ground' in df.columns:
-        stats['on_ground'] = df[0]['on_ground'].to_list()[0]
+    if 'airborne' in df.columns:
+        stats['airborne'] = df[0]['airborne'].to_list()[0]
 
     return stats
 
@@ -95,8 +122,11 @@ def print_stats(params: StatsParams):
     """
     df = load_frame(params)
 
-    if segment := params.get('segment'):
-        frames = segment_airborne(df, segment=segment)
+    if params.get('segment') is not None:
+        if params.get('vdim') is None:
+            raise UserWarning('Segmentation requires a vertical dimension')
+
+        frames = segment_airborne(df, params)
     else:
         frames = [df]
 
@@ -117,8 +147,8 @@ def _print_stats(stats: dict):
 
     rich.print('-' * 60)
 
-    if 'on_ground' in stats:
-        rich.print(f'On ground: {stats["on_ground"]}')
+    if 'airborne' in stats:
+        rich.print(f'Airborne: {stats["airborne"]}')
 
     rich.print(f'Start: {ftime(stats["time"]["min"])}')
     rich.print(f'End: {ftime(stats["time"]["max"])}')
