@@ -3,6 +3,8 @@ from pathlib import Path
 
 import click
 from rich.progress import Progress
+from rich.live import Live
+from rich.spinner import Spinner
 
 import fvc.tools.df.core as core
 import fvc.tools.df.flightlog as flightlog
@@ -144,7 +146,11 @@ def convert_command(params, output_file, **kwargs):
 @df.command(help='Calculate statistics for a FVC data file')
 @click.pass_obj
 def stats(params):
-    flightlog.stats(params)
+    with Live(
+        Spinner('aesthetic', 'Analyzing...'),
+        transient=True,
+    ):
+        flightlog.print_stats(params)
 
 
 @df.command(help='Just download and cache external data')
