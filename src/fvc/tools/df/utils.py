@@ -77,7 +77,12 @@ class JsonlinesIO:
 
 
 def input_path(params: benedict) -> Path:
-    path = Path(params['input_path'])
+    param = params.get('input_path')
+
+    if not param:
+        raise UserWarning('Input path is not set, use --in to set it')
+
+    path = Path(param)
 
     if suffix := params.get('suffix'):
         path = path.with_suffix(suffix)

@@ -3,17 +3,16 @@ from pathlib import Path
 
 import click
 from rich.progress import Progress
-from rich.live import Live
-from rich.spinner import Spinner
 
 import fvc.tools.df.core as core
-import fvc.tools.df.flightlog as flightlog
 import fvc.tools.df.metadata as metadata
 import fvc.tools.df.utils as u
 from fvc.tools.df.correlate import correlate
 from fvc.tools.df.fusion import fusion
 from fvc.tools.utils import json_print
 from fvc.tools.df.utils import lg
+
+from fvc.tools.flightlog.cli import flightlog_group
 
 DESCRIPTION = 'Data file conversion and manipulation tool'
 
@@ -143,16 +142,6 @@ def convert_command(params, output_file, **kwargs):
     lg.info(f'Conversion complete, output written to {output_path}')
 
 
-@df.command(help='Calculate statistics for a FVC data file')
-@click.pass_obj
-def stats(params):
-    with Live(
-        Spinner('aesthetic', 'Analyzing...'),
-        transient=True,
-    ):
-        flightlog.print_stats(params)
-
-
 @df.command(help='Just download and cache external data')
 @click.pass_obj
 def fetch(params):
@@ -222,3 +211,4 @@ def correlate_command(params, infiles: tuple[Path, ...]):
 
 
 df.add_command(fusion)
+df.add_command(flightlog_group)
