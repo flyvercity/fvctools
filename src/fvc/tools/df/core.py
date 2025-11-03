@@ -41,7 +41,7 @@ def convert(
     output_path = params['output_path']
 
     try:
-        x_format = params.get('x-format') or params.get('x_format')
+        x_format = params['x_format']
 
         lg.debug(f'Using external format module: {x_format}')
 
@@ -92,6 +92,7 @@ def validate(input_path: Path, callback: Callable[[int], None] | None = None) ->
 
             if error_count >= MAX_ERRORS:
                 lg.error(f'Maximum number of errors reached ({MAX_ERRORS}), stopping')
+
                 return False
 
     success = error_count == 0
@@ -106,12 +107,14 @@ def export(params: DFParams):
     """
 
     output_path = params['output_path']
-    x_format = params.get('x_format')
+    x_format = params['x_format']
 
     lg.debug(f'Using external format module: {x_format}')
+
     export_module = importlib.import_module(f'fvc.tools.df.xformats.{x_format}')
     export_fun = getattr(export_module, 'export_from_fvc')
     real_output = export_fun(params, output_path)
+
     lg.info(f'Export complete, output written to {real_output}')
 
 

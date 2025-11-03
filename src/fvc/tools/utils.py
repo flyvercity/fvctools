@@ -1,8 +1,8 @@
 import json
 import logging as lg
-from datetime import UTC
 from pathlib import Path
 from typing import Any, Dict
+from datetime import UTC
 
 from dateutil import parser as dateparser
 from pygeodesy import dms
@@ -35,9 +35,7 @@ def load_geoid(params, metadata=None) -> GeoidPGM:
     return geoid
 
 
-def amsl_to_ellipsoidal(
-    geoid: GeoidPGM, lat: float, lon: float, amsl_height: float
-) -> float:
+def amsl_to_ellipsoidal(geoid: GeoidPGM, lat: float, lon: float, amsl_height: float) -> float:
     # Initialize the Geoid model using EGM96 with WGS-84 datum
     geoid_height = geoid.height(lat, lon)
     ellipsoidal_height = amsl_height + geoid_height  # type: ignore
