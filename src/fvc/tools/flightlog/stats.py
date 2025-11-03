@@ -67,12 +67,17 @@ def calculate_stats(df, vdim: Optional[str] = None):
         },
     }
 
+    u.lg.info(f'Using vertical dimension: {vdim}')
+
     if vdim is not None:
-        vdim_col = pl.col('pos').struct.field('loc').struct.field(vdim)
-        
-        stats[vdim] = {
-            'min': vdim_col.min(),
-            'max': vdim_col.max(),
+        vdim_projection = df.select(
+            pl.col('pos').struct.field('loc').struct.field(vdim).alias(vdim)
+        )
+
+        stats['vdim'] = {
+            'name': vdim,
+            'min': vdim_projection[vdim].min(),
+            'max': vdim_projection[vdim].max(),
         }
 
     if 'on_ground' in df.columns:
@@ -96,7 +101,7 @@ def print_stats(params: StatsParams):
         frames = [df]
 
     for frame in frames:
-        stats = calculate_stats(frame)
+        stats = calculate_stats(frame, vdim=params.get('vdim'))
         _print_stats(stats)
 
 
@@ -119,8 +124,21 @@ def _print_stats(stats: dict):
     rich.print(f'End: {ftime(stats["time"]["max"])}')
     rich.print(f'Duration: {stats["duration"] / 1000.0:.2f} seconds')
 
-    rich.print(f'From latutude {flat(stats["lat"]["min"])} to {flat(stats["lat"]["max"])}')
-    rich.print(f'From longitude {flon(stats["lon"]["min"])} to {flon(stats["lon"]["max"])}')
-    # rich.print(f'From altitude {stats["alt"]["min"]:.2f} to {stats["alt"]["max"]:.2f}')
-    rich.print(f'Time difference: {stats["time_diff"]["min"]} to {stats["time_diff"]["max"]}')
+    rich.print(
+        f'From latutude {flat(stats["lat"]["min"])} to {flat(stats["lat"]["max"])}'
+    )
+
+    rich.print(
+        f'From longitude {flon(stats["lon"]["min"])} to {flon(stats["lon"]["max"])}'
+    )
+
+    rich.print(
+        f'Time difference: {stats["time_diff"]["min"]} to {stats["time_diff"]["max"]}'
+    )
+
+    if 'vdim' in stats:
+        rich.print(
+            f'From {stats["vdim"]["name"]} {stats["vdim"]["min"]:.2f} to {stats["vdim"]["max"]:.2f}'
+        )
+
     rich.print('-' * 60)
