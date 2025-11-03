@@ -17,7 +17,8 @@ def flightlog_group():
 )
 @click.pass_obj
 @click.option(
-    '--vdim', type=str, help='Dimension to visualize', default='alt'
+    '--vdim', type=str, help='Dimension to visualize', default='alt',
+    choices=['alt', 'height', 'amsl']
 )
 @click.option('--segment', type=float, help='Segment altitude')
 def stats_command(params, **kwargs):
