@@ -16,9 +16,15 @@ def flightlog_group():
     help='Calculate statistics for a FVC data file'
 )
 @click.pass_obj
+@click.option(
+    '--vdim', type=str, help='Dimension to visualize', default='alt'
+)
 @click.option('--segment', type=float, help='Segment altitude')
 def stats_command(params, **kwargs):
     params.update(kwargs)
+
+    if params.get('vdim') == 'none':
+        params['vdim'] = None
 
     with Live(
         Spinner('aesthetic', 'Analyzing...'),

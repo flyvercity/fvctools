@@ -1,4 +1,6 @@
 from datetime import UTC, datetime
+from pathlib import Path
+from typing import Optional, TypedDict
 
 import polars as pl
 from pygeodesy.dms import F_DMS, latDMS, lonDMS
@@ -7,7 +9,14 @@ import rich
 import fvc.tools.df.utils as u
 
 
-def load_frame(params):
+class StatsParams(TypedDict):
+    verbose: bool
+    input_path: Path
+    vdim: str
+    segment: float
+
+
+def load_frame(params: StatsParams):
     """ Parameters:
         - input_path: Path to the FVC data file
     """
@@ -17,60 +26,53 @@ def load_frame(params):
     if dataset.metadata.get('content') != 'flightlog':
         raise UserWarning(f'File {input_path} is not a flightlog')
 
-    df = dataset.df.select(
-        pl.col('time').struct.field('unix').alias('time'),
-        pl.col('pos').struct.field('loc').struct.field('lat').alias('lat'),
-        pl.col('pos').struct.field('loc').struct.field('lon').alias('lon'),
-        pl.col("pos").struct.field("loc").struct.field("alt").is_not_null()
+    df = dataset.df
+
+    if params.get('verbose'):
+        u.lg.info(f'Loaded {len(df)} rows')
+        print(df)
+
+    df = df.with_columns(
+        pl.col('time').struct.field('unix').alias('timestamp'),
     )
 
-    return df.sort('time')
+    return df.sort('timestamp')
 
 
-def segment_airborne(df, segment: str):
-    df = df.filter(pl.col('alt').is_not_null())
-    df = df.with_columns(df['alt'].lt(float(segment)).alias('on_ground'))
-
-    change_idx = (df['on_ground'].shift(1) != df['on_ground']).fill_null(True).to_numpy().nonzero()[0]
-
-    boundaries = list(change_idx) + [len(df)]
-
-    frames = [df.slice(start, stop - start) for start, stop in zip(boundaries, boundaries[1:])]
-
-    u.lg.info(f'Segmented into {len(frames)} frames')
-
-    return frames
-
-
-def calculate_stats(df):
-    df = df.with_columns(df['time'].diff().alias('time_diff'))
+def calculate_stats(df, vdim: Optional[str] = None):
+    projection = df.select(
+        pl.col('time').struct.field('unix').alias('time'),
+        pl.col('pos').struct.field('loc').struct.field('lon').alias('lon'),
+        pl.col('pos').struct.field('loc').struct.field('lat').alias('lat'),
+    )
+    time_diff = projection['time'].diff().drop_nulls()
 
     stats = {
         'time': {
-            'min': df['time'].min(),
-            'max': df['time'].max(),
+            'min': projection['time'].min(),
+            'max': projection['time'].max(),
         },
-        'duration': df['time'].max() - df['time'].min(),
+        'duration': projection['time'].max() - projection['time'].min(),
         'lon': {
-            'min': df['lon'].min(),
-            'max': df['lon'].max(),
+            'min': projection['lon'].min(),
+            'max': projection['lon'].max(),
         },
         'lat': {
-            'min': df['lat'].min(),
-            'max': df['lat'].max(),
+            'min': projection['lat'].min(),
+            'max': projection['lat'].max(),
         },
         'time_diff': {
-            'min': df['time_diff'].min(),
-            'max': df['time_diff'].max(),
+            'min': time_diff.min(),
+            'max': time_diff.max(),
         },
     }
 
-    df_alt = df.filter(pl.col('alt').is_not_null())
+    if vdim is not None:
+        vdim_col = pl.col('pos').struct.field('loc').struct.field(vdim)
         
-    if not df_alt.is_empty():
-        stats['alt'] = {
-            'min': df_alt['alt'].min(),
-            'max': df_alt['alt'].max(),
+        stats[vdim] = {
+            'min': vdim_col.min(),
+            'max': vdim_col.max(),
         }
 
     if 'on_ground' in df.columns:
@@ -79,7 +81,13 @@ def calculate_stats(df):
     return stats
 
 
-def print_stats(params):
+def print_stats(params: StatsParams):
+    """ P
+    Parameters:
+        - input_path: Path to the FVC data file
+        - vdim: Visualize dimension
+        - segment: Segment altitude
+    """
     df = load_frame(params)
 
     if segment := params.get('segment'):
@@ -92,7 +100,7 @@ def print_stats(params):
         _print_stats(stats)
 
 
-def _print_stats(stats):
+def _print_stats(stats: dict):
     def ftime(ts):
         return datetime.fromtimestamp(ts / 1000.0, tz=UTC).strftime('%Y-%m-%d %H:%M:%S UTC')
 
@@ -113,6 +121,6 @@ def _print_stats(stats):
 
     rich.print(f'From latutude {flat(stats["lat"]["min"])} to {flat(stats["lat"]["max"])}')
     rich.print(f'From longitude {flon(stats["lon"]["min"])} to {flon(stats["lon"]["max"])}')
-    rich.print(f'From altitude {stats["alt"]["min"]:.2f} to {stats["alt"]["max"]:.2f}')
+    # rich.print(f'From altitude {stats["alt"]["min"]:.2f} to {stats["alt"]["max"]:.2f}')
     rich.print(f'Time difference: {stats["time_diff"]["min"]} to {stats["time_diff"]["max"]}')
     rich.print('-' * 60)
