@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Generator, Literal
 
 from benedict import benedict
+import polars as pl
 
 
 lg = logging.getLogger('fvc.tools.df')
@@ -82,3 +83,24 @@ def input_path(params: benedict) -> Path:
         path = path.with_suffix(suffix)
 
     return path
+
+
+class FvcDataset(JsonlinesIO):
+    @staticmethod
+    def read(filepath: Path) -> 'FvcDataset':
+        with JsonlinesIO(filepath, 'r') as io:
+            metadata = io.read()
+            df = pl.read_ndjson(io._file)
+            return FvcDataset(metadata, df)
+
+    def __init__(self, metadata: benedict, df: pl.DataFrame):
+        self._metadata = metadata
+        self._df = df
+
+    @property
+    def metadata(self) -> benedict:
+        return self._metadata
+
+    @property
+    def df(self) -> pl.DataFrame:
+        return self._df
