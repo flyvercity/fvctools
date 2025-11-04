@@ -40,6 +40,9 @@ def convert(
     input_path = params['input_path']
     output_path = params['output_path']
 
+    if input_path.absolute() == output_path.absolute():
+        raise UserWarning('Input and output paths are the same')
+
     try:
         x_format = params['x_format']
 
