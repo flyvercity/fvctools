@@ -8,7 +8,9 @@ import rich
 import fvc.tools.df.utils as u
 
 
-def calculate_segment_stats(df: pl.DataFrame, vdim: Optional[str] = None):
+def calculate_segment_stats(
+    index: int, df: pl.DataFrame, vdim: Optional[str] = None
+):
     projection = df.select(
         pl.col('time').struct.field('unix').alias('time'),
         pl.col('pos').struct.field('loc').struct.field('lon').alias('lon'),
@@ -17,6 +19,7 @@ def calculate_segment_stats(df: pl.DataFrame, vdim: Optional[str] = None):
     time_diff = projection['time'].diff().drop_nulls()
 
     stats = {
+        'index': index,
         'time': {
             'min': projection['time'].min(),
             'max': projection['time'].max(),
@@ -35,8 +38,6 @@ def calculate_segment_stats(df: pl.DataFrame, vdim: Optional[str] = None):
             'max': time_diff.max(),
         },
     }
-
-    u.lg.info(f'Using vertical dimension: {vdim}')
 
     if vdim is not None:
         vdim_projection = df.select(
@@ -60,8 +61,8 @@ def calculate_flightlog_stats(
     vdim: Optional[str] = None
 ):
     stats = [
-        calculate_segment_stats(frame, vdim=vdim)
-        for frame in frames
+        calculate_segment_stats(inx, frame, vdim=vdim)
+        for inx, frame in enumerate(frames)
     ]
 
     return stats
