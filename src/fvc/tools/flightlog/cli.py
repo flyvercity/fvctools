@@ -27,7 +27,26 @@ def flightlog_group():
     type=click.Choice(['alt', 'height', 'amsl'])
 )
 @click.option(
-    '--segment', type=float, help='Segment altitude'
+    '--segment-by-altitude', is_flag=True,
+    help='Segment the log by altitude'
+)
+@click.option(
+    '--segment-altitude-meters', type=float,
+    help='Altitude to segment the log by in meters',
+    default=5.0,
+)
+@click.option(
+    '--filter-by-duration', is_flag=True,
+    help='Filter the log by duration'
+)
+@click.option(
+    '--filter-duration-seconds', type=float,
+    help='Duration to filter the log by in seconds',
+    default=300.0
+)
+@click.option(
+    '--verbose', is_flag=True,
+    help='Verbose output'
 )
 def stats_command(params, **kwargs):
     params.update(kwargs)

@@ -13,7 +13,10 @@ class StatsParams(TypedDict):
     verbose: bool
     input_path: Path
     vdim: str
-    segment: float
+    segment_by_altitude: bool
+    segment_altitude_meters: float
+    filter_by_duration: bool
+    filter_duration_seconds: float
 
 
 def load_frame(params: StatsParams):
@@ -40,8 +43,10 @@ def load_frame(params: StatsParams):
 
 
 def segment_airborne(df, params: StatsParams):
-    segment = float(params['segment'])
+    segment = params['segment_altitude_meters']
     vdim = params['vdim']
+    u.lg.info(f'Segmenting by altitude {segment} meters')
+    u.lg.info(f'Using vertical dimension: {vdim}')
 
     df = df.with_columns(
         pl.col('pos').struct.field('loc').struct.field(vdim).alias('vdim')
@@ -52,7 +57,7 @@ def segment_airborne(df, params: StatsParams):
     )
 
     df = df.with_columns(
-        df['vdim'].gt(float(segment)).alias('airborne')
+        df['vdim'].gt(segment).alias('airborne')
     )
 
     change_idx = (df['airborne'].shift(1) != df['airborne']).fill_null(True).to_numpy().nonzero()[0]
@@ -61,7 +66,7 @@ def segment_airborne(df, params: StatsParams):
 
     frames = [df.slice(start, stop - start) for start, stop in zip(boundaries, boundaries[1:])]
 
-    u.lg.info(f'Segmented into {len(frames)} frames')
+    u.lg.info(f'Segmented into {len(frames)} frames by altitude {segment} meters')
 
     return frames
 
@@ -113,16 +118,8 @@ def calculate_stats(df, vdim: Optional[str] = None):
     return stats
 
 
-def print_stats(params: StatsParams):
-    """ P
-    Parameters:
-        - input_path: Path to the FVC data file
-        - vdim: Visualize dimension
-        - segment: Segment altitude
-    """
-    df = load_frame(params)
-
-    if params.get('segment') is not None:
+def segment(df, params):
+    if params.get('segment_by_altitude'):
         if params.get('vdim') is None:
             raise UserWarning('Segmentation requires a vertical dimension')
 
@@ -130,11 +127,39 @@ def print_stats(params: StatsParams):
     else:
         frames = [df]
 
+    return frames
+
+
+def filter_duration(frames, params):
+    duration = params['filter_duration_seconds'] * 1000.0
+    u.lg.info(f'Filtering by duration {duration} milliseconds')
+
+    frames = [
+        frame for frame in frames
+        if frame['timestamp'].max() - frame['timestamp'].min() > duration
+    ]
+
+    u.lg.info(f'Filtered to {len(frames)} frames')
+    return frames
+
+
+def filter(frames, params):
+    if params['filter_by_duration']:
+        frames = filter_duration(frames, params)
+
+    return frames
+
+
+def print_stats(params):
+    df = load_frame(params)
+    frames = segment(df, params)
+    frames = filter(frames, params)
+
     for frame in frames:
         stats = calculate_stats(frame, vdim=params.get('vdim'))
         _print_stats(stats)
 
-    rich.print(f'Number of segments: {len(frames)}')
+    u.lg.info(f'Number of segments: {len(frames)}')
 
 
 def _print_stats(stats: dict):
