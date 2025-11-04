@@ -52,7 +52,7 @@ def segment_airborne(frames, params: SegmentParams, metadata: dict):
         u.lg.info(f'Using vertical dimension: {vdim}')
 
         frame = frame.with_columns(
-            pl.col('pos').struct.field('loc').struct.field(vdim).alias('vdim')
+            pl.col(f'pos.loc.{vdim}').alias('vdim')
         )
 
         frame = frame.filter(
