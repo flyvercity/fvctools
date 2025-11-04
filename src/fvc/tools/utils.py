@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any, Dict
 from datetime import UTC
 
+import polars as pl
 from dateutil import parser as dateparser
 from pygeodesy import dms
 from pygeodesy.geoids import GeoidPGM
@@ -97,3 +98,13 @@ def parse_lon(lon: Any) -> float:
 
 def render_latlon(lat, lon) -> str:
     return f'{dms.latDMS(lat, dms.F_DMS)} {dms.lonDMS(lon, dms.F_DMS)}'
+
+
+def plnested(selector: str):
+    col, *fields = selector.split('.')
+    e = pl.col(col)
+
+    for f in fields:
+        e = e.struct.field(f)
+
+    return e

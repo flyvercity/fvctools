@@ -3,6 +3,7 @@ from typing import TypedDict
 
 import polars as pl
 
+from fvc.tools.utils import plnested
 import fvc.tools.df.utils as u
 
 
@@ -35,7 +36,7 @@ def load_frame(params: SegmentParams):
         print(df)
 
     df = df.with_columns(
-        pl.col('time').struct.field('unix').alias('timestamp'),
+        plnested('time.unix').alias('timestamp'),
     )
 
     return df.sort('timestamp')
@@ -52,7 +53,7 @@ def segment_airborne(frames, params: SegmentParams, metadata: dict):
         u.lg.info(f'Using vertical dimension: {vdim}')
 
         frame = frame.with_columns(
-            pl.col(f'pos.loc.{vdim}').alias('vdim')
+            plnested(f'pos.loc.{vdim}').alias('vdim')
         )
 
         frame = frame.filter(
@@ -63,7 +64,9 @@ def segment_airborne(frames, params: SegmentParams, metadata: dict):
             frame['vdim'].gt(segment).alias('airborne')
         )
 
-        change_idx = (frame['airborne'].shift(1) != frame['airborne']).fill_null(True).to_numpy().nonzero()[0]
+        change_idx = (
+            frame['airborne'].shift(1) != frame['airborne']
+        ).fill_null(True).to_numpy().nonzero()[0]
 
         boundaries = list(change_idx) + [len(frame)]
 

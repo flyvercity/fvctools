@@ -6,15 +6,16 @@ from pygeodesy.dms import F_DMS, latDMS, lonDMS
 import rich
 
 import fvc.tools.df.utils as u
+from fvc.tools.utils import plnested
 
 
 def calculate_segment_stats(
     index: int, df: pl.DataFrame, vdim: Optional[str] = None
 ):
     projection = df.select(
-        pl.col('time').struct.field('unix').alias('time'),
-        pl.col('pos').struct.field('loc').struct.field('lon').alias('lon'),
-        pl.col('pos').struct.field('loc').struct.field('lat').alias('lat'),
+        plnested('time.unix').alias('time'),
+        plnested('pos.loc.lon').alias('lon'),
+        plnested('pos.loc.lat').alias('lat'),
     )
     time_diff = projection['time'].diff().drop_nulls()
 
@@ -41,7 +42,7 @@ def calculate_segment_stats(
 
     if vdim is not None:
         vdim_projection = df.select(
-            pl.col('pos').struct.field('loc').struct.field(vdim).alias(vdim)
+            plnested(f'pos.loc.{vdim}').alias(vdim)
         )
 
         stats['vdim'] = {

@@ -2,9 +2,9 @@ import os
 from pathlib import Path
 
 import geopandas
-import polars as pl
 
 from fvc.tools.df.utils import FvcDataset
+from fvc.tools.utils import plnested
 
 
 def fetch_geodata(file_name: str) -> geopandas.GeoDataFrame:
@@ -17,13 +17,11 @@ def fetch_geodata(file_name: str) -> geopandas.GeoDataFrame:
     df = dataset.df
 
     df = df.select(
-        pl.col('time').struct.field('unix').alias('time'),
-        pl.col('pos').struct.field('loc').struct.field('lat').alias('lat'),
-        pl.col('pos').struct.field('loc').struct.field('lon').alias('lon'),
-        pl.col('pos').struct.field('loc').struct.field('alt').alias('alt'),
+        plnested('time.unix').alias('time'),
+        plnested('pos.loc.lat').alias('lat'),
+        plnested('pos.loc.lon').alias('lon'),
+        plnested('pos.loc.alt').alias('alt'),
     )
-
-    print(df)
 
     gdf = geopandas.GeoDataFrame(  # type: ignore
         df,
