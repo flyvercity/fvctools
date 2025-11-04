@@ -7,12 +7,12 @@ import fvc.tools.df.utils as u
 
 
 class SegmentParams(TypedDict):
-    verbose: bool
     input_path: Path
-    vdim: str
-    segment_by_altitude: bool
-    segment_altitude_meters: float
-    filter_by_duration: bool
+    vdim: str = 'alt'
+    verbose: bool = False
+    segment_by_height: bool = False
+    segment_height_meters: float
+    filter_by_duration: bool = False
     filter_duration_seconds: float
 
 
@@ -40,9 +40,9 @@ def load_frame(params: SegmentParams):
 
 
 def segment_airborne(df, params: SegmentParams):
-    segment = params['segment_altitude_meters']
+    segment = params['segment_height_meters']
     vdim = params['vdim']
-    u.lg.info(f'Segmenting by altitude {segment} meters')
+    u.lg.info(f'Segmenting by height {segment} meters')
     u.lg.info(f'Using vertical dimension: {vdim}')
 
     df = df.with_columns(
@@ -63,7 +63,7 @@ def segment_airborne(df, params: SegmentParams):
 
     frames = [df.slice(start, stop - start) for start, stop in zip(boundaries, boundaries[1:])]
 
-    u.lg.info(f'Segmented into {len(frames)} frames by altitude {segment} meters')
+    u.lg.info(f'Segmented into {len(frames)} frames by height {segment} meters')
 
     return frames
 
@@ -84,7 +84,7 @@ def filter_duration(frames, params):
 def segment(params: SegmentParams):
     df = load_frame(params)
 
-    if params.get('segment_by_altitude'):
+    if params.get('segment_by_height'):
         if params.get('vdim') is None:
             raise UserWarning('Segmentation requires a vertical dimension')
 
