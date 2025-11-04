@@ -28,13 +28,22 @@ def flightlog_group():
     type=click.Choice(['alt', 'height', 'amsl'])
 )
 @click.option(
+    '--segment-by-height', is_flag=True,
+    help='Segment the log by height'
+)
+@click.option(
     '--segment-height-meters', type=float,
     help='Height to segment the log by in meters',
     default=10.0,
 )
 @click.option(
-    '--segment-by-height', is_flag=True,
-    help='Segment the log by height'
+    '--segment-by-idle', is_flag=True,
+    help='Segment the log by idle time'
+)
+@click.option(
+    '--idle-time-seconds', type=float,
+    help='Idle time to segment the log by in seconds',
+    default=60.0,
 )
 @click.option(
     '--filter-by-duration', is_flag=True,
