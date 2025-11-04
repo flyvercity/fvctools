@@ -1,4 +1,5 @@
 import click
+import json
 
 from rich.live import Live
 from rich.spinner import Spinner
@@ -65,7 +66,12 @@ def stats_command(params, **kwargs):
         params['vdim'] = None
 
     with Live(Spinner('aesthetic', 'Analyzing...'), transient=True):
-        frames = segment.segment(params)
+        frames, metadata = segment.segment(params)
+
+        u.lg.info(
+            f'Processing metadata:\n{json.dumps(metadata, indent=4)}'
+        )
+
         stats.print_stats(frames, vdim=params.get('vdim'))
 
 
