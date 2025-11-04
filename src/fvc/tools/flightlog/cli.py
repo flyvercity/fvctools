@@ -4,6 +4,7 @@ from rich.live import Live
 from rich.spinner import Spinner
 from rich.progress import Progress
 
+import fvc.tools.flightlog.segment as segment
 import fvc.tools.flightlog.stats as stats
 from fvc.tools.flightlog.split import split_by_day, split_by_inactivity
 import fvc.tools.df.utils as u
@@ -55,7 +56,9 @@ def stats_command(params, **kwargs):
         params['vdim'] = None
 
     with Live(Spinner('aesthetic', 'Analyzing...'), transient=True):
-        stats.print_stats(params)
+        frames = segment.segment(params)
+        stats.print_stats(frames, vdim=params.get('vdim'))
+        u.lg.info(f'Total number of segments: {len(frames)}')
 
 
 @flightlog_group.command(
