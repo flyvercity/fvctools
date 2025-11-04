@@ -28,13 +28,13 @@ def flightlog_group():
     type=click.Choice(['alt', 'height', 'amsl'])
 )
 @click.option(
-    '--segment-by-altitude', is_flag=True,
-    help='Segment the log by altitude'
+    '--segment-height-meters', type=float,
+    help='Height to segment the log by in meters',
+    default=10.0,
 )
 @click.option(
-    '--segment-altitude-meters', type=float,
-    help='Altitude to segment the log by in meters',
-    default=5.0,
+    '--segment-by-height', is_flag=True,
+    help='Segment the log by height'
 )
 @click.option(
     '--filter-by-duration', is_flag=True,
@@ -58,7 +58,6 @@ def stats_command(params, **kwargs):
     with Live(Spinner('aesthetic', 'Analyzing...'), transient=True):
         frames = segment.segment(params)
         stats.print_stats(frames, vdim=params.get('vdim'))
-        u.lg.info(f'Total number of segments: {len(frames)}')
 
 
 @flightlog_group.command(
