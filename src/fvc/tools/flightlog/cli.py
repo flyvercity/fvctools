@@ -1,5 +1,6 @@
 import click
 import json
+from pathlib import Path
 
 from rich.live import Live
 from rich.spinner import Spinner
@@ -90,6 +91,15 @@ def stats_command(params, **kwargs):
     default=300.0,
     help='Inactivity threshold in seconds'
 )
+@click.option(
+    '--output-dir',
+    type=click.Path(
+        file_okay=False, dir_okay=True, writable=True, 
+        path_type=Path,
+    ),
+    help='Output directory',
+    required=False,
+)
 def split_command(params, **kwargs):
     params.update(kwargs)
 
@@ -102,6 +112,9 @@ def split_command(params, **kwargs):
 
         def callback(s):
             progress.update(read_task, advance=s)
+
+        if params.get('output_dir') is None:
+            params['output_dir'] = input_path.parent / 'split'
 
         if params.get('mode') == 'inactivity':
             split_by_inactivity(params, callback=callback)

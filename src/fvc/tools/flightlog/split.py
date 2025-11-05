@@ -8,14 +8,18 @@ import fvc.tools.df.utils as u
 
 class SplitParams(TypedDict):
     input_path: Path
+    output_dir: Path
     verbose: bool
     inactivity_threshold_seconds: float
 
 
-def split_by_day(params: SplitParams, callback=None):
+def split_by_day(params: SplitParams, callback=None) -> list[Path]:
     input_path = u.input_path(params)
+    output_dir = params['output_dir']
+    output_dir.mkdir(parents=True, exist_ok=True)
     current_day = None
     current_output = None
+    output_files = []
 
     with u.JsonlinesIO(input_path, 'r', callback=callback) as input:
         metadata = input.read()
@@ -28,12 +32,14 @@ def split_by_day(params: SplitParams, callback=None):
                 current_day = day
 
                 if current_output:
-                    _save_output(
+                    output_path = _save_output(
                         day,
-                        input_path,
+                        output_dir,
                         metadata,
                         current_output,
                     )
+
+                    output_files.append(output_path)
 
                 current_output = []
 
@@ -42,18 +48,23 @@ def split_by_day(params: SplitParams, callback=None):
     if current_output:
         _save_output(
             current_day,
-            input_path,
+            output_dir,
             metadata,
             current_output,
         )
 
+    return output_files
 
-def split_by_inactivity(params: SplitParams, callback=None):
+
+def split_by_inactivity(params: SplitParams, callback=None) -> list[Path]:
     input_path = u.input_path(params)
+    output_dir = params['output_dir']
+    output_dir.mkdir(parents=True, exist_ok=True)
     threshold_seconds = params['inactivity_threshold_seconds']
     current_output = None
     previous_time = None
     file_counter = 0
+    output_files = []
 
     with u.JsonlinesIO(input_path, 'r', callback=callback) as input:
         metadata = input.read()
@@ -67,13 +78,16 @@ def split_by_inactivity(params: SplitParams, callback=None):
 
                 if gap_seconds > threshold_seconds:
                     if current_output:
-                        _save_output_by_inactivity(
+                        output_path = _save_output_by_inactivity(
                             file_counter,
-                            input_path,
+                            output_dir,
                             metadata,
                             current_output,
                         )
+
+                        output_files.append(output_path)
                         file_counter += 1
+
                     current_output = []
 
             if current_output is None:
@@ -83,21 +97,24 @@ def split_by_inactivity(params: SplitParams, callback=None):
             previous_time = time_seconds
 
     if current_output:
-        _save_output_by_inactivity(
+        output_path = _save_output_by_inactivity(
             file_counter,
-            input_path,
+            output_dir,
             metadata,
             current_output,
         )
+        output_files.append(output_path)
+
+    return output_files
 
 
 def _save_output(
     current_day: datetime,
-    input_path: Path,
+    output_dir: Path,
     metadata: benedict,
     records: list[benedict],
 ):
-    output_path = input_path.with_suffix(f'.{current_day.strftime('%Y%m%d')}.fvc')
+    output_path = output_dir / f'{current_day.strftime('%Y%m%d')}.fvc'
 
     with u.JsonlinesIO(output_path, 'w') as output:
         output.write(metadata)
@@ -105,10 +122,12 @@ def _save_output(
         for record in records:
             output.write(record)
 
+    return output_path
+
 
 def _save_output_by_inactivity(
     file_counter: int,
-    input_path: Path,
+    output_dir: Path,
     metadata: benedict,
     records: list[benedict],
 ):
@@ -118,10 +137,12 @@ def _save_output_by_inactivity(
     start_time = datetime.fromtimestamp(records[0]['time']['unix'] / 1000.0)
     end_time = datetime.fromtimestamp(records[-1]['time']['unix'] / 1000.0)
     time_str = f'{start_time.strftime("%Y%m%d_%H%M%S")}-{end_time.strftime("%H%M%S")}'
-    output_path = input_path.with_suffix(f'.{file_counter:03d}_{time_str}.fvc')
+    output_path = output_dir / f'{file_counter:03d}_{time_str}.fvc'
 
     with u.JsonlinesIO(output_path, 'w') as output:
         output.write(metadata)
 
         for record in records:
             output.write(record)
+
+    return output_path
