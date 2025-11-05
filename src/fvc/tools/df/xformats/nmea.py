@@ -111,9 +111,7 @@ def extract_sensor_data(params, sensor_source: Path) -> JSON:
         raise ValueError(f'No GGA messages found in {sensor_source}')
 
     return {
-        'loc': {
-            'lat': statistics.median(latitudes),
-            'lon': statistics.median(longitudes),
-            'alt': statistics.median(altitudes),
-        }
+        'lat': statistics.median(latitudes),
+        'lon': statistics.median(longitudes),
+        'alt': statistics.median(altitudes),
     }
