@@ -57,6 +57,16 @@ POLAR_SENSOR: &POLAR_SENSOR
   $title: "Polar Sensor Payload"
   type: object
   properties:
+    source:
+      type: string
+      description: "Source of the polar sensor"
+      enum:
+        - nmea
+      examples: ["nmea"]
+    origin:
+      type: string
+      description: "Original file name or originating system"
+      examples: ["flight_data_20231201.log", "radar_system_alpha"]
     loc:
       description: "Geographic location of the polar sensor"
       allOf: [*LOCATION]

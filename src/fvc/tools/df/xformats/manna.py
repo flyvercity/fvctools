@@ -1,6 +1,5 @@
 """Manna's data dump format"""
 
-import copy
 import csv
 import json
 import uuid
@@ -12,31 +11,10 @@ from dateutil.parser import parse
 from fvc.tools.df.utils import JsonlinesIO, lg
 
 
-def module_help():
-    return """\
-- signal-select=<metric>: Select the signal metric to choose the best one. Options:
-    - rsrp: Reference Signal Received Power (default)
-    - rsrq: Reference Signal Received Quality
-    - rssi: Received Signal Strength Indicator
-"""
-
-
 def convert_to_fvc(
-    params, metadata, input_path: Path, output: JsonlinesIO
+    params, metadata, input_path: Path, output: JsonlinesIO,
 ):
     track_id = str(uuid.uuid4())
-
-    signal_select = 'rsrp'
-
-    for custom in params.get('custom', []):
-        if custom.startswith('signal-select='):
-            signal_select = custom.split('=')[1]
-            break
-
-    if signal_select not in ('rsrp', 'rsrq', 'rssi'):
-        raise UserWarning(
-            f'Invalid signal select: {signal_select}. Valid options are: rsrp, rsrq, rssi'
-        )
 
     with input_path.open('rt') as input:
         reader = csv.DictReader(input, delimiter=',')
@@ -52,7 +30,6 @@ def convert_to_fvc(
             {
                 'content': 'flightlog',
                 'source': 'manna',
-                'signal_select': signal_select,
             }
         )
 
@@ -78,7 +55,7 @@ def convert_to_fvc(
                 row,
                 {'k': 'lat', 'c': maybe_float},
                 {'k': 'lon', 'c': maybe_float},
-                {'k': 'alt_wgs84', 'c': maybe_float, 'n': 'alt'},
+                {'k': 'alt_wgs_84', 'c': maybe_float, 'n': 'alt'},
                 {'k': 'alt_lidar', 'c': maybe_float, 'n': 'height'},
             )
 
@@ -88,26 +65,18 @@ def convert_to_fvc(
                 'pos': {'loc': loc},
             }
 
-            best_cellsig = None
-            best_signal = None
             modem_data_dict = {}
 
             for modem_name in modems:
-                modem_data = _get_modem_data(row, modem_name, reader.line_num)
+                modem_data = _get_modem_data(
+                    row, modem_name, reader.line_num
+                )
 
                 if modem_data:
                     modem_data_dict[modem_name] = modem_data
-                    signal = modem_data.get(signal_select)
 
-                    if signal is not None and (
-                        best_signal is None or signal > best_signal
-                    ):
-                        best_signal = signal
-                        best_cellsig = copy.deepcopy(modem_data)
-
-            if best_cellsig:
-                record['cellsig'] = best_cellsig
-                record['cellsig']['modems'] = modem_data_dict
+            if modem_data_dict:
+                record['cellsig'] = {'multi': modem_data_dict}
                 signals_found += 1
 
             output.write(record)

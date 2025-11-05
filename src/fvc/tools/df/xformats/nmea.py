@@ -97,9 +97,7 @@ def extract_sensor_data(params, sensor_source: Path) -> JSON:
     (latitudes, longitudes, altitudes) = zip(*iterate())
 
     return {
-        'loc': {
-            'lat': statistics.median(latitudes),
-            'lon': statistics.median(longitudes),
-            'alt': statistics.median(altitudes),
-        }
+        'lat': statistics.median(latitudes),
+        'lon': statistics.median(longitudes),
+        'alt': statistics.median(altitudes),
     }

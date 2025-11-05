@@ -55,9 +55,9 @@ def convert(
         lg.debug('Imported external format function')
 
         convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
-        meta = metadata.initial_metadata(input_path.name, params)
+        meta = metadata.create_metadata(input_path.name, params)
 
-        with u.JsonlinesIO(output_path, 'w', callback=callback) as io:
+        with u.JsonlinesIO(output_path, 'w') as io:
             convert_fun(params, meta, input_path, io)
 
     except ModuleNotFoundError as e:

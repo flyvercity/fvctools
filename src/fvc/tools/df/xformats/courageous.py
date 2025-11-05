@@ -91,7 +91,7 @@ class CourageousPolar(Courageous):
             return None
 
         position = {
-            'loc': {'polar': {'bear': pos['bearing'], 'elev': pos['elevation']}}
+            'loc': {'bear': pos['bearing'], 'elev': pos['elevation']}
         }
 
         return position
