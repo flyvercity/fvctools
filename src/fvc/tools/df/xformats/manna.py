@@ -122,7 +122,11 @@ def _get_modem_data(row, modem_name, line_number):
 
         cell_id = modem_data.get('cell_id')
         cgi = f'{plmnid}{ac:05d}{cell_id:05d}'
-        cellsig.update({'radio': radio, 'plmnid': plmnid, 'CGI': cgi})
+
+        cellsig.update(
+            {'radio': radio, 'plmnid': plmnid, 'cgi': cgi}
+        )
+
         return cellsig
 
     except Exception as e:
