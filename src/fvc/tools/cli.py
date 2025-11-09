@@ -22,9 +22,7 @@ from fvc.tools.render.cli import render
     is_flag=True,
     help='Make JSON default output format instead of free form',
 )
-@click.option(
-    '--no-pprint', is_flag=True, help='Disable colored pretty printing'
-)
+@click.option('--no-pprint', is_flag=True, help='Disable colored pretty printing')
 @click.option('--aws-profile', help='AWS profile to use for S3 operations')
 @click.option(
     '--egm',
@@ -44,9 +42,7 @@ def cli(ctx, verbose, json, no_pprint, aws_profile, egm):
 
     lg.debug(f'Verbose mode is {"on" if verbose else "off"}')
 
-    lg.debug(
-        f'JSON mode is {"on" if json else "off"} (pprint: {"off" if no_pprint else "on"})'
-    )
+    lg.debug(f'JSON mode is {"on" if json else "off"} (pprint: {"off" if no_pprint else "on"})')
 
     ctx.obj['JSON'] = json
     ctx.obj['no_pprint'] = no_pprint

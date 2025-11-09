@@ -58,9 +58,11 @@ def calculate_segment_stats(
 
 
 def calculate_flightlog_stats(
-    frames: list[pl.DataFrame],
+    dataset: dict,
     vdim: Optional[str] = None
 ):
+    frames = dataset.frames
+
     stats = [
         calculate_segment_stats(inx, frame, vdim=vdim)
         for inx, frame in enumerate(frames)
