@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import TypedDict
 
+from benedict import benedict
 import polars as pl
 
 from fvc.tools.utils import plnested
@@ -19,7 +20,28 @@ class SegmentParams(TypedDict):
     filter_duration_seconds: float
 
 
-def load_frame(params: SegmentParams):
+class FlightlogDataset:
+    metadata: benedict
+    frames: list[pl.DataFrame]
+
+    def __init__(self, *, metadata: benedict, frames: list[pl.DataFrame]):
+        self.metadata = metadata
+        self.frames = frames
+
+    def serialize(self) -> dict:
+        return {
+            'metadata': self.metadata.dict(),
+            'frames': [frame.to_dicts() for frame in self.frames],
+        }
+
+    def deserialize(self, data: dict) -> 'FlightlogDataset':
+        return FlightlogDataset(
+            metadata=benedict(data['metadata']),
+            frames=[pl.DataFrame(frame) for frame in data['frames']],
+        )
+
+
+def load_frame(params: SegmentParams) -> FlightlogDataset:
     """ Parameters:
         - input_path: Path to the FVC data file
     """
@@ -39,10 +61,13 @@ def load_frame(params: SegmentParams):
         plnested('time.unix').alias('timestamp'),
     )
 
-    return df.sort('timestamp')
+    return {
+        'metadata': dataset.metadata,
+        'frames': [df.sort('timestamp')]
+    }
 
 
-def segment_airborne(frames, params: SegmentParams, metadata: dict):
+def segment_airborne(frames, params: SegmentParams, metaproc: dict):
     segment = params['segment_height_meters']
     vdim = params['vdim']
 
@@ -80,7 +105,7 @@ def segment_airborne(frames, params: SegmentParams, metadata: dict):
 
         result_frames.extend(subframes)
 
-    metadata.update({
+    metaproc.update({
         'segment_height_meters': segment,
         'segment_height_in': len(frames),
         'segment_height_out': len(result_frames),
@@ -89,7 +114,7 @@ def segment_airborne(frames, params: SegmentParams, metadata: dict):
     return result_frames
 
 
-def segment_by_idle(frames, params: SegmentParams, metadata: dict):
+def segment_by_idle(frames, params: SegmentParams, metaproc: dict):
     idle_time_milliseconds = params['idle_time_seconds'] * 1000.0
 
     u.lg.info(
@@ -108,7 +133,7 @@ def segment_by_idle(frames, params: SegmentParams, metadata: dict):
             subframe = frame.slice(start, end - start)
             result_frames.append(subframe)
 
-    metadata.update({
+    metaproc.update({
         'segment_idle_time_ms': idle_time_milliseconds,
         'segment_idle_time_in': len(frames),
         'segment_idle_time_out': len(result_frames),
@@ -117,7 +142,7 @@ def segment_by_idle(frames, params: SegmentParams, metadata: dict):
     return result_frames
 
 
-def filter_duration(frames, params: SegmentParams, metadata: dict):
+def filter_duration(frames, params: SegmentParams, metaproc: dict):
     duration = params['filter_duration_seconds'] * 1000.0
     u.lg.info(f'Filtering by duration {duration} milliseconds')
 
@@ -128,7 +153,7 @@ def filter_duration(frames, params: SegmentParams, metadata: dict):
 
     u.lg.info(f'Filtered to {len(result_frames)} frames')
 
-    metadata.update({
+    metaproc.update({
         'filter_duration_ms': duration,
         'filter_duration_in': len(frames),
         'filter_duration_out': len(result_frames),
@@ -138,19 +163,29 @@ def filter_duration(frames, params: SegmentParams, metadata: dict):
 
 
 def segment(params: SegmentParams):
-    frames = [load_frame(params)]
-    metadata = {}
+    dataset = load_frame(params)
+    frames = dataset['frames']
+    metaproc = {}
 
     if params['segment_by_height']:
         if params.get('vdim') is None:
             raise UserWarning('Segmentation requires a vertical dimension')
 
-        frames = segment_airborne(frames, params, metadata)
+        frames = segment_airborne(frames, params, metaproc)
 
     if params['segment_by_idle']:
-        frames = segment_by_idle(frames, params, metadata)
+        frames = segment_by_idle(frames, params, metaproc)
 
     if params['filter_by_duration']:
-        frames = filter_duration(frames, params, metadata)
+        frames = filter_duration(frames, params, metaproc)
 
-    return frames, metadata
+    dataset = FlightlogDataset(
+        metadata=dataset['metadata'],
+        frames=frames,
+    )
+
+    metaproc.update({
+        'num_frames': len(dataset.frames),
+    })
+
+    return dataset, metaproc
