@@ -1,11 +1,11 @@
 from pathlib import Path
 from typing import TypedDict
 
-from benedict import benedict
 import polars as pl
 
 from fvc.tools.utils import plnested
 import fvc.tools.df.utils as u
+from fvc.tools.flightlog.dataset import FlightlogDataset
 
 
 class SegmentParams(TypedDict):
@@ -18,27 +18,6 @@ class SegmentParams(TypedDict):
     segment_idle_time_seconds: float
     filter_by_duration: bool = False
     filter_duration_seconds: float
-
-
-class FlightlogDataset:
-    metadata: benedict
-    frames: list[pl.DataFrame]
-
-    def __init__(self, *, metadata: benedict, frames: list[pl.DataFrame]):
-        self.metadata = metadata
-        self.frames = frames
-
-    def serialize(self) -> dict:
-        return {
-            'metadata': self.metadata.dict(),
-            'frames': [frame.to_dicts() for frame in self.frames],
-        }
-
-    def deserialize(self, data: dict) -> 'FlightlogDataset':
-        return FlightlogDataset(
-            metadata=benedict(data['metadata']),
-            frames=[pl.DataFrame(frame) for frame in data['frames']],
-        )
 
 
 def load_frame(params: SegmentParams) -> FlightlogDataset:
