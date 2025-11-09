@@ -30,6 +30,7 @@ def convert_to_fvc(
             {
                 'content': 'flightlog',
                 'source': 'manna',
+                'cellsig': {'modems': modems},
             }
         )
 
