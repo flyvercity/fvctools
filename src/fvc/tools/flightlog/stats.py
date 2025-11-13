@@ -1,6 +1,7 @@
 from datetime import UTC, datetime
 from typing import Optional
 
+from fvc.tools.flightlog.load import FlightlogDataset
 import polars as pl
 from pygeodesy.dms import F_DMS, latDMS, lonDMS
 import rich
@@ -58,7 +59,7 @@ def calculate_segment_stats(
 
 
 def calculate_flightlog_stats(
-    dataset: dict,
+    dataset: FlightlogDataset,
     vdim: Optional[str] = None
 ):
     frames = dataset.frames
