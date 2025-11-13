@@ -63,9 +63,6 @@ def flightlog_group():
 def stats_command(params, **kwargs):
     params.update(kwargs)
 
-    if params.get('vdim') == 'none':
-        params['vdim'] = None
-
     with Live(Spinner('aesthetic', 'Analyzing...'), transient=True):
         frames, metadata = segment.segment(params)
 
@@ -94,7 +91,7 @@ def stats_command(params, **kwargs):
 @click.option(
     '--output-dir',
     type=click.Path(
-        file_okay=False, dir_okay=True, writable=True, 
+        file_okay=False, dir_okay=True, writable=True,
         path_type=Path,
     ),
     help='Output directory',

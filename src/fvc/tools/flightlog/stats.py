@@ -43,7 +43,7 @@ def calculate_segment_stats(
 
     if vdim is not None:
         vdim_projection = df.select(
-            plnested(f'pos.loc.{vdim}').alias(vdim)
+            plnested(vdim).alias(vdim)
         )
 
         stats['vdim'] = {

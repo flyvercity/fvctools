@@ -3,14 +3,12 @@ from typing import TypedDict
 
 import polars as pl
 
-from fvc.tools.utils import plnested
 import fvc.tools.df.utils as u
 from fvc.tools.flightlog.load import FlightlogDataset
 
 
 class SegmentParams(TypedDict):
     input_path: Path
-    vdim: str = 'alt'
     verbose: bool = False
     segment_by_height: bool = False
     segment_height_meters: float
@@ -26,24 +24,14 @@ def segment_airborne(
     metaproc: dict,
 ) -> list[pl.DataFrame]:
     segment = params['segment_height_meters']
-    vdim = params['vdim']
 
     u.lg.info(f'Segmenting {len(frames)} frames by height {segment} meters')
-    u.lg.info(f'Using vertical dimension: {vdim}')
 
     result_frames = []
 
     for frame in frames:
         frame = frame.with_columns(
-            plnested(f'pos.loc.{vdim}').alias('vdim')
-        )
-
-        frame = frame.filter(
-            pl.col('vdim').is_not_null()
-        )
-
-        frame = frame.with_columns(
-            frame['vdim'].gt(segment).alias('airborne')
+            frame['derived_height'].gt(segment).alias('airborne')
         )
 
         frame.write_ndjson('airborne_frame.ndjson')
@@ -133,9 +121,6 @@ def segment(
     metaproc = {}
 
     if params['segment_by_height']:
-        if params.get('vdim') is None:
-            raise UserWarning('Segmentation requires a vertical dimension')
-
         frames = segment_airborne(frames, params, metaproc)
 
     if params['segment_by_idle']:
@@ -144,13 +129,14 @@ def segment(
     if params['filter_by_duration']:
         frames = filter_duration(frames, params, metaproc)
 
-    dataset = FlightlogDataset(
-        metadata=dataset.metadata,
-        frames=frames,
-    )
-
-    metaproc.update({
-        'num_frames': len(dataset.frames),
+    result_dataset = dataset.evolve(frames=frames, metadata={
+        'segment_by_height': params['segment_by_height'],
+        'segment_by_idle': params['segment_by_idle'],
+        'filter_by_duration': params['filter_by_duration'],
     })
 
-    return dataset, metaproc
+    metaproc.update({
+        'num_frames': len(result_dataset.frames),
+    })
+
+    return result_dataset, metaproc
