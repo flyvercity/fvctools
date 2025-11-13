@@ -5,7 +5,7 @@ import polars as pl
 
 from fvc.tools.utils import plnested
 import fvc.tools.df.utils as u
-from fvc.tools.flightlog.dataset import FlightlogDataset
+from fvc.tools.flightlog.load import FlightlogDataset
 
 
 class SegmentParams(TypedDict):
@@ -20,42 +20,20 @@ class SegmentParams(TypedDict):
     filter_duration_seconds: float
 
 
-def load_frame(params: SegmentParams) -> FlightlogDataset:
-    """ Parameters:
-        - input_path: Path to the FVC data file
-    """
-    input_path = u.input_path(params)
-    dataset = u.FvcDataset.read(input_path)
-
-    if dataset.metadata.get('content') != 'flightlog':
-        raise UserWarning(f'File {input_path} is not a flightlog')
-
-    df = dataset.df
-
-    if params.get('verbose'):
-        u.lg.info(f'Loaded {len(df)} rows')
-        print(df)
-
-    df = df.with_columns(
-        plnested('time.unix').alias('timestamp'),
-    )
-
-    return {
-        'metadata': dataset.metadata,
-        'frames': [df.sort('timestamp')]
-    }
-
-
-def segment_airborne(frames, params: SegmentParams, metaproc: dict):
+def segment_airborne(
+    frames: list[pl.DataFrame],
+    params: SegmentParams,
+    metaproc: dict,
+) -> list[pl.DataFrame]:
     segment = params['segment_height_meters']
     vdim = params['vdim']
+
+    u.lg.info(f'Segmenting {len(frames)} frames by height {segment} meters')
+    u.lg.info(f'Using vertical dimension: {vdim}')
 
     result_frames = []
 
     for frame in frames:
-        u.lg.info(f'Segmenting by height {segment} meters')
-        u.lg.info(f'Using vertical dimension: {vdim}')
-
         frame = frame.with_columns(
             plnested(f'pos.loc.{vdim}').alias('vdim')
         )
@@ -68,11 +46,17 @@ def segment_airborne(frames, params: SegmentParams, metaproc: dict):
             frame['vdim'].gt(segment).alias('airborne')
         )
 
+        frame.write_ndjson('airborne_frame.ndjson')
+
         change_idx = (
             frame['airborne'].shift(1) != frame['airborne']
         ).fill_null(True).to_numpy().nonzero()[0]
 
+        Path('change_idx').write_text(str(change_idx))
+
         boundaries = list(change_idx) + [len(frame)]
+
+        Path('boundaries').write_text(str(boundaries))
 
         subframes = [
             frame.slice(start, stop - start) for start, stop in zip(boundaries, boundaries[1:])
@@ -141,9 +125,11 @@ def filter_duration(frames, params: SegmentParams, metaproc: dict):
     return result_frames
 
 
-def segment(params: SegmentParams):
-    dataset = load_frame(params)
-    frames = dataset['frames']
+def segment(
+    dataset: FlightlogDataset,
+    params: SegmentParams,
+):
+    frames = dataset.frames
     metaproc = {}
 
     if params['segment_by_height']:
@@ -159,7 +145,7 @@ def segment(params: SegmentParams):
         frames = filter_duration(frames, params, metaproc)
 
     dataset = FlightlogDataset(
-        metadata=dataset['metadata'],
+        metadata=dataset.metadata,
         frames=frames,
     )
 

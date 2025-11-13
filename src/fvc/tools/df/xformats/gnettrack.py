@@ -136,10 +136,16 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 {'k': 'Altitude', 'c': maybe_float, 'n': 'alt'},
             )
 
+            def nonzero(x):
+                if not x:
+                    return None
+
+                return int(x) != 0
+
             datalink = dslice(
                 row,
                 {'k': 'PINGMAX', 'c': maybe_int, 'n': 'rtt'},
-                {'k': 'PINGLOSS', 'c': maybe_int, 'n': 'loss'},
+                {'k': 'PINGLOSS', 'c': nonzero, 'n': 'loss'},
             )
 
             row_metadata.update(
