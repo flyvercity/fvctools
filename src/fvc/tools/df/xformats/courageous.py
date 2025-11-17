@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
 
-import fvc.tools.utils as u
 from fvc.tools.df.utils import JsonlinesIO, lg
+from fvc.tools.calc.geoid import load_geoid, amsl_to_ellipsoidal
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
@@ -10,7 +10,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     if target not in ('flightlog', 'radarlog'):
         raise ValueError(f'Unsupported target type: {target}')
 
-    geoid = u.load_geoid(params, metadata)
+    geoid = load_geoid(params, metadata)
     metadata.update({'content': target, 'source': 'courageous'})
     output.write(metadata)
 
@@ -38,7 +38,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 lat = pos['lat']
                 lon = pos['lon']
                 amsl = pos['height_amsl']
-                alt = u.amsl_to_ellipsoidal(geoid, lat, lon, amsl)
+                alt = amsl_to_ellipsoidal(geoid, lat, lon, amsl)
                 position = {'loc': {'lat': lat, 'lon': lon, 'alt': alt}}
 
             elif target == 'radarlog':

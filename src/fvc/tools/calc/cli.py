@@ -1,9 +1,11 @@
-import logging as lg
 from datetime import UTC, datetime
 
 import click
 
 import fvc.tools.utils as u
+import fvc.tools.calc.terrain as terrain
+import fvc.tools.calc.geoid as geoid
+from fvc.tools.calc.utils import lg
 
 
 @click.group(help='Specialized calculation tools')
@@ -35,19 +37,56 @@ def epoch(params, epoch, nanoseconds):
 @click.pass_obj
 @click.argument('latitude', type=str)
 @click.argument('longitude', type=str)
-def undulation(params, latitude, longitude):
-    geoid = u.load_geoid(params)
+def undulation(obj, latitude, longitude):
+    pgm = geoid.load_geoid(obj)
 
-    lg.debug(f'Given {latitude} {longitude}')
+    u.lg.debug(f'Given {latitude} {longitude}')
 
     lat = u.parse_lat(latitude)
     lon = u.parse_lon(longitude)
 
     lg.debug(f'Using {u.render_latlon(lat, lon)}')
 
-    height = geoid.height(lat, lon)
+    geoid_height = pgm.height(lat, lon)
 
-    if not params['JSON']:
-        print(height)
+    if not obj['JSON']:
+        print(geoid_height)
     else:
-        u.json_print(params, {'undulation': height})
+        u.json_print(obj, {'undulation': geoid_height})
+
+
+@calc.command(
+    help='Get terrain elevation by latitude/longitude and undulation or ellipsoid height'
+)
+@click.pass_obj
+@click.option(
+    '--normal',
+    is_flag=True,
+    help='Use undulation instead of ellipsoid height',
+)
+@click.option(
+    '--copernicus-dir',
+    type=str,
+    help='Directory containing Copernicus DEM files',
+)
+@click.argument('lat', type=str)
+@click.argument('lon', type=str)
+@click.argument('geo-amsl-height', type=float)
+def terrain_command(obj, lat, lon, normal, geo_amsl_height, copernicus_dir):
+    lat = u.parse_lat(lat)
+    lon = u.parse_lon(lon)
+
+    if normal:
+        amsl_height = geo_amsl_height
+    else:
+        pgm = geoid.load_geoid(obj)
+        amsl_height = geoid.ellipsoid_to_amsl(pgm, lat, lon, geo_amsl_height)
+
+    lg.debug(f'Given {lat} {lon} {amsl_height} ({geo_amsl_height} AMSL={normal})')
+
+    terrain_height = terrain.height(lat, lon, amsl_height, copernicus_dir)
+    
+    if not obj['JSON']:
+        print(terrain_height)
+    else:
+        u.json_print(obj, {'terrain': terrain_height})
