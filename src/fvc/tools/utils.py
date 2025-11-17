@@ -1,13 +1,10 @@
 import json
-import logging as lg
-from pathlib import Path
 from typing import Any, Dict
 from datetime import UTC
 
 import polars as pl
 from dateutil import parser as dateparser
 from pygeodesy import dms
-from pygeodesy.geoids import GeoidPGM
 from rich import print_json
 
 JSON = Dict[str, Any]
@@ -19,37 +16,6 @@ def json_print(params, data: JSON):
         print_json(data=json.dumps(data, indent=JSON_INDENT, sort_keys=True))
     else:
         print(json.dumps(data))
-
-
-def load_geoid(params, metadata=None) -> GeoidPGM:
-    pgm_path = Path(__file__).parent / 'static' / 'egm96-5.pgm'
-
-    if egm := params.get('EGM'):
-        pgm_path = Path(egm)
-
-    lg.debug(f'Using geoid model: {pgm_path.absolute()}')
-
-    if metadata:
-        metadata.update({'geoid': pgm_path.name})
-
-    geoid = GeoidPGM(pgm_path)
-    return geoid
-
-
-def amsl_to_ellipsoidal(geoid: GeoidPGM, lat: float, lon: float, amsl_height: float) -> float:
-    # Initialize the Geoid model using EGM96 with WGS-84 datum
-    geoid_height = geoid.height(lat, lon)
-    ellipsoidal_height = amsl_height + geoid_height  # type: ignore
-    return ellipsoidal_height
-
-
-def datestring_to_ts(datestr: str) -> int:
-    dt = dateparser.parse(datestr)
-
-    if dt.tzinfo is None:
-        dt = dt.replace(tzinfo=UTC)
-
-    return int(dt.timestamp() * 1000)
 
 
 def parse_lat(lat: Any) -> float:
@@ -108,3 +74,12 @@ def plnested(selector: str):
         e = e.struct.field(f)
 
     return e
+
+
+def datestring_to_ts(datestr: str) -> int:
+    dt = dateparser.parse(datestr)
+
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=UTC)
+
+    return int(dt.timestamp() * 1000)

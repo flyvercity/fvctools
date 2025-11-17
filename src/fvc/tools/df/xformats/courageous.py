@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-import fvc.tools.utils as u
+from fvc.tools.calc import geoid
 from fvc.tools.df.utils import JsonlinesIO, lg
 
 
@@ -11,7 +11,7 @@ class Courageous:
         self.metadata = metadata
         self.input_path = input_path
         self.output = output
-        self.geoid = u.load_geoid(self.params, self.metadata)
+        self.pgm = geoid.load_geoid(self.params, self.metadata)
 
     def build_position(self, loc):
         pass
@@ -70,7 +70,7 @@ class CourageousCartesian(Courageous):
         lat = pos['lat']
         lon = pos['lon']
         amsl = pos['height_amsl']
-        alt = u.amsl_to_ellipsoidal(self.geoid, lat, lon, amsl)
+        alt = geoid.amsl_to_ellipsoidal(self.pgm, lat, lon, amsl)
 
         position = {'loc': {'lat': lat, 'lon': lon, 'alt': alt}}
 

@@ -4,8 +4,8 @@ import click
 
 import fvc.tools.df.utils as uf
 import fvc.tools.df.xformats.safirmqtt as smq
-import fvc.tools.utils as u
 from fvc.tools.df.utils import JsonlinesIO as JLIO, lg
+from fvc.tools.calc import geoid
 
 
 def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
@@ -23,7 +23,7 @@ def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
         'source': 'fusion.replay',
     }
 
-    geoid = u.load_geoid(params, out_metadata)
+    pgm = geoid.load_geoid(params, out_metadata)
     plots.write(out_metadata)
     tracks.write(out_metadata)
 
@@ -33,7 +33,7 @@ def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
         if event not in ['input', 'output']:
             continue
 
-        fligtlog_rec = smq.flightlog_record(record['message'], geoid)
+        fligtlog_rec = smq.flightlog_record(record['message'], pgm)
 
         if record['event'] == 'input':
             plots.write(fligtlog_rec)
