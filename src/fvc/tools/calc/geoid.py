@@ -5,7 +5,7 @@ from pathlib import Path
 from pygeodesy.geoids import GeoidPGM
 
 
-def load_geoid(params, metadata=None) -> GeoidPGM:
+def load_geoid(params={}, metadata=None) -> GeoidPGM:
     pgm_path = Path(os.getenv('FVC_CACHE')) / 'geo' / 'egm96-5' / 'egm96-5.pgm'
 
     if egm := params.get('EGM'):
