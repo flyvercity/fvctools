@@ -1,3 +1,4 @@
+import json
 from benedict import benedict
 import polars as pl
 from fvc.tools.utils import plnested
@@ -20,7 +21,10 @@ class FlightlogDataset:
         }
 
     @staticmethod
-    def deserialize(data: dict) -> 'FlightlogDataset':
+    def deserialize(data: dict | Path) -> 'FlightlogDataset':
+        if isinstance(data, Path):
+            data = json.loads(data.read_text())
+
         return FlightlogDataset(
             metadata=benedict(data['metadata']),
             frames=[pl.DataFrame(frame) for frame in data['frames']],
@@ -40,7 +44,7 @@ class FlightlogDataset:
         )
 
 
-def load_frame(input_path: Path):
+def load_frames(input_path: Path):
     """ Parameters:
         - input_path: Path to the FVC data file
     """

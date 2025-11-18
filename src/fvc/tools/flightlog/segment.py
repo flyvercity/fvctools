@@ -3,7 +3,7 @@ from typing import TypedDict
 
 import polars as pl
 
-import fvc.tools.df.utils as u
+import fvc.tools.df.utils as dfu
 from fvc.tools.flightlog.load import FlightlogDataset
 
 
@@ -25,7 +25,7 @@ def segment_airborne(
 ) -> list[pl.DataFrame]:
     segment = params['segment_height_meters']
 
-    u.lg.info(f'Segmenting {len(frames)} frames by height {segment} meters')
+    dfu.lg.info(f'Segmenting {len(frames)} frames by height {segment} meters')
 
     result_frames = []
 
@@ -44,7 +44,7 @@ def segment_airborne(
             frame.slice(start, stop - start) for start, stop in zip(boundaries, boundaries[1:])
         ]
 
-        u.lg.info(
+        dfu.lg.info(
             f'Segmented into {len(subframes)} frames by height {segment} meters'
         )
 
@@ -62,7 +62,7 @@ def segment_airborne(
 def segment_by_idle(frames, params: SegmentParams, metaproc: dict):
     idle_time_milliseconds = params['idle_time_seconds'] * 1000.0
 
-    u.lg.info(
+    dfu.lg.info(
         f'Segmenting by idle time {idle_time_milliseconds} milliseconds'
     )
 
@@ -89,14 +89,14 @@ def segment_by_idle(frames, params: SegmentParams, metaproc: dict):
 
 def filter_duration(frames, params: SegmentParams, metaproc: dict):
     duration = params['filter_duration_seconds'] * 1000.0
-    u.lg.info(f'Filtering by duration {duration} milliseconds')
+    dfu.lg.info(f'Filtering by duration {duration} milliseconds')
 
     result_frames = [
         frame for frame in frames
         if frame['timestamp'].max() - frame['timestamp'].min() > duration
     ]
 
-    u.lg.info(f'Filtered to {len(result_frames)} frames')
+    dfu.lg.info(f'Filtered to {len(result_frames)} frames')
 
     metaproc.update({
         'filter_duration_ms': duration,
@@ -110,18 +110,27 @@ def filter_duration(frames, params: SegmentParams, metaproc: dict):
 def segment(
     dataset: FlightlogDataset,
     params: SegmentParams,
+    dump_steps: bool | None = None
 ):
     frames = dataset.frames
     metaproc = {}
 
+    _dump(dump_steps, 'input', frames)
+
     if params['segment_by_height']:
         frames = segment_airborne(frames, params, metaproc)
+
+    _dump(dump_steps, 'airborne', frames)
 
     if params['segment_by_idle']:
         frames = segment_by_idle(frames, params, metaproc)
 
+    _dump(dump_steps, 'idle', frames)
+
     if params['filter_by_duration']:
         frames = filter_duration(frames, params, metaproc)
+
+    _dump(dump_steps, 'duration', frames)
 
     result_dataset = dataset.evolve(frames=frames, metadata={
         'segment_by_height': params['segment_by_height'],
@@ -134,3 +143,9 @@ def segment(
     })
 
     return result_dataset, metaproc
+
+
+def _dump(dump_steps: bool, step: str, frames: list[pl.DataFrame]):
+    if dump_steps:
+        for inx, frame in enumerate(frames):
+            frame.write_ndjson(Path(f'.tmp/dump_segment_{step}_{inx}'))

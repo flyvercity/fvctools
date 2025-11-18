@@ -3,7 +3,7 @@ from typing import TypedDict
 from datetime import datetime
 
 from benedict import benedict
-import fvc.tools.df.utils as u
+import fvc.tools.df.utils as dfu
 
 
 class SplitParams(TypedDict):
@@ -14,14 +14,14 @@ class SplitParams(TypedDict):
 
 
 def split_by_day(params: SplitParams, callback=None) -> list[Path]:
-    input_path = u.input_path(params)
+    input_path = dfu.input_path(params)
     output_dir = params['output_dir']
     output_dir.mkdir(parents=True, exist_ok=True)
     current_day = None
     current_output = None
     output_files = []
 
-    with u.JsonlinesIO(input_path, 'r', callback=callback) as input:
+    with dfu.JsonlinesIO(input_path, 'r', callback=callback) as input:
         metadata = input.read()
 
         for record in input.iterate():
@@ -57,7 +57,7 @@ def split_by_day(params: SplitParams, callback=None) -> list[Path]:
 
 
 def split_by_inactivity(params: SplitParams, callback=None) -> list[Path]:
-    input_path = u.input_path(params)
+    input_path = dfu.input_path(params)
     output_dir = params['output_dir']
     output_dir.mkdir(parents=True, exist_ok=True)
     threshold_seconds = params['inactivity_threshold_seconds']
@@ -66,7 +66,7 @@ def split_by_inactivity(params: SplitParams, callback=None) -> list[Path]:
     file_counter = 0
     output_files = []
 
-    with u.JsonlinesIO(input_path, 'r', callback=callback) as input:
+    with dfu.JsonlinesIO(input_path, 'r', callback=callback) as input:
         metadata = input.read()
 
         for record in input.iterate():
@@ -116,7 +116,7 @@ def _save_output(
 ):
     output_path = output_dir / f'{current_day.strftime('%Y%m%d')}.fvc'
 
-    with u.JsonlinesIO(output_path, 'w') as output:
+    with dfu.JsonlinesIO(output_path, 'w') as output:
         output.write(metadata)
 
         for record in records:
@@ -139,7 +139,7 @@ def _save_output_by_inactivity(
     time_str = f'{start_time.strftime("%Y%m%d_%H%M%S")}-{end_time.strftime("%H%M%S")}'
     output_path = output_dir / f'{file_counter:03d}_{time_str}.fvc'
 
-    with u.JsonlinesIO(output_path, 'w') as output:
+    with dfu.JsonlinesIO(output_path, 'w') as output:
         output.write(metadata)
 
         for record in records:

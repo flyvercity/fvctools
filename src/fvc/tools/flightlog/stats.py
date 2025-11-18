@@ -6,7 +6,7 @@ import polars as pl
 from pygeodesy.dms import F_DMS, latDMS, lonDMS
 import rich
 
-import fvc.tools.df.utils as u
+import fvc.tools.df.utils as dfu
 from fvc.tools.utils import plnested
 
 
@@ -78,7 +78,7 @@ def print_stats(frames: list[pl.DataFrame], vdim: Optional[str] = None):
     for stat in stats:
         _print_stats(stat)
 
-    u.lg.info(f'Total number of segments: {len(stats)}')
+    dfu.lg.info(f'Total number of segments: {len(stats)}')
 
 
 def _print_stats(stats: dict):
