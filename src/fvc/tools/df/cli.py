@@ -6,7 +6,7 @@ from rich.progress import Progress
 
 import fvc.tools.df.core as core
 import fvc.tools.df.metadata as metadata
-import fvc.tools.df.utils as u
+import fvc.tools.df.utils as dfu
 from fvc.tools.df.correlate import correlate
 from fvc.tools.df.fusion import fusion
 from fvc.tools.utils import json_print
@@ -51,7 +51,7 @@ def df(params, **kwargs):
 @df.command(help='Validate a FVC file against the known schema')
 @click.pass_obj
 def validate(params):
-    input_path = u.input_path(params)
+    input_path = dfu.input_path(params)
     file_size = input_path.stat().st_size
 
     with Progress(transient=True) as progress:
@@ -119,7 +119,7 @@ def convert_command(params, output_file, **kwargs):
     """
 
     params.update(kwargs)
-    input_path = u.input_path(params)
+    input_path = dfu.input_path(params)
     output_path = output_file if output_file else input_path.with_suffix('.fvc')
 
     if output_path.absolute() == input_path.absolute():

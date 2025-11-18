@@ -4,7 +4,7 @@ from zipfile import ZipFile
 
 import simplekml
 
-import fvc.tools.df.utils as u
+import fvc.tools.df.utils as dfu
 
 
 def generate_point(params, record, kml):
@@ -57,7 +57,7 @@ def export_from_fvc(params, output_path: Path | None):
 
     kml = simplekml.Kml()
 
-    with u.JsonlinesIO(input_path, 'r') as io:
+    with dfu.JsonlinesIO(input_path, 'r') as io:
         metadata = io.read()
 
         if not metadata:

@@ -2,14 +2,18 @@ import click
 import json
 from pathlib import Path
 
+import rich
 from rich.live import Live
 from rich.spinner import Spinner
 from rich.progress import Progress
+import polars as pl
 
+import fvc.tools.utils as u
+import fvc.tools.df.utils as dfu
 import fvc.tools.flightlog.segment as segment
 import fvc.tools.flightlog.stats as stats
 from fvc.tools.flightlog.split import split_by_day, split_by_inactivity
-import fvc.tools.df.utils as u
+import fvc.tools.flightlog.load as load
 
 
 @click.group(
@@ -66,7 +70,7 @@ def stats_command(params, **kwargs):
     with Live(Spinner('aesthetic', 'Analyzing...'), transient=True):
         frames, metadata = segment.segment(params)
 
-        u.lg.info(
+        dfu.lg.info(
             f'Processing metadata:\n{json.dumps(metadata, indent=4)}'
         )
 
@@ -101,7 +105,7 @@ def split_command(params, **kwargs):
     params.update(kwargs)
 
     with Progress(transient=True) as progress:
-        input_path = u.input_path(params)
+        input_path = dfu.input_path(params)
 
         read_task = progress.add_task(
             'Reading...', total=input_path.stat().st_size
@@ -117,3 +121,43 @@ def split_command(params, **kwargs):
             split_by_inactivity(params, callback=callback)
         else:
             split_by_day(params, callback=callback)
+
+
+@flightlog_group.command(
+    name='select',
+    help='Fetch a given element from the flight log'
+)
+@click.pass_obj
+@click.option(
+    '--format',
+    type=click.Choice(['fvc', 'frames', 'ndjson']),
+    default='frames'
+)
+@click.argument('expression')
+def select_command(obj, format, expression):
+    input_path = dfu.input_path(obj)
+
+    if input_path.suffix == '.fvc' and format != 'fvc':
+        dfu.lg.warning(
+            'You are selecting from a FVC file, but the format is not frames. This will likely result in an error.'
+        )
+    
+    match format:
+        case 'fvc':
+            dataset = load.load_frames(input_path)
+            frames = dataset.frames
+        case 'frames':
+            dataset = load.FlightlogDataset.deserialize(input_path)
+            frames = dataset.frames
+        case 'ndjson':
+            df = [pl.read_ndjson(input_path)]
+
+    if not obj['JSON']:
+        for inx, frame in enumerate(frames):
+            rich.print(f'----- Frame {inx} ----')
+            df = frame.select(u.plnested(expression))
+            rich.print(df)
+    else:
+        json_frames = [frame.to_dicts() for frame in frames]
+        click.echo(json.dumps(json_frames, indent=4))
+    

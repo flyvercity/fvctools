@@ -6,7 +6,7 @@ import jsonschema
 
 import fvc.tools.df.metadata as metadata
 import fvc.tools.df.schema as schema
-import fvc.tools.df.utils as u
+import fvc.tools.df.utils as dfu
 from fvc.tools.df.utils import lg
 
 MAX_ERRORS = 100
@@ -57,7 +57,7 @@ def convert(
         convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
         meta = metadata.create_metadata(input_path.name, params)
 
-        with u.JsonlinesIO(output_path, 'w') as io:
+        with dfu.JsonlinesIO(output_path, 'w') as io:
             convert_fun(params, meta, input_path, io)
 
     except ModuleNotFoundError as e:
@@ -68,7 +68,7 @@ def convert(
 def validate(
     input_path: Path, callback: Callable[[int], None] | None = None
 ) -> bool:
-    with u.JsonlinesIO(input_path, 'r', callback=callback) as f:
+    with dfu.JsonlinesIO(input_path, 'r', callback=callback) as f:
         try:
             metaline = f.read()
 
