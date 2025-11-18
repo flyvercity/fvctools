@@ -13,7 +13,10 @@ def calc():
     pass
 
 
-@calc.command(help='Convert UNIX timestamps to human-readable format')
+@calc.command(
+    name='epoch',
+    help='Convert UNIX timestamps to human-readable format',
+)
 @click.pass_obj
 @click.option(
     '--nanoseconds',
@@ -21,7 +24,7 @@ def calc():
     help='Use nanoseconds instead of milliseconds',
 )
 @click.argument('epoch', type=int, required=True)
-def epoch(params, epoch, nanoseconds):
+def epoch_command(params, epoch, nanoseconds):
     if nanoseconds:
         dt = datetime.fromtimestamp(epoch / 1_000_000_000.0, UTC)
     else:
@@ -33,11 +36,14 @@ def epoch(params, epoch, nanoseconds):
         u.json_print(params, {'datetime': dt.isoformat()})
 
 
-@calc.command(help='Get geoid indulation by latitude/longitude')
+@calc.command(
+    name='undulation',
+    help='Get geoid indulation by latitude/longitude',
+)
 @click.pass_obj
 @click.argument('latitude', type=str)
 @click.argument('longitude', type=str)
-def undulation(obj, latitude, longitude):
+def undulation_command(obj, latitude, longitude):
     pgm = geoid.load_geoid(obj)
 
     u.lg.debug(f'Given {latitude} {longitude}')
@@ -56,6 +62,7 @@ def undulation(obj, latitude, longitude):
 
 
 @calc.command(
+    name='terrain',
     help='Get terrain elevation by latitude/longitude and undulation or ellipsoid height'
 )
 @click.pass_obj
@@ -84,7 +91,8 @@ def terrain_command(obj, lat, lon, normal, geo_amsl_height, copernicus_dir):
 
     lg.debug(f'Given {lat} {lon} {amsl_height} ({geo_amsl_height} AMSL={normal})')
 
-    terrain_height = terrain.height(lat, lon, amsl_height, copernicus_dir)
+    with terrain.Terrain(copernicus_dir) as t:
+        terrain_height = t.height(lat, lon, amsl_height)
     
     if not obj['JSON']:
         print(terrain_height)

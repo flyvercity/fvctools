@@ -34,17 +34,11 @@ def segment_airborne(
             frame['derived_height'].gt(segment).alias('airborne')
         )
 
-        frame.write_ndjson('airborne_frame.ndjson')
-
         change_idx = (
             frame['airborne'].shift(1) != frame['airborne']
         ).fill_null(True).to_numpy().nonzero()[0]
 
-        Path('change_idx').write_text(str(change_idx))
-
         boundaries = list(change_idx) + [len(frame)]
-
-        Path('boundaries').write_text(str(boundaries))
 
         subframes = [
             frame.slice(start, stop - start) for start, stop in zip(boundaries, boundaries[1:])
