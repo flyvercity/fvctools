@@ -12,10 +12,57 @@ class SegmentParams(TypedDict):
     verbose: bool = False
     segment_by_height: bool = False
     segment_height_meters: float
-    segment_by_idle: bool = False
+    airborne_only: bool
+    segment_by_idle: bool
     segment_idle_time_seconds: float
-    filter_by_duration: bool = False
+    filter_by_duration: bool
     filter_duration_seconds: float
+
+
+def segment(
+    dataset: FlightlogDataset,
+    params: SegmentParams,
+    dump_steps: bool | None = None,
+) -> tuple[FlightlogDataset, dict]:
+    frames = dataset.frames
+    metaproc = {}
+
+    _dump(dump_steps, 'input', frames)
+
+    if params['segment_by_height']:
+        frames = segment_airborne(frames, params, metaproc)
+
+        if params['airborne_only']:
+            frames = [frame for frame in frames if frame['airborne'].max()]
+
+    _dump(dump_steps, 'airborne', frames)
+
+    if params['segment_by_idle']:
+        frames = segment_by_idle(frames, params, metaproc)
+
+    _dump(dump_steps, 'idle', frames)
+
+    if params['filter_by_duration']:
+        frames = filter_duration(frames, params, metaproc)
+
+    _dump(dump_steps, 'duration', frames)
+
+    result_dataset = dataset.evolve(
+        frames=frames,
+        metadata={
+            'segment_by_height': params['segment_by_height'],
+            'segment_by_idle': params['segment_by_idle'],
+            'filter_by_duration': params['filter_by_duration'],
+        },
+    )
+
+    metaproc.update(
+        {
+            'num_frames': len(result_dataset.frames),
+        }
+    )
+
+    return result_dataset, metaproc
 
 
 def segment_airborne(
@@ -30,31 +77,25 @@ def segment_airborne(
     result_frames = []
 
     for frame in frames:
-        frame = frame.with_columns(
-            frame['derived_height'].gt(segment).alias('airborne')
-        )
+        frame = frame.with_columns(frame['derived_height'].gt(segment).alias('airborne'))
 
-        change_idx = (
-            frame['airborne'].shift(1) != frame['airborne']
-        ).fill_null(True).to_numpy().nonzero()[0]
+        change_idx = (frame['airborne'].shift(1) != frame['airborne']).fill_null(True).to_numpy().nonzero()[0]
 
         boundaries = list(change_idx) + [len(frame)]
 
-        subframes = [
-            frame.slice(start, stop - start) for start, stop in zip(boundaries, boundaries[1:])
-        ]
+        subframes = [frame.slice(start, stop - start) for start, stop in zip(boundaries, boundaries[1:])]
 
-        dfu.lg.info(
-            f'Segmented into {len(subframes)} frames by height {segment} meters'
-        )
+        dfu.lg.info(f'Segmented into {len(subframes)} frames by height {segment} meters')
 
         result_frames.extend(subframes)
 
-    metaproc.update({
-        'segment_height_meters': segment,
-        'segment_height_in': len(frames),
-        'segment_height_out': len(result_frames),
-    })
+    metaproc.update(
+        {
+            'segment_height_meters': segment,
+            'segment_height_in': len(frames),
+            'segment_height_out': len(result_frames),
+        }
+    )
 
     return result_frames
 
@@ -62,9 +103,7 @@ def segment_airborne(
 def segment_by_idle(frames, params: SegmentParams, metaproc: dict):
     idle_time_milliseconds = params['idle_time_seconds'] * 1000.0
 
-    dfu.lg.info(
-        f'Segmenting by idle time {idle_time_milliseconds} milliseconds'
-    )
+    dfu.lg.info(f'Segmenting by idle time {idle_time_milliseconds} milliseconds')
 
     result_frames = []
 
@@ -78,11 +117,13 @@ def segment_by_idle(frames, params: SegmentParams, metaproc: dict):
             subframe = frame.slice(start, end - start)
             result_frames.append(subframe)
 
-    metaproc.update({
-        'segment_idle_time_ms': idle_time_milliseconds,
-        'segment_idle_time_in': len(frames),
-        'segment_idle_time_out': len(result_frames),
-    })
+    metaproc.update(
+        {
+            'segment_idle_time_ms': idle_time_milliseconds,
+            'segment_idle_time_in': len(frames),
+            'segment_idle_time_out': len(result_frames),
+        }
+    )
 
     return result_frames
 
@@ -92,57 +133,22 @@ def filter_duration(frames, params: SegmentParams, metaproc: dict):
     dfu.lg.info(f'Filtering by duration {duration} milliseconds')
 
     result_frames = [
-        frame for frame in frames
+        frame
+        for frame in frames
         if frame['timestamp'].max() - frame['timestamp'].min() > duration
     ]
 
     dfu.lg.info(f'Filtered to {len(result_frames)} frames')
 
-    metaproc.update({
-        'filter_duration_ms': duration,
-        'filter_duration_in': len(frames),
-        'filter_duration_out': len(result_frames),
-    })
+    metaproc.update(
+        {
+            'filter_duration_ms': duration,
+            'filter_duration_in': len(frames),
+            'filter_duration_out': len(result_frames),
+        }
+    )
 
     return result_frames
-
-
-def segment(
-    dataset: FlightlogDataset,
-    params: SegmentParams,
-    dump_steps: bool | None = None
-):
-    frames = dataset.frames
-    metaproc = {}
-
-    _dump(dump_steps, 'input', frames)
-
-    if params['segment_by_height']:
-        frames = segment_airborne(frames, params, metaproc)
-
-    _dump(dump_steps, 'airborne', frames)
-
-    if params['segment_by_idle']:
-        frames = segment_by_idle(frames, params, metaproc)
-
-    _dump(dump_steps, 'idle', frames)
-
-    if params['filter_by_duration']:
-        frames = filter_duration(frames, params, metaproc)
-
-    _dump(dump_steps, 'duration', frames)
-
-    result_dataset = dataset.evolve(frames=frames, metadata={
-        'segment_by_height': params['segment_by_height'],
-        'segment_by_idle': params['segment_by_idle'],
-        'filter_by_duration': params['filter_by_duration'],
-    })
-
-    metaproc.update({
-        'num_frames': len(result_dataset.frames),
-    })
-
-    return result_dataset, metaproc
 
 
 def _dump(dump_steps: bool, step: str, frames: list[pl.DataFrame]):
