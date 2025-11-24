@@ -100,22 +100,16 @@ def segment_airborne(
     return result_frames
 
 
-def segment_by_idle(frames, params: SegmentParams, metaproc: dict):
+def segment_by_idle(
+    frames: list[pl.DataFrame],
+    params: SegmentParams,
+    metaproc: dict,
+) -> list[pl.DataFrame]:
     idle_time_milliseconds = params['idle_time_seconds'] * 1000.0
 
     dfu.lg.info(f'Segmenting by idle time {idle_time_milliseconds} milliseconds')
 
-    result_frames = []
-
-    for frame in frames:
-        ts = frame['timestamp'].to_numpy()
-        diffs = ts[1:] - ts[:-1]
-        split_indices = (diffs > idle_time_milliseconds).nonzero()[0] + 1
-        indices = [0] + split_indices.tolist() + [len(frame)]
-
-        for start, end in zip(indices[:-1], indices[1:]):
-            subframe = frame.slice(start, end - start)
-            result_frames.append(subframe)
+    result_frames = segment_by_timestamp(frames, idle_time_milliseconds)
 
     metaproc.update(
         {
@@ -124,6 +118,22 @@ def segment_by_idle(frames, params: SegmentParams, metaproc: dict):
             'segment_idle_time_out': len(result_frames),
         }
     )
+
+    return result_frames
+
+
+def segment_by_timestamp(frames: list[pl.DataFrame], step_ms: int):
+    result_frames = []
+
+    for frame in frames:
+        ts = frame['timestamp'].to_numpy()
+        diffs = ts[1:] - ts[:-1]
+        split_indices = (diffs > step_ms).nonzero()[0] + 1
+        indices = [0] + split_indices.tolist() + [len(frame)]
+
+        for start, end in zip(indices[:-1], indices[1:]):
+            subframe = frame.slice(start, end - start)
+            result_frames.append(subframe)
 
     return result_frames
 
