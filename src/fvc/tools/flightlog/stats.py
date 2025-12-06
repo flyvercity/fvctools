@@ -6,7 +6,6 @@ import polars as pl
 from pygeodesy.dms import F_DMS, latDMS, lonDMS
 import rich
 
-import fvc.tools.df.utils as dfu
 from fvc.tools.utils import plnested
 
 
@@ -52,33 +51,46 @@ def calculate_segment_stats(
             'max': vdim_projection[vdim].max(),
         }
 
-    if 'airborne' in df.columns:
-        stats['airborne'] = df[0]['airborne'].to_list()[0]
-
     return stats
 
 
 def calculate_flightlog_stats(
     dataset: FlightlogDataset,
     vdim: Optional[str] = None
-):
+) -> dict:
     frames = dataset.frames
 
-    stats = [
+    segment_stats = [
         calculate_segment_stats(inx, frame, vdim=vdim)
         for inx, frame in enumerate(frames)
     ]
+
+    stats = {
+        'time': {
+            'min': min(stat['time']['min'] for stat in segment_stats),
+            'max': max(stat['time']['max'] for stat in segment_stats),
+        },
+        'duration': max(stat['duration'] for stat in segment_stats),
+        'lon': {
+            'min': min(stat['lon']['min'] for stat in segment_stats),
+            'max': max(stat['lon']['max'] for stat in segment_stats),
+        },
+        'lat': {
+            'min': min(stat['lat']['min'] for stat in segment_stats),
+            'max': max(stat['lat']['max'] for stat in segment_stats),
+        },
+        vdim: {
+            'min': min(stat['vdim']['min'] for stat in segment_stats),
+            'max': max(stat['vdim']['max'] for stat in segment_stats),
+        },
+    }
 
     return stats
 
 
 def print_stats(frames: list[pl.DataFrame], vdim: Optional[str] = None):
     stats = calculate_flightlog_stats(frames, vdim=vdim)
-
-    for stat in stats:
-        _print_stats(stat)
-
-    dfu.lg.info(f'Total number of segments: {len(stats)}')
+    _print_stats(stats)
 
 
 def _print_stats(stats: dict):
