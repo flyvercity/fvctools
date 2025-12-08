@@ -23,5 +23,6 @@ $endpoint_command = @(
 $endpoint = Invoke-Expression ($endpoint_command -join " ")
 if ($LASTEXITCODE -ne 0) { throw "Failed to get repository endpoint" }
 
-$command = "uv run twine upload --repository-url $endpoint -u $username -p $password .\dist\*"
+$command = "uv publish --publish-url $endpoint -u $username -p $password .\dist\*"
+Write-Host Running: $command
 Invoke-Expression $command
