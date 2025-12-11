@@ -157,6 +157,7 @@ METADATA: &METADATA
         - mqtt
         - ulog
         - fvcgen
+        - capture.android
       examples: ["nmea", "safirmqtt", "fusion.replay"]
     origin:
       type: string
@@ -353,6 +354,88 @@ FLIGHTLOG: &FLIGHTLOG
           type: boolean
           description: "Packet loss flag"
           examples: [true, false]
+      additionalProperties: false
+    gnss:
+      type: object
+      description: "GNSS constellation satellite counts"
+      properties:
+        gps:
+          type: object
+          description: "GPS constellation satellite counts"
+          properties:
+            in_view:
+              type: number
+              description: "Number of GPS satellites in view"
+            used:
+              type: number
+              description: "Number of GPS satellites used in position fix"
+          additionalProperties: false
+        glonass:
+          type: object
+          description: "GLONASS constellation satellite counts"
+          properties:
+            in_view:
+              type: number
+              description: "Number of GLONASS satellites in view"
+            used:
+              type: number
+              description: "Number of GLONASS satellites used in position fix"
+          additionalProperties: false
+        galileo:
+          type: object
+          description: "Galileo constellation satellite counts"
+          properties:
+            in_view:
+              type: number
+              description: "Number of Galileo satellites in view"
+            used:
+              type: number
+              description: "Number of Galileo satellites used in position fix"
+          additionalProperties: false
+        beidou:
+          type: object
+          description: "BeiDou constellation satellite counts"
+          properties:
+            in_view:
+              type: number
+              description: "Number of BeiDou satellites in view"
+            used:
+              type: number
+              description: "Number of BeiDou satellites used in position fix"
+          additionalProperties: false
+        qzss:
+          type: object
+          description: "QZSS constellation satellite counts"
+          properties:
+            in_view:
+              type: number
+              description: "Number of QZSS satellites in view"
+            used:
+              type: number
+              description: "Number of QZSS satellites used in position fix"
+          additionalProperties: false
+        irnss:
+          type: object
+          description: "IRNSS/NavIC constellation satellite counts"
+          properties:
+            in_view:
+              type: number
+              description: "Number of IRNSS/NavIC satellites in view"
+            used:
+              type: number
+              description: "Number of IRNSS/NavIC satellites used in position fix"
+          additionalProperties: false
+        sbas:
+          type: object
+          description: "SBAS constellation satellite counts"
+          properties:
+            in_view:
+              type: number
+              description: "Number of SBAS satellites in view"
+            used:
+              type: number
+              description: "Number of SBAS satellites used in position fix"
+          additionalProperties: false
       additionalProperties: false
     metadata:
       type: object
