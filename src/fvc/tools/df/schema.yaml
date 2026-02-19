@@ -98,15 +98,15 @@ IDENTIFICATION: &IDENTIFICATION
       type: string
       description: "ATM callsign"
       examples: ["UAL123", "BAW456"]
-    IP:
+    ip:
       type: string
       description: "IP address"
       examples: ["192.168.1.100", "10.0.0.5"]
-    IMEI:
+    imei:
       type: string
       description: "IMEI (International Mobile Equipment Identity) number"
       examples: ["123456789012345", "987654321098765"]
-    IMSI:
+    imsi:
       type: string
       description: "IMSI (International Mobile Subscriber Identity) number"
       examples: ["310150123456789", "310260987654321"]
@@ -283,7 +283,7 @@ CELLULAR_SIGNAL: &CELLULAR_SIGNAL
       type: number
       description: "CSI Signal-to-Interference-plus-Noise Ratio (dB)"
       examples: [8, 13, 18]
-    SS-rsrp:
+    ss-rsrp:
       type: number
       description: "Synchronization Signal Reference Signal Received Power (dBm)"
       examples: [-82, -102, -122]
