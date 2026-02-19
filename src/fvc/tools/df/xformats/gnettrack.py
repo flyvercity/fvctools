@@ -77,7 +77,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             device = row.get('DEVICE', 'unknown-device')
 
             uaid = {'int': f'{device}:{track_id}'}
-            uaid.update(dslice(row, 'IP', 'IMEI', 'IMSI'))
+            uaid.update(dslice(row, {'k': 'IP', 'n': 'ip'}, {'k': 'IMEI', 'n': 'imei'}, {'k': 'IMSI', 'n': 'imsi'}))
 
             def maybe_float(x):
                 return float(x) if x and x != '-' else None
