@@ -11,12 +11,20 @@ lg = logging.getLogger('fvc.tools.df')
 
 
 class JsonlinesIO:
-    def __init__(self, filepath: Path, mode: Literal['r', 'w'], callback=None):
+    def __init__(
+        self,
+        filepath: Path,
+        mode: Literal['r', 'w'],
+        callback=None,
+        raw: bool = False,
+    ):
         self._filepath = filepath
         self._mode = mode
         self._file = None  # IO | None
         self._callback = callback
         self._pos = 0
+        # Performance optimization: if True, skip benedict wrapping for read operations
+        self._raw = raw
 
     def stat_size(self):
         return self._filepath.stat().st_size
@@ -36,7 +44,7 @@ class JsonlinesIO:
         if not self._file:
             raise UserWarning('Enter context before using the object')
 
-    def read(self) -> benedict | None:
+    def read(self) -> benedict | dict | None:
         self._check_entered()
 
         if self._file:
@@ -54,7 +62,13 @@ class JsonlinesIO:
         if not line.strip():
             return None
 
-        return benedict(json.loads(line))
+        data = json.loads(line)
+
+        if self._raw:
+            # Skip benedict wrapping for performance
+            return data
+
+        return benedict(data)
 
     def in_line_no(self):
         return self._in_line_no
@@ -71,7 +85,7 @@ class JsonlinesIO:
         else:
             raise RuntimeError('File is not open')
 
-    def iterate(self) -> Generator[benedict, None, None]:
+    def iterate(self) -> Generator[benedict | dict, None, None]:
         while data := self.read():
             yield data
 
