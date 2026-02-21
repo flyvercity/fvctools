@@ -48,9 +48,7 @@ def convert(
 
         lg.debug(f'Using external format module: {x_format}')
 
-        ext_format_mod = importlib.import_module(
-            f'fvc.tools.df.xformats.{x_format}'
-        )
+        ext_format_mod = importlib.import_module(f'fvc.tools.df.xformats.{x_format}')
 
         lg.debug('Imported external format function')
 
@@ -65,9 +63,7 @@ def convert(
         raise UserWarning(f'Unknown external format: {params["x_format"]}')
 
 
-def validate(
-    input_path: Path, callback: Callable[[int], None] | None = None
-) -> bool:
+def validate(input_path: Path, callback: Callable[[int], None] | None = None) -> bool:
     with dfu.JsonlinesIO(input_path, 'r', callback=callback) as f:
         try:
             metaline = f.read()
@@ -89,18 +85,27 @@ def validate(
 
         error_count = 0
 
+        try:
+            # ⚡ Bolt: Create the validator once to avoid recompilation overhead for each record.
+            # This significantly improves performance for large files.
+            cls = jsonschema.validators.validator_for(content_schema)
+            cls.check_schema(content_schema)
+            validator = cls(content_schema)
+
+        except Exception as e:
+            lg.error(f'Schema error: {e}')
+            return False
+
         for data in f.iterate():
             try:
-                jsonschema.validate(data, content_schema)
+                validator.validate(data)
 
             except Exception as e:
                 lg.error(f'Validation error at line {f.in_line_no()}: {e}')
                 error_count += 1
 
             if error_count >= MAX_ERRORS:
-                lg.error(
-                    f'Maximum number of errors reached ({MAX_ERRORS}), stopping'
-                )
+                lg.error(f'Maximum number of errors reached ({MAX_ERRORS}), stopping')
 
                 return False
 
@@ -109,10 +114,10 @@ def validate(
 
 
 def export(params: DFParams):
-    """ Parameters:
-        - input: input file path
-        - output_path: output file path
-        - x_format: external format
+    """Parameters:
+    - input: input file path
+    - output_path: output file path
+    - x_format: external format
     """
 
     output_path = params['output_path']
@@ -129,12 +134,11 @@ def export(params: DFParams):
 
 def upgrade(params: DFParams):
     """Parameters:
-        - input_path: input file path
-        - output_path: output file path
-        - x_format: external format
+    - input_path: input file path
+    - output_path: output file path
+    - x_format: external format
     """
 
     # input_path = params['input_path']
     # output_path = params['output_path']
     raise NotImplementedError('Upgrade is not implemented')
-    
