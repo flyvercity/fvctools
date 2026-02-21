@@ -85,9 +85,20 @@ def validate(input_path: Path, callback: Callable[[int], None] | None = None) ->
 
         error_count = 0
 
+        try:
+            # ⚡ Bolt: Create the validator once to avoid recompilation overhead for each record.
+            # This significantly improves performance for large files.
+            cls = jsonschema.validators.validator_for(content_schema)
+            cls.check_schema(content_schema)
+            validator = cls(content_schema)
+
+        except Exception as e:
+            lg.error(f'Schema error: {e}')
+            return False
+
         for data in f.iterate():
             try:
-                jsonschema.validate(data, content_schema)
+                validator.validate(data)
 
             except Exception as e:
                 lg.error(f'Validation error at line {f.in_line_no()}: {e}')
