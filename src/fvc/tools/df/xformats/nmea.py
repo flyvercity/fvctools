@@ -75,16 +75,23 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
         output.write(record)
 
 
-def iterate_nmea_file(input_path: Path):
+def iterate_nmea_file(input_path: Path, strict: bool = False):
     with input_path.open() as f:
-        while line := f.readline():
+        for line_no, line in enumerate(f, 1):
+            line = line.strip()
+            if not line:
+                continue
+
             try:
-                message = pynmea2.parse(line)
+                yield pynmea2.parse(line)
 
-                yield message
+            except (pynmea2.ParseError, ValueError) as e:
+                if strict:
+                    raise ValueError(
+                        f'Unable to parse line {line_no} ({line}) with error: {e}'
+                    ) from e
 
-            except ValueError as e:
-                lg.warning(f'Unable to parse line ({line}) with error: {e}')
+                lg.warning(f'Unable to parse line {line_no} ({line}) with error: {e}')
 
 
 def extract_sensor_data(params, sensor_source: Path) -> JSON:
@@ -95,7 +102,12 @@ def extract_sensor_data(params, sensor_source: Path) -> JSON:
             if isinstance(message, pynmea2.GGA):
                 yield (message.latitude, message.longitude, message.altitude)
 
-    (latitudes, longitudes, altitudes) = zip(*iterate())
+    data = list(iterate())
+
+    if not data:
+        raise ValueError(f'No GGA messages found in {sensor_source}')
+
+    (latitudes, longitudes, altitudes) = zip(*data)
 
     return {
         'loc': {
