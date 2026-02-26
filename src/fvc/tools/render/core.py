@@ -1,5 +1,6 @@
 import logging as lg
 from datetime import UTC, datetime
+from itertools import islice
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -115,12 +116,27 @@ def calculate_bounds(coordinates: List[Dict[str, Any]]) -> Dict[str, float]:
     if not coordinates:
         return {'north': 0, 'south': 0, 'east': 0, 'west': 0}
 
-    lats = [coord['lat'] for coord in coordinates]
-    lons = [coord['lon'] for coord in coordinates]
+    first = coordinates[0]
+    north = south = first['lat']
+    east = west = first['lon']
+
+    for coord in islice(coordinates, 1, None):
+        lat = coord['lat']
+        lon = coord['lon']
+
+        if lat > north:
+            north = lat
+        elif lat < south:
+            south = lat
+
+        if lon > east:
+            east = lon
+        elif lon < west:
+            west = lon
 
     return {
-        'north': max(lats),
-        'south': min(lats),
-        'east': max(lons),
-        'west': min(lons),
+        'north': north,
+        'south': south,
+        'east': east,
+        'west': west,
     }
