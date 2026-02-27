@@ -84,15 +84,18 @@ def iterate_nmea_file(input_path: Path, strict: bool = False):
                 continue
 
             try:
-                yield pynmea2.parse(line)
+                message = pynmea2.parse(line)
 
-            except (pynmea2.ParseError, ValueError) as e:
+            except pynmea2.ParseError as e:
                 if strict:
                     raise ValueError(
                         f'Unable to parse line {line_no} ({line}) with error: {e}'
                     ) from e
 
                 lg.warning(f'Unable to parse line {line_no} ({line}) with error: {e}')
+                continue
+
+            yield message
 
 
 def extract_sensor_data(params, sensor_source: Path) -> JSON:
