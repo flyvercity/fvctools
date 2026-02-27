@@ -101,7 +101,13 @@ def _get_modem_data(row, modem_name, line_number):
     try:
         modem_data_str = row[modem_name]
         modem_data = json.loads(modem_data_str)
+    except (json.JSONDecodeError, KeyError, TypeError) as e:
+        lg.warning(
+            f'Error parsing modem data for {modem_name} at line {line_number}: {e}'
+        )
+        return None
 
+    try:
         cellsig = dslice(
             modem_data,
             {'k': 'rsrp', 'n': 'RSRP'},
@@ -134,7 +140,7 @@ def _get_modem_data(row, modem_name, line_number):
         return cellsig
 
     except Exception as e:
-        lg.debug(
+        lg.exception(
             f'Error getting modem data for {modem_name} at line {line_number}: {e}'
         )
         return None
