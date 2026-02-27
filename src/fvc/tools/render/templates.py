@@ -54,4 +54,4 @@ def _get_template_env() -> Environment:
         Jinja2 Environment instance
     """
     template_dir = Path(__file__).parent / 'templates'
-    return Environment(loader=FileSystemLoader(str(template_dir)))
+    return Environment(loader=FileSystemLoader(str(template_dir)), autoescape=True)
