@@ -34,14 +34,14 @@ def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
         if event not in ['input', 'output']:
             continue
 
-        fligtlog_rec = smq.flightlog_record(record['message'], geoid)
+        flightlog_rec = smq.flightlog_record(record['message'], geoid)
 
         if record['event'] == 'input':
-            plots.write(fligtlog_rec)
+            plots.write(flightlog_rec)
 
         if record['event'] == 'output':
-            fligtlog_rec['fusion'] = True
-            tracks.write(fligtlog_rec)
+            flightlog_rec['fusion'] = True
+            tracks.write(flightlog_rec)
 
 
 @click.command(help='Extract fused flight log data from a replay file')
