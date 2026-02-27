@@ -5,6 +5,7 @@ Custom parameters:
     - base-date=<datestring> is required for this format
 """
 
+import array
 import logging as lg
 import statistics
 from datetime import UTC, datetime
@@ -97,17 +98,18 @@ def iterate_nmea_file(input_path: Path, strict: bool = False):
 def extract_sensor_data(params, sensor_source: Path) -> JSON:
     lg.info(f'Extracting sensor data from {sensor_source}')
 
-    def iterate():
-        for message in iterate_nmea_file(sensor_source):
-            if isinstance(message, pynmea2.GGA):
-                yield (message.latitude, message.longitude, message.altitude)
+    latitudes = array.array('d')
+    longitudes = array.array('d')
+    altitudes = array.array('d')
 
-    data = list(iterate())
+    for message in iterate_nmea_file(sensor_source):
+        if isinstance(message, pynmea2.GGA):
+            latitudes.append(message.latitude)
+            longitudes.append(message.longitude)
+            altitudes.append(message.altitude)
 
-    if not data:
+    if not latitudes:
         raise ValueError(f'No GGA messages found in {sensor_source}')
-
-    (latitudes, longitudes, altitudes) = zip(*data)
 
     return {
         'loc': {
