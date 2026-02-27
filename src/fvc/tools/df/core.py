@@ -124,7 +124,7 @@ def crawl(params):
 
     input_dir = params['input'].as_dir()
     force = params.get('force')
-    validate = params.get('validate')
+    should_validate = params.get('validate')
 
     errors = []
 
@@ -175,7 +175,7 @@ def crawl(params):
                             params['output_path'] = output_path
                             convert(params, input_path=input.fetch())
 
-                            if validate:
+                            if should_validate:
                                 lg.info(f'Validating {output_path.name}')
 
                                 if not validate(output_path):
