@@ -6,13 +6,16 @@ import pyparsing as pp
 from fvc.tools.df.utils import JsonlinesIO
 
 
-def grammar():
+def _make_grammar():
     lp = pp.Literal('(')
     rp = pp.Literal(')')
     word = pp.Word(pp.alphas)
     comment = pp.Suppress(lp + pp.OneOrMore(word) + rp)
     column = word + pp.Optional(comment)
     return pp.OneOrMore(column)
+
+
+GRAMMAR = _make_grammar()
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
@@ -22,7 +25,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
         if not header:
             return
 
-        columns = grammar().parse_string(header)
+        columns = GRAMMAR.parse_string(header)
         reader = csv.DictReader(input, fieldnames=columns, delimiter=' ')  # type: ignore
         metadata.update({'content': 'flightlog', 'source': 'datcon'})
         output.write(metadata)
