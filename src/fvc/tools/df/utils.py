@@ -135,13 +135,18 @@ class Input:
             spinner = Spinner('aesthetic', 'Downloading...')
 
             with Live(spinner):
+                total_bytes = 0
+
+                def progress_callback(bytes_amount):
+                    nonlocal total_bytes
+                    total_bytes += bytes_amount
+                    spinner.update(text=f'Downloaded {total_bytes} bytes')
+
                 s3.download_file(
                     bucket_name,
                     key,
                     str(local_path),
-                    Callback=lambda x: spinner.update(
-                        text=f'Downloaded {x} bytes'
-                    ),
+                    Callback=progress_callback,
                 )
 
             return local_path
