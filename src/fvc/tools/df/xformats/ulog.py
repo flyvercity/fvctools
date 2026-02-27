@@ -29,6 +29,11 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
     output.write(metadata)
 
+    gps_times = []
+    latitudes = []
+    longitudes = []
+    altitudes = []
+
     for d in ulog.data_list:
         if d.name == 'vehicle_gps_position':
             gps_times = d.data.get('timestamp', [])
