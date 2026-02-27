@@ -36,8 +36,8 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             longitudes = d.data.get('lon', [])
             altitudes = d.data.get('alt', [])
 
-    records = [
-        {
+    for i in range(len(gps_times)):
+        record = {
             'uaid': {'int': uaid},
             'time': {'unix': int(gps_times[i])},
             'pos': {
@@ -48,10 +48,6 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 }
             },
         }
-        for i in range(len(gps_times))
-    ]
-
-    for record in records:
         output.write(record)
 
 
