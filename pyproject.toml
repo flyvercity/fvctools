@@ -40,6 +40,7 @@ dev = [
     "flake8>=7.2.0",
     "jsonschema2md>=1.7.0",
     "ptpython>=3.0.30",
+    "pytest>=9.0.2",
     "pyyaml>=6.0.2",
     "ruff>=0.14.0",
     "twine>=6.1.0",
