@@ -5,6 +5,7 @@ import csv
 import json
 import logging as lg
 import uuid
+from datetime import datetime
 from pathlib import Path
 
 from botobuddy.utils import dslice
@@ -53,9 +54,41 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
             return None
 
+        # Optimization: Try to guess the date format from common formats
+        # and reuse it for subsequent rows using datetime.strptime
+        date_format = None
+        common_formats = [
+            '%Y-%m-%d %H:%M:%S',
+            '%Y-%m-%dT%H:%M:%S',
+            '%Y-%m-%d %H:%M:%S.%f',
+            '%Y-%m-%dT%H:%M:%S.%f',
+        ]
+
         for row in reader:
             row_ts_str = row['utc_datetime']
-            row_ts = parse(row_ts_str)
+
+            row_ts = None
+            if date_format:
+                try:
+                    row_ts = datetime.strptime(row_ts_str, date_format)
+                except ValueError:
+                    # Fallback if the cached format fails
+                    date_format = None
+
+            if row_ts is None:
+                # Try to find a matching format
+                for fmt in common_formats:
+                    try:
+                        row_ts = datetime.strptime(row_ts_str, fmt)
+                        date_format = fmt
+                        break
+                    except ValueError:
+                        continue
+
+                # Ultimate fallback
+                if row_ts is None:
+                    row_ts = parse(row_ts_str)
+
             timestamp = int(row_ts.timestamp() * 1000)
             uaid = {'int': track_id}
 
