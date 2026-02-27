@@ -53,45 +53,45 @@ def datestring_to_ts(datestr: str) -> int:
     return int(dt.timestamp() * 1000)
 
 
-def parse_lat(lat: Any) -> float:
+def _parse_nmea_coord(
+    coord: Any,
+    pre_dot_length: int,
+    valid_suffixes: list[str],
+    negative_suffix: str,
+) -> float | None:
     # Try to detect the NMEA-0183 format
-    if isinstance(lat, str):
-        split = lat.split('.')
+    if isinstance(coord, str):
+        split = coord.split('.')
 
-        if len(split) == 2 and len(split[0]) == 4:
-            lat = lat.replace(',', '')
+        if len(split) == 2 and len(split[0]) == pre_dot_length:
+            coord = coord.replace(',', '')
 
-            if lat[-1] in ['N', 'S']:
-                sign = -1 if lat[-1] == 'S' else 1
-                lat = lat[:-1]
+            if coord[-1] in valid_suffixes:
+                sign = -1 if coord[-1] == negative_suffix else 1
+                coord = coord[:-1]
             else:
                 sign = 1
 
-            deg = int(lat[:2])
-            min = float(lat[2:])
+            deg = int(coord[: pre_dot_length - 2])
+            min = float(coord[pre_dot_length - 2 :])
             return sign * (deg + min / 60.0)
+
+    return None
+
+
+def parse_lat(lat: Any) -> float:
+    result = _parse_nmea_coord(lat, 4, ['N', 'S'], 'S')
+    if result is not None:
+        return result
 
     # Something else
     return dms.parseDMS(lat)
 
 
 def parse_lon(lon: Any) -> float:
-    # Try to detect the NMEA-0183 format
-    if isinstance(lon, str):
-        split = lon.split('.')
-
-        if len(split) == 2 and len(split[0]) == 5:
-            lon = lon.replace(',', '')
-
-            if lon[-1] in ['W', 'E']:
-                sign = -1 if lon[-1] == 'W' else 1
-                lon = lon[:-1]
-            else:
-                sign = 1
-
-            deg = int(lon[:3])
-            min = float(lon[3:])
-            return sign * (deg + min / 60.0)
+    result = _parse_nmea_coord(lon, 5, ['W', 'E'], 'W')
+    if result is not None:
+        return result
 
     # Something else
     return dms.parseDMS(lon)
