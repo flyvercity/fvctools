@@ -86,12 +86,12 @@ def export_from_fvc(params, output_path: Path | None):
 
         kml_string = kml.kml()
         arrow = Path(__file__).parent / 'images' / 'arrow.png'
-        arrow = Path(__file__).parent / 'images' / 'circle.png'
+        circle = Path(__file__).parent / 'images' / 'circle.png'
         output.parent.mkdir(parents=True, exist_ok=True)
 
         with ZipFile(output, 'w') as kmz:
             kmz.writestr('doc.kml', kml_string)
             kmz.write(arrow, 'images/arrow.png')
-            kmz.write(arrow, 'images/circle.png')
+            kmz.write(circle, 'images/circle.png')
 
         return output
