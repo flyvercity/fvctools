@@ -20,9 +20,7 @@ class Courageous:
         pass
 
     def convert(self):
-        self.metadata.update(
-            {'content': self.content(), 'source': 'courageous'}
-        )
+        self.metadata.update({'content': self.content(), 'source': 'courageous'})
         self.output.write(self.metadata)
         data = json.loads(self.input_path.read_text())
 
@@ -90,9 +88,7 @@ class CourageousPolar(Courageous):
             lg.warning(f'Unused location format: {loc_format}')
             return None
 
-        position = {
-            'loc': {'bear': pos['bearing'], 'elev': pos['elevation']}
-        }
+        position = {'loc': {'bear': pos['bearing'], 'elev': pos['elevation']}}
 
         return position
 

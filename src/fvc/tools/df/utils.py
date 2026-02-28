@@ -30,9 +30,7 @@ class JsonlinesIO:
         return self._filepath.stat().st_size
 
     def __enter__(self):
-        self._file = self._filepath.open(
-            f'{self._mode}t', encoding='utf-8', newline=None
-        )
+        self._file = self._filepath.open(f'{self._mode}t', encoding='utf-8', newline=None)
         self._in_line_no = 0
         return self
 

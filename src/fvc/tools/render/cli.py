@@ -42,15 +42,11 @@ def render_flightlog(obj, filename, output, title):
         generate_html_map(filename, output, title)
         lg.info(f'Visualization generated successfully in {output}')
         try:
-            lg.info(
-                f'Opening {output / "index.html"} in your browser to view the map'
-            )
+            lg.info(f'Opening {output / "index.html"} in your browser to view the map')
             webbrowser.open(str(output / 'index.html'))
 
         except Exception:
-            lg.info(
-                f'Open {output / "index.html"} in your browser to view the map'
-            )
+            lg.info(f'Open {output / "index.html"} in your browser to view the map')
 
     except Exception as e:
         lg.error(f'Failed to generate visualization: {e}')

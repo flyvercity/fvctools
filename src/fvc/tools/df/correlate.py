@@ -12,10 +12,7 @@ def correlate(
     merge_callback: Callable[[int], None],
 ):
     with ThreadPoolExecutor() as executor:
-        futures = [
-            executor.submit(_ensure_sorting, infile, check_callbacks[i])
-            for i, infile in enumerate(infiles)
-        ]
+        futures = [executor.submit(_ensure_sorting, infile, check_callbacks[i]) for i, infile in enumerate(infiles)]
 
         results = []
         errors = []

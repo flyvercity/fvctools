@@ -80,9 +80,7 @@ class Converter:
                 raise ValueError('Incomplete position record')
 
             if type(self.parent) is Converter.Track:
-                self.parent.record['pos'] = {
-                    'loc': {'lat': self.lat, 'lon': self.lon, 'alt': self.alt}
-                }
+                self.parent.record['pos'] = {'loc': {'lat': self.lat, 'lon': self.lon, 'alt': self.alt}}
 
     class Latitude:
         def __init__(self, ctx, parent, attrs):
@@ -177,6 +175,4 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 parser.Parse(block, True)
 
             except Exception as e:
-                lg.warning(
-                    f'Error parsing block {block_no} line {line_no}: {e}'
-                )
+                lg.warning(f'Error parsing block {block_no} line {line_no}: {e}')

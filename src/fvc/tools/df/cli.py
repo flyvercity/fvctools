@@ -35,7 +35,9 @@ Notes:
     required=False,
 )
 @click.option(
-    '--in', 'input_path', required=False,
+    '--in',
+    'input_path',
+    required=False,
     type=click.Path(exists=True, path_type=Path),
 )
 @click.option(
@@ -57,9 +59,7 @@ def validate(params):
     with Progress(transient=True) as progress:
         task = progress.add_task('Validating data', total=file_size)
 
-        valid = core.validate(
-            input_path, callback=lambda s: progress.update(task, advance=s)
-        )
+        valid = core.validate(input_path, callback=lambda s: progress.update(task, advance=s))
 
         lg.info(f'Validation {"succeeded" if valid else "failed"}')
 
@@ -70,9 +70,7 @@ def validate(params):
 @df.command(name='help', help='Show help for a specific format')
 @click.argument('x_format', type=str, required=True)
 def xformat_help(x_format: str):
-    ext_format_mod = importlib.import_module(
-        f'fvc.tools.df.xformats.{x_format}'
-    )
+    ext_format_mod = importlib.import_module(f'fvc.tools.df.xformats.{x_format}')
 
     help_text = getattr(ext_format_mod, 'module_help', None)
 
@@ -130,9 +128,7 @@ def convert_command(params, output_file, **kwargs):
     params['output_path'] = output_path
 
     with Progress(transient=True) as progress:
-        read_task = progress.add_task(
-            'Converting...', total=input_path.stat().st_size
-        )
+        read_task = progress.add_task('Converting...', total=input_path.stat().st_size)
 
         def callback(s):
             progress.update(read_task, advance=s)
@@ -159,9 +155,7 @@ def export_command(params, output_file, **kwargs):
 
 
 @df.command(help='Upgrade a FVC file to the latest schema (volatile code)')
-@click.argument(
-    'infile', type=click.Path(exists=True, path_type=Path), required=True
-)
+@click.argument('infile', type=click.Path(exists=True, path_type=Path), required=True)
 @click.pass_obj
 def upgrade(params, infile):
     params['input_path'] = infile
@@ -169,9 +163,7 @@ def upgrade(params, infile):
 
     with Progress(transient=True) as progress:
         read_task = progress.add_task('Reading...', total=infile.stat().st_size)
-        write_task = progress.add_task(
-            'Writing...', total=infile.stat().st_size
-        )
+        write_task = progress.add_task('Writing...', total=infile.stat().st_size)
 
         core.upgrade(
             params,
@@ -190,22 +182,14 @@ def upgrade(params, infile):
 )
 def correlate_command(params, infiles: tuple[Path, ...]):
     with Progress() as progress:
-        check_tasks = [
-            progress.add_task(
-                f'Checking {infile}...', total=infile.stat().st_size
-            )
-            for infile in infiles
-        ]
+        check_tasks = [progress.add_task(f'Checking {infile}...', total=infile.stat().st_size) for infile in infiles]
 
         merge_task = progress.add_task('Merging...', total=None)
 
         correlate(
             params,
             infiles,
-            [
-                lambda s: progress.update(check_tasks[i], advance=s)
-                for i in range(len(check_tasks))
-            ],
+            [lambda s: progress.update(check_tasks[i], advance=s) for i in range(len(check_tasks))],
             lambda s: progress.update(merge_task, advance=s),
         )
 

@@ -56,7 +56,7 @@ def attach_polar_sensor(params) -> JSON:
         metadata['polar_sensor'] = {
             'source': 'nmea',
             'origin': polar_sensor_source.name,
-            'loc': nmea.extract_sensor_data(params, polar_sensor_source)
+            'loc': nmea.extract_sensor_data(params, polar_sensor_source),
         }
 
         return metadata

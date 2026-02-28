@@ -12,18 +12,17 @@ from fvc.tools.df.utils import JsonlinesIO, lg
 
 
 def convert_to_fvc(
-    params, metadata, input_path: Path, output: JsonlinesIO,
+    params,
+    metadata,
+    input_path: Path,
+    output: JsonlinesIO,
 ):
     track_id = str(uuid.uuid4())
 
     with input_path.open('rt') as input:
         reader = csv.DictReader(input, delimiter=',')
 
-        modems = list(
-            filter(
-                lambda x: str(x).startswith('modem'), reader.fieldnames or []
-            )
-        )
+        modems = list(filter(lambda x: str(x).startswith('modem'), reader.fieldnames or []))
         lg.debug(f'Modems found: {modems}')
 
         metadata.update(
@@ -69,9 +68,7 @@ def convert_to_fvc(
             modem_data_dict = {}
 
             for modem_name in modems:
-                modem_data = _get_modem_data(
-                    row, modem_name, reader.line_num
-                )
+                modem_data = _get_modem_data(row, modem_name, reader.line_num)
 
                 if modem_data:
                     modem_data_dict[modem_name] = modem_data
@@ -110,22 +107,16 @@ def _get_modem_data(row, modem_name, line_number):
             ac = cell_tac
             radio = '4GLTE'
         else:
-            lg.debug(
-                f'Unknown network technology: {plmnid} {cell_lac} {cell_tac}'
-            )
+            lg.debug(f'Unknown network technology: {plmnid} {cell_lac} {cell_tac}')
             radio = 'Unknown'
 
         cell_id = modem_data.get('cell_id')
         cgi = f'{plmnid}{ac:05d}{cell_id:05d}'
 
-        cellsig.update(
-            {'radio': radio, 'plmnid': plmnid, 'cgi': cgi}
-        )
+        cellsig.update({'radio': radio, 'plmnid': plmnid, 'cgi': cgi})
 
         return cellsig
 
     except Exception as e:
-        lg.debug(
-            f'Error getting modem data for {modem_name} at line {line_number}: {e}'
-        )
+        lg.debug(f'Error getting modem data for {modem_name} at line {line_number}: {e}')
         return None
