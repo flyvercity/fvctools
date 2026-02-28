@@ -25,9 +25,7 @@ def fetch_geodata(file_name: str) -> geopandas.GeoDataFrame:
 
     gdf = geopandas.GeoDataFrame(  # type: ignore
         df,
-        geometry=geopandas.points_from_xy(
-            df['lon'], df['lat'], z=df['alt']
-        ),
+        geometry=geopandas.points_from_xy(df['lon'], df['lat'], z=df['alt']),
         crs='EPSG:4326',
     )
 

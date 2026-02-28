@@ -50,9 +50,7 @@ def from_safir_loc(safir_loc, pgm):
         present = 'present' if 'altitudeAMSL' in safir_loc else 'also missing'
 
         # TODO: Collect error statistics
-        lg.debug(
-            f'No AMSL found in SAFIR location record (geodetic is {present})'
-        )
+        lg.debug(f'No AMSL found in SAFIR location record (geodetic is {present})')
 
     return record
 
@@ -108,6 +106,4 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             if params['verbose']:
                 traceback.print_exc()
 
-            lg.warning(
-                f'Error processing {input_path}:{input.in_line_no()}: {e}'
-            )
+            lg.warning(f'Error processing {input_path}:{input.in_line_no()}: {e}')

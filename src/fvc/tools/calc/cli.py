@@ -61,10 +61,7 @@ def undulation_command(obj, latitude, longitude):
         u.json_print(obj, {'undulation': geoid_height})
 
 
-@calc.command(
-    name='terrain',
-    help='Get terrain elevation by latitude/longitude and undulation or ellipsoid height'
-)
+@calc.command(name='terrain', help='Get terrain elevation by latitude/longitude and undulation or ellipsoid height')
 @click.pass_obj
 @click.option(
     '--normal',
@@ -93,7 +90,7 @@ def terrain_command(obj, lat, lon, normal, geo_amsl_height, copernicus_dir):
 
     with terrain.Terrain(copernicus_dir) as t:
         terrain_height = t.height(lat, lon, amsl_height)
-    
+
     if not obj['JSON']:
         print(terrain_height)
     else:

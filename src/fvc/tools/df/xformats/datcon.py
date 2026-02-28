@@ -38,9 +38,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                     # nanoseconds to milliseconds
                     'unix': int(row['TS']) // 1_000_000,
                 },
-                'uaid': {
-                    'int': row['GUID'] if row['GUID'] != 'N/A' else row['ID']
-                },
+                'uaid': {'int': row['GUID'] if row['GUID'] != 'N/A' else row['ID']},
                 'pos': {
                     'loc': {
                         'lat': float(row['Latitude']),
