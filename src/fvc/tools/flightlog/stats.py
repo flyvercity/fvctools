@@ -9,9 +9,7 @@ import rich
 from fvc.tools.utils import plnested
 
 
-def calculate_segment_stats(
-    index: int, df: pl.DataFrame, vdim: Optional[str] = None
-):
+def calculate_segment_stats(index: int, df: pl.DataFrame, vdim: Optional[str] = None):
     projection = df.select(
         plnested('time.unix').alias('time'),
         plnested('pos.loc.lon').alias('lon'),
@@ -41,9 +39,7 @@ def calculate_segment_stats(
     }
 
     if vdim is not None:
-        vdim_projection = df.select(
-            plnested(vdim).alias(vdim)
-        )
+        vdim_projection = df.select(plnested(vdim).alias(vdim))
 
         stats['vdim'] = {
             'name': vdim,
@@ -54,16 +50,10 @@ def calculate_segment_stats(
     return stats
 
 
-def calculate_flightlog_stats(
-    dataset: FlightlogDataset,
-    vdim: Optional[str] = None
-) -> dict:
+def calculate_flightlog_stats(dataset: FlightlogDataset, vdim: Optional[str] = None) -> dict:
     frames = dataset.frames
 
-    segment_stats = [
-        calculate_segment_stats(inx, frame, vdim=vdim)
-        for inx, frame in enumerate(frames)
-    ]
+    segment_stats = [calculate_segment_stats(inx, frame, vdim=vdim) for inx, frame in enumerate(frames)]
 
     stats = {
         'time': {
@@ -112,21 +102,13 @@ def _print_stats(stats: dict):
     rich.print(f'End: {ftime(stats["time"]["max"])}')
     rich.print(f'Duration: {stats["duration"] / 1000.0:.2f} seconds')
 
-    rich.print(
-        f'From latutude {flat(stats["lat"]["min"])} to {flat(stats["lat"]["max"])}'
-    )
+    rich.print(f'From latutude {flat(stats["lat"]["min"])} to {flat(stats["lat"]["max"])}')
 
-    rich.print(
-        f'From longitude {flon(stats["lon"]["min"])} to {flon(stats["lon"]["max"])}'
-    )
+    rich.print(f'From longitude {flon(stats["lon"]["min"])} to {flon(stats["lon"]["max"])}')
 
-    rich.print(
-        f'Time difference: {stats["time_diff"]["min"]} to {stats["time_diff"]["max"]}'
-    )
+    rich.print(f'Time difference: {stats["time_diff"]["min"]} to {stats["time_diff"]["max"]}')
 
     if 'vdim' in stats:
-        rich.print(
-            f'From {stats["vdim"]["name"]} {stats["vdim"]["min"]:.2f} to {stats["vdim"]["max"]:.2f}'
-        )
+        rich.print(f'From {stats["vdim"]["name"]} {stats["vdim"]["min"]:.2f} to {stats["vdim"]["max"]:.2f}')
 
     rich.print('-' * 60)

@@ -30,11 +30,7 @@ class FlightlogDataset:
             frames=[pl.DataFrame(frame) for frame in data['frames']],
         )
 
-    def evolve(
-        self, *,
-        frames: list[pl.DataFrame],
-        metadata: benedict | dict = {}
-    ) -> 'FlightlogDataset':
+    def evolve(self, *, frames: list[pl.DataFrame], metadata: benedict | dict = {}) -> 'FlightlogDataset':
         new_metadata = benedict(metadata)
         new_metadata['upstream'] = self.metadata
 
@@ -45,8 +41,8 @@ class FlightlogDataset:
 
 
 def load_frames(input_path: Path):
-    """ Parameters:
-        - input_path: Path to the FVC data file
+    """Parameters:
+    - input_path: Path to the FVC data file
     """
     dataset = dfu.FvcDataset.read(input_path)
 

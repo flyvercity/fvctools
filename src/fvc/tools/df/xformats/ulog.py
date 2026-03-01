@@ -15,14 +15,9 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     uaid = filename.split('+')[0]
 
     if not start_dt:
-        lg.warning(
-            f'Could not extract datetime from filename {filename}. '
-            f'Falling back to boot time.'
-        )
+        lg.warning(f'Could not extract datetime from filename {filename}. Falling back to boot time.')
 
-        start_dt = datetime.fromtimestamp(
-            ulog.start_timestamp / 1e6, tz=timezone.utc
-        )
+        start_dt = datetime.fromtimestamp(ulog.start_timestamp / 1e6, tz=timezone.utc)
 
     metadata.update({'content': 'flightlog', 'source': 'ulog'})
 

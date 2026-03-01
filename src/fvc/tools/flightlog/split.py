@@ -114,7 +114,7 @@ def _save_output(
     metadata: benedict,
     records: list[benedict],
 ):
-    output_path = output_dir / f'{current_day.strftime('%Y%m%d')}.fvc'
+    output_path = output_dir / f'{current_day.strftime("%Y%m%d")}.fvc'
 
     with dfu.JsonlinesIO(output_path, 'w') as output:
         output.write(metadata)

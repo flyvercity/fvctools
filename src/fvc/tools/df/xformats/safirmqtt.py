@@ -11,9 +11,7 @@ def from_safir_ids(safir_ids):
 
     for safir_id in safir_ids:
         if safir_id.get('version') != '1':
-            raise UserWarning(
-                f'Unsupported version {safir_id.get("version")} in SAFIR ID'
-            )
+            raise UserWarning(f'Unsupported version {safir_id.get("version")} in SAFIR ID')
 
         system = safir_id.get('system')
         key = safir_id.get('key')
@@ -41,9 +39,7 @@ def from_safir_loc(safir_loc, pgm):
     amsl = safir_loc.get('altitudeAMSL')
 
     if version != '1':
-        raise UserWarning(
-            f'Unsupported version {version} in SAFIR location record'
-        )
+        raise UserWarning(f'Unsupported version {version} in SAFIR location record')
 
     if lat is None:
         raise UserWarning('No latitude found in SAFIR location record')
@@ -59,18 +55,14 @@ def from_safir_loc(safir_loc, pgm):
 
     else:
         present = 'present' if 'altitudeAMSL' in safir_loc else 'also missing'
-        lg.warning(
-            f'No AMSL found in safir location record (geodetic is {present})'
-        )
+        lg.warning(f'No AMSL found in safir location record (geodetic is {present})')
 
     return record
 
 
 def flightlog_record(record, pgm):
     if record.get('version') != '1':
-        raise UserWarning(
-            f'Unsupported version {record.get("version")} in SAFIR record'
-        )
+        raise UserWarning(f'Unsupported version {record.get("version")} in SAFIR record')
 
     if 'timestamp' not in record:
         raise UserWarning('No timestamp found in SAFIR record')
@@ -106,6 +98,4 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             if params['verbose']:
                 traceback.print_exc()
 
-            lg.warning(
-                f'Error processing {input_path}:{input.in_line_no()}: {e}'
-            )
+            lg.warning(f'Error processing {input_path}:{input.in_line_no()}: {e}')

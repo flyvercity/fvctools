@@ -142,11 +142,7 @@ def filter_duration(frames, params: SegmentParams, metaproc: dict):
     duration = params['filter_duration_seconds'] * 1000.0
     dfu.lg.info(f'Filtering by duration {duration} milliseconds')
 
-    result_frames = [
-        frame
-        for frame in frames
-        if frame['timestamp'].max() - frame['timestamp'].min() > duration
-    ]
+    result_frames = [frame for frame in frames if frame['timestamp'].max() - frame['timestamp'].min() > duration]
 
     dfu.lg.info(f'Filtered to {len(result_frames)} frames')
 

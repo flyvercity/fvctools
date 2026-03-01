@@ -32,9 +32,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
         base_date = dateparse(base_date)
 
     if not base_date:
-        raise UserWarning(
-            'This format requires the date to be set manually with "base-date" custom parameter'
-        )
+        raise UserWarning('This format requires the date to be set manually with "base-date" custom parameter')
 
     lg.debug(f'Using base date: {base_date}')
 

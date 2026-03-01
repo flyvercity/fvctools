@@ -55,7 +55,7 @@ class Terrain:
 
             if (rough_lat, rough_lon) in self._cache:
                 return self._cache[(rough_lat, rough_lon)]
-            
+
         ds = self._get_dataset(lat_deg, lon_deg)
         row, col = ds.index(lon_deg, lat_deg)
         value = ds.read(1)[row, col]

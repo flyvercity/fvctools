@@ -13,16 +13,14 @@ from fvc.tools.df.utils import JsonlinesIO, lg
 
 
 def module_help():
-    """ Module custom parameters """
+    """Module custom parameters"""
     return '- gnettrack-allow-low-precision: Allow low precision time for Gnettrack log'
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     track_id = str(uuid.uuid4())
 
-    allow_low_precision = 'gnettrack-allow-low-precision' in params.get(
-        'custom', []
-    )
+    allow_low_precision = 'gnettrack-allow-low-precision' in params.get('custom', [])
 
     if allow_low_precision:
         lg.debug('Allowing low precision time for Gnettrack log')
@@ -98,9 +96,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 case ('5G', 'NR'):
                     radio = '5GNR'
                 case _:
-                    lg.warning(
-                        f'Unknown network technology: {net_tech} {net_mode}'
-                    )
+                    lg.warning(f'Unknown network technology: {net_tech} {net_mode}')
                     radio = 'Unknown'
                     continue
 
