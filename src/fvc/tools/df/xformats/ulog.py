@@ -35,6 +35,8 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             longitudes = d.data.get('lon', [])
             altitudes = d.data.get('alt', [])
 
+    # ⚡ Bolt: Write records iteratively instead of building a large list in memory.
+    # This prevents O(N) memory consumption for large ULog files.
     for i in range(len(gps_times)):
         record = {
             'uaid': {'int': uaid},
