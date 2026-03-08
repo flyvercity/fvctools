@@ -4,24 +4,6 @@ import pytest
 from datetime import datetime, timezone
 from dateutil.parser import ParserError
 
-# Safe mocking using a fixture
-@pytest.fixture(autouse=True)
-def mock_dependencies():
-    """Mock dependencies not available or needed for these tests."""
-    mock_modules = {
-        'rich': MagicMock(),
-        'pygeodesy': MagicMock(),
-        'pygeodesy.dms': MagicMock(),
-        'pygeodesy.geoids': MagicMock(),
-    }
-    with patch.dict(sys.modules, mock_modules):
-        # Clear the module from sys.modules if it was already imported
-        if 'fvc.tools.utils' in sys.modules:
-            del sys.modules['fvc.tools.utils']
-        yield
-        # Cleanup: Remove the module from sys.modules after the test
-        if 'fvc.tools.utils' in sys.modules:
-            del sys.modules['fvc.tools.utils']
 
 def test_datestring_to_ts_naive():
     """Test with a naive date string (assumed UTC)."""
