@@ -6,104 +6,61 @@ import fvc.tools.utils as u
 from fvc.tools.df.utils import JsonlinesIO
 
 
-class Courageous:
-    def __init__(self, params, metadata, input_path: Path, output: JsonlinesIO):
-        self.params = params
-        self.metadata = metadata
-        self.input_path = input_path
-        self.output = output
-        self.geoid = u.load_geoid(self.params, self.metadata)
-
-    def build_position(self, loc):
-        pass
-
-    def content(self):
-        pass
-
-    def convert(self):
-        self.metadata.update(
-            {'content': self.content(), 'source': 'courageous'}
-        )
-        self.output.write(self.metadata)
-        data = json.loads(self.input_path.read_text())
-
-        entries = []
-
-        for track in data.get('tracks', []):
-            track_name = track.get('name', 'unknown')
-            track_id = track.get('uas_id', 'noid')
-
-            uaid = {
-                'int': f'{track_name}-{track_id}',
-            }
-
-            def record_to_entry(record):
-                timestamp = {'unix': record['time']}
-                flog_record = {'time': timestamp, 'uaid': uaid}
-                position = self.build_position(record['location'])
-
-                if position:
-                    flog_record.update({'pos': position})
-
-                return flog_record
-
-            entries.extend(map(record_to_entry, track['records']))
-
-        entries.sort(key=lambda e: e['time']['unix'])
-
-        for entry in entries:
-            self.output.write(entry)
-
-
-class CourageousCartesian(Courageous):
-    def content(self):
-        return 'flightlog'
-
-    def build_position(self, loc):
-        if 't' in loc and loc['t'] == 'Position3d':
-            pos = loc['c']
-        elif 'Position3d' in loc:
-            pos = loc['Position3d']
-        else:
-            lg.warning(f'Unused location format: {loc.get("t")}')
-            return None
-
-        lat = pos['lat']
-        lon = pos['lon']
-        amsl = pos['height_amsl']
-        alt = u.amsl_to_ellipsoidal(self.geoid, lat, lon, amsl)
-
-        position = {'loc': {'lat': lat, 'lon': lon, 'alt': alt}}
-
-        return position
-
-
-class CourageousPolar(Courageous):
-    def content(self):
-        return 'radarlog'
-
-    def build_position(self, loc):
-        loc_format = loc.get('t')
-
-        if loc_format == 'BearingElevation':
-            pos = loc['c']
-        else:
-            lg.warning(f'Unused location format: {loc_format}')
-            return None
-
-        position = {
-            'loc': {'polar': {'bear': pos['bearing'], 'elev': pos['elevation']}}
-        }
-
-        return position
-
-
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
-    if params.get('target') == 'flightlog':
-        Converter = CourageousCartesian
-    elif params.get('target') == 'radarlog':
-        Converter = CourageousPolar
-    else:
-        raise ValueError(f'Unsupported content type: {params.get("content")}')
+    target = params.get('target')
+    if target not in ('flightlog', 'radarlog'):
+        raise ValueError(f'Unsupported target type: {target}')
 
-    Converter(params, metadata, input_path, output).convert()
+    geoid = u.load_geoid(params, metadata)
+    metadata.update({'content': target, 'source': 'courageous'})
+    output.write(metadata)
+
+    data = json.loads(input_path.read_text())
+    entries = []
+
+    for track in data.get('tracks', []):
+        track_name = track.get('name', 'unknown')
+        track_id = track.get('uas_id', 'noid')
+        uaid = {'int': f'{track_name}-{track_id}'}
+
+        for record in track.get('records', []):
+            loc = record.get('location', {})
+            position = None
+
+            if target == 'flightlog':
+                if 't' in loc and loc['t'] == 'Position3d':
+                    pos = loc['c']
+                elif 'Position3d' in loc:
+                    pos = loc['Position3d']
+                else:
+                    lg.warning(f'Unused location format: {loc.get("t")}')
+                    continue
+
+                lat = pos['lat']
+                lon = pos['lon']
+                amsl = pos['height_amsl']
+                alt = u.amsl_to_ellipsoidal(geoid, lat, lon, amsl)
+                position = {'loc': {'lat': lat, 'lon': lon, 'alt': alt}}
+
+            elif target == 'radarlog':
+                loc_format = loc.get('t')
+                if loc_format == 'BearingElevation':
+                    pos = loc['c']
+                else:
+                    lg.warning(f'Unused location format: {loc_format}')
+                    continue
+
+                position = {'loc': {'polar': {'bear': pos['bearing'], 'elev': pos['elevation']}}}
+
+            if position:
+                entries.append(
+                    {
+                        'time': {'unix': record['time']},
+                        'uaid': uaid,
+                        'pos': position,
+                    }
+                )
+
+    entries.sort(key=lambda e: e['time']['unix'])
+    for entry in entries:
+        output.write(entry)
