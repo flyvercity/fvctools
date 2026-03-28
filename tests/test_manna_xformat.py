@@ -18,9 +18,6 @@ def simple_dslice(source, *args):
 mock_botobuddy_utils.dslice = simple_dslice
 sys.modules['botobuddy'] = mock_botobuddy
 sys.modules['botobuddy.utils'] = mock_botobuddy_utils
-sys.modules['fvc.tools.df.utils'] = MagicMock()
-sys.modules['dateutil'] = MagicMock()
-sys.modules['dateutil.parser'] = MagicMock()
 
 import pytest
 from fvc.tools.df.xformats.manna import _get_modem_data
