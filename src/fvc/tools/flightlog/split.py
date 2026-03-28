@@ -21,7 +21,7 @@ def split_by_day(params: SplitParams, callback=None) -> list[Path]:
     current_output = None
     output_files = []
 
-    with dfu.JsonlinesIO(input_path, 'r', callback=callback) as input:
+    with dfu.JsonlinesIO(input_path, 'r', callback=callback, raw=True) as input:
         metadata = input.read()
 
         for record in input.iterate():
@@ -66,7 +66,7 @@ def split_by_inactivity(params: SplitParams, callback=None) -> list[Path]:
     file_counter = 0
     output_files = []
 
-    with dfu.JsonlinesIO(input_path, 'r', callback=callback) as input:
+    with dfu.JsonlinesIO(input_path, 'r', callback=callback, raw=True) as input:
         metadata = input.read()
 
         for record in input.iterate():
@@ -111,8 +111,8 @@ def split_by_inactivity(params: SplitParams, callback=None) -> list[Path]:
 def _save_output(
     current_day: datetime,
     output_dir: Path,
-    metadata: benedict,
-    records: list[benedict],
+    metadata: benedict | dict,
+    records: list[benedict | dict],
 ):
     output_path = output_dir / f'{current_day.strftime("%Y%m%d")}.fvc'
 
@@ -128,8 +128,8 @@ def _save_output(
 def _save_output_by_inactivity(
     file_counter: int,
     output_dir: Path,
-    metadata: benedict,
-    records: list[benedict],
+    metadata: benedict | dict,
+    records: list[benedict | dict],
 ):
     if not records:
         return
