@@ -19,7 +19,6 @@ mock_botobuddy_utils.dslice = simple_dslice
 sys.modules['botobuddy'] = mock_botobuddy
 sys.modules['botobuddy.utils'] = mock_botobuddy_utils
 
-import pytest
 from fvc.tools.df.xformats.manna import _get_modem_data
 
 def test_get_modem_data_valid(caplog):
