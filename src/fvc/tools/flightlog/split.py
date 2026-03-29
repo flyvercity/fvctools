@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import TypedDict
-from datetime import datetime
+from datetime import datetime, date
 
 from benedict import benedict
 import fvc.tools.df.utils as dfu
@@ -109,11 +109,12 @@ def split_by_inactivity(params: SplitParams, callback=None) -> list[Path]:
 
 
 def _save_output(
-    current_day: datetime,
+    current_day: date,
     output_dir: Path,
     metadata: benedict | dict,
     records: list[benedict | dict],
 ):
+    assert records is not None
     output_path = output_dir / f'{current_day.strftime("%Y%m%d")}.fvc'
 
     with dfu.JsonlinesIO(output_path, 'w') as output:
@@ -128,7 +129,7 @@ def _save_output(
 def _save_output_by_inactivity(
     file_counter: int,
     output_dir: Path,
-    metadata: benedict | dict,
+    metadata: benedict | dict | None,
     records: list[benedict | dict],
 ):
     if not records:
