@@ -1,6 +1,6 @@
 [project]
 name = "fvctools"
-version = "1.5.0rc1"
+version = "1.5.0rc2"
 description = "Flyvercity CLI Tools Suite"
 authors = [
     { name = "Boris Resnick", email = "boris@flyver.city" }
@@ -42,11 +42,11 @@ fvc = "fvc.tools.cli:main"
 
 [dependency-groups]
 dev = [
+    "duct>=1.0.1",
     "flake8>=7.2.0",
     "jsonschema2md>=1.7.0",
     "ptpython>=3.0.30",
     "pytest>=9.0.2",
-    "pyyaml>=6.0.2",
     "ruff>=0.14.0",
 ]
 
@@ -55,3 +55,8 @@ line-length = 120
 
 [tool.ruff.format]
 quote-style = "single"
+
+[[tool.uv.index]]
+name = "codeartifact"
+url = "https://flyvercity-368281077578.d.codeartifact.eu-west-3.amazonaws.com/pypi/tools/simple/"
+publish-url = "https://flyvercity-368281077578.d.codeartifact.eu-west-3.amazonaws.com/pypi/tools/"
