@@ -10,6 +10,13 @@
 
 ## Installation
 
+### Unix Shells (Linux, macOS, WSL)
+
+```bash
+source scripts/Login-ToCodeArtifact.sh
+./scripts/Install-FvcTools.sh
+```
+
 ### PowerShell
 
 ```pwsh
