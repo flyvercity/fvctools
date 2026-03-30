@@ -81,6 +81,45 @@ Generates interactive visualizations for flight data analysis.
   uv run fvc render fl flight.fvc --output ./map_results
   ```
 
+## The Flyvercity Data Format (.fvc)
+
+The `.fvc` format is the unified data standard used by all Flyvercity tools. It is a [JSON-Lines](https://jsonlines.org/) (`.jsonl`) formatted file where each line is a valid JSON object.
+
+### Structure
+
+1.  **Metadata Line**: The **first line** of every `.fvc` file must be a `METADATA` record. It contains essential information about the file's content and its origin.
+    - `content`: The type of data contained (e.g., `flightlog`, `radarlog`).
+    - `source`: The original format the data was converted from.
+    - `origin`: The name of the original source file or system.
+2.  **Data Records**: Subsequent lines contain individual data records (e.g., `FLIGHTLOG` or `RADARLOG` entries) that follow the schemas defined in the project.
+
+### Example
+
+```json
+{"content": "flightlog", "source": "nmea", "origin": "flight_data_20231201.log"}
+{"time": {"unix": 1756033206882}, "pos": {"loc": {"lat": 52.3, "lon": 4.9, "alt": 100.5}}}
+```
+
+## Supported External Formats
+
+Flyvercity CLI tools can convert data from a variety of external aviation and geospatial formats into the unified `.fvc` format.
+
+| Format Name | Description | Source Module |
+| :--- | :--- | :--- |
+| **AgentFly** | AgentFly simulator logs | `agentfly` |
+| **ART** | ART log format | `artlog` |
+| **Courageous** | Courageous project logs | `courageous` |
+| **CS Group** | CS Group logs | `csgroup` |
+| **DJI Datcon** | DJI Datcon logs | `datcon` |
+| **GeoJSON** | GeoJSON format | `geojson` |
+| **Gnettrack** | Gnettrack logs | `gnettrack` |
+| **Manna** | Manna drone logs | `manna` |
+| **NMEA** | NMEA GPS logs | `nmea` |
+| **Robin Radar** | Robin Radar XML | `robinradar` |
+| **Safir MQTT** | Safir MQTT logs | `safirmqtt` |
+| **Senhive** | Senhive logs | `senhive` |
+| **PX4 ULog** | PX4 ULog logs | `ulog` |
+
 ### PowerShell Helper (`fvc shell`)
 
 For Windows-based workflows, `fvctools` provides a PowerShell integration that treats CLI outputs as first-class objects, enabling advanced automation and scripting.
