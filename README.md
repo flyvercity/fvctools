@@ -187,3 +187,18 @@ A specialized installation script is provided for Windows environments to set up
     ```pwsh
     . .\pwsh\Load-FvcTools.ps1
     ```
+
+### For Linux/macOS Users (Bash)
+
+Equivalent Bash scripts are provided for Linux and macOS environments.
+
+1.  **Authenticate**:
+    Fetch the CodeArtifact token and set environment variables:
+    ```bash
+    source scripts/Login-ToCodeArtifact.sh
+    ```
+2.  **Install**:
+    Run the installation script:
+    ```bash
+    ./scripts/Install-FvcTools.sh
+    ```
