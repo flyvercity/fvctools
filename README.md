@@ -10,33 +10,12 @@
 
 ## Installation
 
-### For Developers
+### PowerShell
 
-The project uses [uv](https://github.com/astral-sh/uv) for dependency management and environment isolation.
-
-1.  **Install dependencies**:
-    ```bash
-    uv sync
-    ```
-2.  **Verify installation**:
-    ```bash
-    uv run fvc --help
-    ```
-
-### For Windows/PowerShell Users
-
-A specialized installation script is provided for Windows environments to set up the CLI tools locally.
-
-1.  **Install**:
-    Run the provided installation script:
-    ```pwsh
-    .\scripts\Install-FvcTools.ps1
-    ```
-2.  **Load into session**:
-    To load the tools into your current PowerShell session, source the loader script:
-    ```pwsh
-    . .\pwsh\Load-FvcTools.ps1
-    ```
+```pwsh
+.\scripts\Login-ToCodeArtifact.ps1
+.\scripts\Install-FvcTools.ps1
+```
 
 ## Core Toolsets
 
@@ -180,3 +159,31 @@ We use `ruff` to ensure code quality and consistent formatting.
   ```bash
   uv run ruff format .
   ```
+
+## For Developers
+
+The project uses [uv](https://github.com/astral-sh/uv) for dependency management and environment isolation.
+
+1.  **Install dependencies**:
+    ```bash
+    uv sync
+    ```
+2.  **Verify installation**:
+    ```bash
+    uv run fvc --help
+    ```
+
+### For Windows/PowerShell Users
+
+A specialized installation script is provided for Windows environments to set up the CLI tools locally.
+
+1.  **Install**:
+    Run the provided installation script:
+    ```pwsh
+    .\scripts\Install-FvcTools.ps1
+    ```
+2.  **Load into session**:
+    To load the tools into your current PowerShell session, source the loader script:
+    ```pwsh
+    . .\pwsh\Load-FvcTools.ps1
+    ```

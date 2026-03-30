@@ -18,7 +18,6 @@ $password = Invoke-Expression ($token_command -join " ")
 Write-Host 'Setting environment variables for CodeArtifact authentication'
 
 $env:UV_INDEX_CODEARTIFACT_USERNAME = $username
-$env:UV_INDEX_PRIVATE_REGISTRY_USERNAME = $username
-$env:UV_INDEX_PRIVATE_REGISTRY_PASSWORD = $password
+$env:UV_INDEX_CODEARTIFACT_PASSWORD = $password
 $env:UV_PUBLISH_USERNAME = $username
 $env:UV_PUBLISH_PASSWORD = $password
