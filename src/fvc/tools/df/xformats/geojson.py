@@ -1,10 +1,10 @@
 import json
-import logging as lg
 from pathlib import Path
 
 from botobuddy.utils import dslice
 
-import fvc.tools.df.utils as u
+import fvc.tools.df.utils as dfu
+from fvc.tools.df.utils import lg
 
 
 def generate_point(params, record):
@@ -71,7 +71,7 @@ def export_from_fvc(params, output_path: Path | None):
     else:
         output = output_path
 
-    with u.JsonlinesIO(input_path, 'r') as io:
+    with dfu.JsonlinesIO(input_path, 'r') as io:
         metadata = io.read()
 
         if not metadata:

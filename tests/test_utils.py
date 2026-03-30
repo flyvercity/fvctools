@@ -1,5 +1,3 @@
-import sys
-from unittest.mock import MagicMock, patch
 import pytest
 from datetime import datetime, timezone
 from dateutil.parser import ParserError

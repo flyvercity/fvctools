@@ -1,17 +1,22 @@
 from functools import wraps
+from pathlib import Path
 
 import click
 
 import fvc.tools.df.xformats.nmea as nmea
-from fvc.tools.df.utils import Input
 from fvc.tools.utils import JSON
 
 
 def metadata_args(command_func):
     @click.option(
+        '--attach-polar-sensor',
+        help='Attach polar sensor information to metadata for this file',
+        is_flag=True,
+    )
+    @click.option(
         '--polar-sensor-source',
         help='Add polar sensor information to metadata for this file',
-        type=str,
+        type=click.Path(exists=True, path_type=Path),
     )
     @click.option(
         '--polar-sensor-format',
@@ -25,36 +30,35 @@ def metadata_args(command_func):
     return wrapper
 
 
-# TODO: move this to "custom" parameters
-def initial_metadata(origin, params) -> JSON:
-    metadata = {}  # type: JSON
-    metadata['origin'] = origin
+def create_metadata(origin, params) -> JSON:
+    metadata = {
+        'origin': origin,
+    }
 
-    polar_sensor_source = params.get('polar_sensor_source') or params.get(
-        'polar-sensor-source'
-    )
-    polar_sensor_format = params.get('polar_sensor_format') or params.get(
-        'polar-sensor-format'
-    )
+    if params.get('attach_polar_sensor'):
+        metadata.update(attach_polar_sensor(params))
 
-    if not polar_sensor_source:
-        return metadata
+    return metadata
 
-    if not polar_sensor_format:
-        raise UserWarning(
-            'Sensor format (--polar-sensor-format) must be provided'
-        )
 
-    filename = polar_sensor_source
-    source = Input(params, filename).fetch()
+def attach_polar_sensor(params) -> JSON:
+    if not params.get('attach_polar_sensor'):
+        raise UserWarning('Polar sensor information not attached')
+
+    if not params.get('polar_sensor_source'):
+        raise UserWarning('Polar sensor source not provided')
+
+    polar_sensor_source = params['polar_sensor_source']
+    polar_sensor_format = params['polar_sensor_format']
+    metadata = {}
 
     if polar_sensor_format == 'nmea':
-        metadata['polar_sensor'] = {'source': 'nmea', 'origin': source.name}
-
-        metadata['polar_sensor'].update(
-            nmea.extract_sensor_data(params, source)
-        )
+        metadata['polar_sensor'] = {
+            'source': 'nmea',
+            'origin': polar_sensor_source.name,
+            'loc': nmea.extract_sensor_data(params, polar_sensor_source),
+        }
 
         return metadata
 
-    raise UserWarning(f'Unknown sensor format: {format}')
+    raise UserWarning(f'Unknown sensor format: {polar_sensor_format}')

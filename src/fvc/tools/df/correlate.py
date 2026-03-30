@@ -1,9 +1,8 @@
-import logging as lg
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Callable
 
-from fvc.tools.df.utils import JsonlinesIO
+from fvc.tools.df.utils import JsonlinesIO, lg
 
 
 def correlate(
@@ -13,10 +12,7 @@ def correlate(
     merge_callback: Callable[[int], None],
 ):
     with ThreadPoolExecutor() as executor:
-        futures = [
-            executor.submit(_ensure_sorting, infile, check_callbacks[i])
-            for i, infile in enumerate(infiles)
-        ]
+        futures = [executor.submit(_ensure_sorting, infile, check_callbacks[i]) for i, infile in enumerate(infiles)]
 
         results = []
         errors = []

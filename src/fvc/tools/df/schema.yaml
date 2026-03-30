@@ -57,6 +57,16 @@ POLAR_SENSOR: &POLAR_SENSOR
   $title: "Polar Sensor Payload"
   type: object
   properties:
+    source:
+      type: string
+      description: "Source of the polar sensor"
+      enum:
+        - nmea
+      examples: ["nmea"]
+    origin:
+      type: string
+      description: "Original file name or originating system"
+      examples: ["flight_data_20231201.log", "radar_system_alpha"]
     loc:
       description: "Geographic location of the polar sensor"
       allOf: [*LOCATION]
@@ -88,15 +98,15 @@ IDENTIFICATION: &IDENTIFICATION
       type: string
       description: "ATM callsign"
       examples: ["UAL123", "BAW456"]
-    IP:
+    ip:
       type: string
       description: "IP address"
       examples: ["192.168.1.100", "10.0.0.5"]
-    IMEI:
+    imei:
       type: string
       description: "IMEI (International Mobile Equipment Identity) number"
       examples: ["123456789012345", "987654321098765"]
-    IMSI:
+    imsi:
       type: string
       description: "IMSI (International Mobile Subscriber Identity) number"
       examples: ["310150123456789", "310260987654321"]
@@ -147,6 +157,7 @@ METADATA: &METADATA
         - mqtt
         - ulog
         - fvcgen
+        - capture.android
       examples: ["nmea", "safirmqtt", "fusion.replay"]
     origin:
       type: string
@@ -235,60 +246,61 @@ CELLULAR_SIGNAL: &CELLULAR_SIGNAL
       type: string
       description: "Radio technology type"
       enum:
+        - Unknown
         - 2G3G
         - 4GLTE
         - 5GNSA
         - 5GNR
-      examples: ["4GLTE", "5GNR"]
-    RSRP:
+      examples: ["4GLTE"]
+    rsrp:
       type: number
       description: "Reference Signal Received Power (dBm)"
-      examples: [-80, -100, -120]
-    RSRQ:
+      examples: [-80]
+    rsrq:
       type: number
       description: "Reference Signal Received Quality (dB)"
-      examples: [-10, -15, -20]
-    RSSI:
+      examples: [-10]
+    rssi:
       type: number
       description: "Received Signal Strength Indicator (dBm)"
-      examples: [-70, -90, -110]
-    SINR:
+      examples: [-70]
+    sinr:
       type: number
       description: "Signal-to-Interference-plus-Noise Ratio (dB)"
       examples: [10, 15, 20]
-    CSI-RSRP:
+    csi-rsrp:
       type: number
       description: "CSI Reference Signal Received Power (dBm)"
       examples: [-85, -105, -125]
-    CSI-RSRQ:
+    csi-rsrq:
       type: number
       description: "CSI Reference Signal Received Quality (dB)"
       examples: [-12, -17, -22]
-    CSI-RSSI:
+    csi-rssi:
       type: number
       description: "CSI Received Signal Strength Indicator (dBm)"
       examples: [-75, -95, -115]
-    CSI-SINR:
+    csi-sinr:
       type: number
       description: "CSI Signal-to-Interference-plus-Noise Ratio (dB)"
       examples: [8, 13, 18]
-    SS-RSRP:
+    ss-rsrp:
       type: number
       description: "Synchronization Signal Reference Signal Received Power (dBm)"
       examples: [-82, -102, -122]
-    SS-RSRQ:
+    ss-rsrq:
       type: number
       description: "Synchronization Signal Reference Signal Received Quality (dB)"
       examples: [-11, -16, -21]
-    SS-RSSI:
+    ss-rssi:
       type: number
       description: "Synchronization Signal Received Signal Strength Indicator (dBm)"
       examples: [-72, -92, -112]
-    SS-SINR:
+    ss-sinr:
       type: number
       description: "Synchronization Signal Signal-to-Interference-plus-Noise Ratio (dB)"
       examples: [9, 14, 19]
-    ARFCN:
+    arfcn:
       type: number
       description: "Absolute Radio Frequency Channel Number"
       examples: [100, 500, 1000]
@@ -296,7 +308,7 @@ CELLULAR_SIGNAL: &CELLULAR_SIGNAL
       type: string
       description: "Frequency band identifier"
       examples: ["B1", "B3", "B7", "n78"]
-    CGI:
+    cgi:
       type: string
       description: "Cell Global Identity"
       examples: ["310-150-123456-789", "310-260-987654-321"]
@@ -342,6 +354,88 @@ FLIGHTLOG: &FLIGHTLOG
           type: boolean
           description: "Packet loss flag"
           examples: [true, false]
+      additionalProperties: false
+    gnss:
+      type: object
+      description: "GNSS constellation satellite counts"
+      properties:
+        gps:
+          type: object
+          description: "GPS constellation satellite counts"
+          properties:
+            in_view:
+              type: number
+              description: "Number of GPS satellites in view"
+            used:
+              type: number
+              description: "Number of GPS satellites used in position fix"
+          additionalProperties: false
+        glonass:
+          type: object
+          description: "GLONASS constellation satellite counts"
+          properties:
+            in_view:
+              type: number
+              description: "Number of GLONASS satellites in view"
+            used:
+              type: number
+              description: "Number of GLONASS satellites used in position fix"
+          additionalProperties: false
+        galileo:
+          type: object
+          description: "Galileo constellation satellite counts"
+          properties:
+            in_view:
+              type: number
+              description: "Number of Galileo satellites in view"
+            used:
+              type: number
+              description: "Number of Galileo satellites used in position fix"
+          additionalProperties: false
+        beidou:
+          type: object
+          description: "BeiDou constellation satellite counts"
+          properties:
+            in_view:
+              type: number
+              description: "Number of BeiDou satellites in view"
+            used:
+              type: number
+              description: "Number of BeiDou satellites used in position fix"
+          additionalProperties: false
+        qzss:
+          type: object
+          description: "QZSS constellation satellite counts"
+          properties:
+            in_view:
+              type: number
+              description: "Number of QZSS satellites in view"
+            used:
+              type: number
+              description: "Number of QZSS satellites used in position fix"
+          additionalProperties: false
+        irnss:
+          type: object
+          description: "IRNSS/NavIC constellation satellite counts"
+          properties:
+            in_view:
+              type: number
+              description: "Number of IRNSS/NavIC satellites in view"
+            used:
+              type: number
+              description: "Number of IRNSS/NavIC satellites used in position fix"
+          additionalProperties: false
+        sbas:
+          type: object
+          description: "SBAS constellation satellite counts"
+          properties:
+            in_view:
+              type: number
+              description: "Number of SBAS satellites in view"
+            used:
+              type: number
+              description: "Number of SBAS satellites used in position fix"
+          additionalProperties: false
       additionalProperties: false
     metadata:
       type: object

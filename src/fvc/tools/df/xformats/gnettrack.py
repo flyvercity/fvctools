@@ -1,31 +1,31 @@
 """
 Gnettrack log format
-
-Custom parameters:
-    - gnettrack-allow-low-precision: Allow low precision time for Gnettrack log
 """
 
 import csv
-import logging as lg
 import uuid
 from datetime import datetime
 from pathlib import Path
 
 from botobuddy.utils import dslice
 
-from fvc.tools.df.utils import JsonlinesIO
+from fvc.tools.df.utils import JsonlinesIO, lg
 
 
 def module_help():
+    """Module custom parameters"""
     return '- gnettrack-allow-low-precision: Allow low precision time for Gnettrack log'
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     track_id = str(uuid.uuid4())
 
-    allow_low_precision = 'gnettrack-allow-low-precision' in params.get(
-        'custom', []
-    )
+    allow_low_precision = 'gnettrack-allow-low-precision' in params.get('custom', [])
+
+    if allow_low_precision:
+        lg.debug('Allowing low precision time for Gnettrack log')
+    else:
+        lg.debug('Not allowing low precision time for Gnettrack log')
 
     with input_path.open('rt') as input:
         reader = csv.DictReader(input, delimiter='\t')
@@ -75,7 +75,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             device = row.get('DEVICE', 'unknown-device')
 
             uaid = {'int': f'{device}:{track_id}'}
-            uaid.update(dslice(row, 'IP', 'IMEI', 'IMSI'))
+            uaid.update(dslice(row, {'k': 'IP', 'n': 'ip'}, {'k': 'IMEI', 'n': 'imei'}, {'k': 'IMSI', 'n': 'imsi'}))
 
             def maybe_float(x):
                 return float(x) if x and x != '-' else None
@@ -96,12 +96,8 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 case ('5G', 'NR'):
                     radio = '5GNR'
                 case _:
-                    raise RuntimeError(
-                        f'Unknown network technology: {net_tech} {net_mode}'
-                    )
-                    lg.warning(
-                        f'Unknown network technology: {net_tech} {net_mode}'
-                    )
+                    lg.warning(f'Unknown network technology: {net_tech} {net_mode}')
+                    radio = 'Unknown'
                     continue
 
             cellsig = {'radio': radio}
@@ -109,23 +105,23 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             cellsig.update(
                 dslice(
                     row,
-                    {'k': 'Level', 'c': maybe_float, 'n': 'RSRP'},
-                    {'k': 'Qual', 'c': maybe_float, 'n': 'RSRQ'},
-                    {'k': 'LTERSSI', 'c': maybe_float, 'n': 'RSSI'},
-                    {'k': 'SNR', 'c': maybe_float, 'n': 'SINR'},
-                    {'k': 'CSI_PCI', 'c': maybe_float, 'n': 'CSI-RSRP'},
-                    {'k': 'CSI_RSRQ', 'c': maybe_float, 'n': 'CSI-RSRQ'},
-                    {'k': 'CSI_RSSI', 'c': maybe_float, 'n': 'CSI-RSSI'},
-                    {'k': 'CSI_SNR', 'c': maybe_float, 'n': 'CSI-SINR'},
-                    {'k': 'SS_Level', 'c': maybe_float, 'n': 'SS-RSRP'},
-                    {'k': 'SS_Qual', 'c': maybe_float, 'n': 'SS-RSRQ'},
-                    {'k': 'SS_RSSI', 'c': maybe_float, 'n': 'SS-RSSI'},
-                    {'k': 'SS_SNR', 'c': maybe_float, 'n': 'SS-SINR'},
+                    {'k': 'Level', 'c': maybe_float, 'n': 'rsrp'},
+                    {'k': 'Qual', 'c': maybe_float, 'n': 'rsrq'},
+                    {'k': 'LTERSSI', 'c': maybe_float, 'n': 'rssi'},
+                    {'k': 'SNR', 'c': maybe_float, 'n': 'sinr'},
+                    {'k': 'CSI_PCI', 'c': maybe_float, 'n': 'csi-rsrp'},
+                    {'k': 'CSI_RSRQ', 'c': maybe_float, 'n': 'csi-rsrq'},
+                    {'k': 'CSI_RSSI', 'c': maybe_float, 'n': 'csi-rssi'},
+                    {'k': 'CSI_SNR', 'c': maybe_float, 'n': 'csi-sinr'},
+                    {'k': 'SS_Level', 'c': maybe_float, 'n': 'ss-rsrp'},
+                    {'k': 'SS_Qual', 'c': maybe_float, 'n': 'ss-rsrq'},
+                    {'k': 'SS_RSSI', 'c': maybe_float, 'n': 'ss-rssi'},
+                    {'k': 'SS_SNR', 'c': maybe_float, 'n': 'ss-sinr'},
                     {'k': 'ARFCN', 'c': maybe_int},
                     {'k': 'BAND', 'n': 'band'},
                     {'k': 'Operator', 'n': 'plmnid'},
                     {'k': 'Operatorname', 'n': 'plmnname'},
-                    {'k': 'CGI', 'n': 'CGI'},
+                    {'k': 'CGI', 'n': 'cgi'},
                 )
             )
 
@@ -136,10 +132,16 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 {'k': 'Altitude', 'c': maybe_float, 'n': 'alt'},
             )
 
+            def nonzero(x):
+                if not x:
+                    return None
+
+                return int(x) != 0
+
             datalink = dslice(
                 row,
                 {'k': 'PINGMAX', 'c': maybe_int, 'n': 'rtt'},
-                {'k': 'PINGLOSS', 'c': maybe_int, 'n': 'loss'},
+                {'k': 'PINGLOSS', 'c': nonzero, 'n': 'loss'},
             )
 
             row_metadata.update(

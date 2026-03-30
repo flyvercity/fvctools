@@ -1,8 +1,7 @@
 import csv
-import logging as lg
 from pathlib import Path
 
-from fvc.tools.df.utils import JsonlinesIO
+from fvc.tools.df.utils import JsonlinesIO, lg
 from fvc.tools.utils import datestring_to_ts
 
 

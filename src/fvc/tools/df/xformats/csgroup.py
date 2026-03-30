@@ -28,9 +28,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
             time = {'unix': int(timestamp)}
 
-            position = {
-                'loc': {'lat': float(lat), 'lon': float(lon), 'alt': float(alt)}
-            }
+            position = {'loc': {'lat': float(lat), 'lon': float(lon), 'alt': float(alt)}}
 
             record = {'time': time, 'uaid': uaid, 'pos': position}
 

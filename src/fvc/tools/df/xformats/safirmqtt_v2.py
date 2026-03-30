@@ -1,9 +1,9 @@
-import logging as lg
 import traceback
 from pathlib import Path
 
 import fvc.tools.utils as u
-from fvc.tools.df.utils import JsonlinesIO
+from fvc.tools.df.utils import JsonlinesIO, lg
+from fvc.tools.calc import geoid
 
 
 def from_safir_ids(safir_ids):
@@ -29,7 +29,7 @@ def from_safir_ids(safir_ids):
     return ids
 
 
-def from_safir_loc(safir_loc, geoid):
+def from_safir_loc(safir_loc, pgm):
     lat = safir_loc.get('latitude')
     lon = safir_loc.get('longitude')
     amsl = safir_loc.get('altitudeAMSL')
@@ -43,16 +43,14 @@ def from_safir_loc(safir_loc, geoid):
     record = {'loc': {'lat': lat, 'lon': lon}}
 
     if amsl is not None:
-        alt = u.amsl_to_ellipsoidal(geoid, lat, lon, amsl)
+        alt = geoid.amsl_to_ellipsoidal(pgm, lat, lon, amsl)
         record['loc']['alt'] = alt
 
     else:
         present = 'present' if 'altitudeAMSL' in safir_loc else 'also missing'
 
         # TODO: Collect error statistics
-        lg.debug(
-            f'No AMSL found in SAFIR location record (geodetic is {present})'
-        )
+        lg.debug(f'No AMSL found in SAFIR location record (geodetic is {present})')
 
     return record
 
@@ -89,7 +87,7 @@ def flightlog_record(record, geoid):
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
-    geoid = u.load_geoid(params, metadata)
+    pgm = geoid.load_geoid(params, metadata)
     metadata.update({'content': 'flightlog', 'source': 'safirmqtt'})
     output.write(metadata)
 
@@ -101,13 +99,11 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
                 raise UserWarning('Incoming content is not "capture.message"')
 
             for record in input.iterate():
-                fl_record = flightlog_record(record, geoid)
+                fl_record = flightlog_record(record, pgm)
                 output.write(fl_record)
 
         except UserWarning as e:
             if params['verbose']:
                 traceback.print_exc()
 
-            lg.warning(
-                f'Error processing {input_path}:{input.in_line_no()}: {e}'
-            )
+            lg.warning(f'Error processing {input_path}:{input.in_line_no()}: {e}')

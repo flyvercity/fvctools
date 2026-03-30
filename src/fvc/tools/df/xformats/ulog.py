@@ -1,11 +1,10 @@
-import logging as lg
 import re
 from datetime import datetime, timezone
 from pathlib import Path
 
 from pyulog import ULog
 
-from fvc.tools.df.utils import JsonlinesIO
+from fvc.tools.df.utils import JsonlinesIO, lg
 
 
 def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
@@ -16,14 +15,9 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     uaid = filename.split('+')[0]
 
     if not start_dt:
-        lg.warning(
-            f'Could not extract datetime from filename {filename}. '
-            f'Falling back to boot time.'
-        )
+        lg.warning(f'Could not extract datetime from filename {filename}. Falling back to boot time.')
 
-        start_dt = datetime.fromtimestamp(
-            ulog.start_timestamp / 1e6, tz=timezone.utc
-        )
+        start_dt = datetime.fromtimestamp(ulog.start_timestamp / 1e6, tz=timezone.utc)
 
     metadata.update({'content': 'flightlog', 'source': 'ulog'})
 
@@ -41,6 +35,8 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
             longitudes = d.data.get('lon', [])
             altitudes = d.data.get('alt', [])
 
+    # ⚡ Bolt: Write records iteratively instead of building a large list in memory.
+    # This prevents O(N) memory consumption for large ULog files.
     for i in range(len(gps_times)):
         record = {
             'uaid': {'int': uaid},

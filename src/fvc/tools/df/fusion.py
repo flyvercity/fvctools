@@ -1,12 +1,11 @@
-import logging as lg
 from pathlib import Path
 
 import click
 
 import fvc.tools.df.utils as uf
 import fvc.tools.df.xformats.safirmqtt as smq
-import fvc.tools.utils as u
-from fvc.tools.df.utils import JsonlinesIO as JLIO
+from fvc.tools.df.utils import JsonlinesIO as JLIO, lg
+from fvc.tools.calc import geoid
 
 
 def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
@@ -24,7 +23,7 @@ def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
         'source': 'fusion.replay',
     }
 
-    geoid = u.load_geoid(params, out_metadata)
+    pgm = geoid.load_geoid(params, out_metadata)
     plots.write(out_metadata)
     tracks.write(out_metadata)
 
@@ -34,7 +33,7 @@ def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
         if event not in ['input', 'output']:
             continue
 
-        flightlog_rec = smq.flightlog_record(record['message'], geoid)
+        flightlog_rec = smq.flightlog_record(record['message'], pgm)
 
         if record['event'] == 'input':
             plots.write(flightlog_rec)
@@ -49,7 +48,7 @@ def extract_flightlogs(params, replay: JLIO, plots: JLIO, tracks: JLIO):
 @click.option('--output-tracks', type=Path, help='Output file for tracks')
 @click.pass_obj
 def flightlog(params, output_plots, output_tracks):
-    with uf.JsonlinesIO(params['input'].fetch(), 'r') as replay:
+    with uf.JsonlinesIO(params['input'].fetch(), 'r', raw=True) as replay:
         with uf.JsonlinesIO(output_plots, 'w') as plots:
             with uf.JsonlinesIO(output_tracks, 'w') as tracks:
                 extract_flightlogs(params, replay, plots, tracks)
