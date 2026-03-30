@@ -134,3 +134,49 @@ For Windows-based workflows, `fvctools` provides a PowerShell integration that t
     # Access the undulation value directly from the command output
     $height = (FvcTool calc undulation 52.3 4.9).undulation
     ```
+
+## Development
+
+We welcome contributions to `fvctools`! Follow these guidelines to get started.
+
+### Adding a New Format
+
+To add support for a new data format, create a new module in `src/fvc/tools/df/xformats/`.
+
+#### Required Implementation
+
+Each format module must implement the `convert_to_fvc` function:
+
+```python
+def convert_to_fvc(params, metadata, input_path, output):
+    """
+    Args:
+        params (dict): CLI parameters and custom options.
+        metadata (dict): Metadata to be written as the first line.
+        input_path (Path): Path to the source file.
+        output (JsonlinesIO): Unified IO handler for writing .fvc records.
+    """
+    # Implementation here
+    ...
+```
+
+### Testing
+
+Tests are located in the `tests/` directory. Use `pytest` to run the suite:
+
+```bash
+uv run pytest
+```
+
+### Linting & Formatting
+
+We use `ruff` to ensure code quality and consistent formatting.
+
+- **Check**:
+  ```bash
+  uv run ruff check .
+  ```
+- **Format**:
+  ```bash
+  uv run ruff format .
+  ```
