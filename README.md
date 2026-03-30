@@ -37,3 +37,61 @@ A specialized installation script is provided for Windows environments to set up
     ```pwsh
     . .\pwsh\Load-FvcTools.ps1
     ```
+
+## Core Toolsets
+
+The `fvctools` suite is organized into specialized toolsets for data manipulation, geospatial calculations, and visualization.
+
+### Data File Tools (`fvc df`)
+
+The `df` toolset manages the conversion, validation, and correlation of aviation data files into the unified Flyvercity (`.fvc`) format.
+
+- **Conversion**: Converts external formats (NMEA, ULog, DJI, etc.) to `.fvc`.
+  ```bash
+  uv run fvc df --in flight.nmea convert nmea flight.fvc
+  ```
+- **Validation**: Verifies that an `.fvc` file complies with the project's data schema.
+  ```bash
+  uv run fvc df --in flight.fvc validate
+  ```
+- **Correlation**: Synchronizes and merges multiple flight or radar log files.
+  ```bash
+  uv run fvc df correlate log1.fvc log2.fvc
+  ```
+
+### Geospatial Calculations (`fvc calc`)
+
+Provides utilities for precise coordinate and altitude calculations.
+
+- **Undulation**: Retrieves the EGM96 geoid undulation for a given latitude and longitude.
+  ```bash
+  uv run fvc calc undulation 52.3 4.9
+  ```
+- **Terrain**: Performs terrain elevation lookups using Digital Elevation Models (DEM).
+  ```bash
+  uv run fvc calc terrain 52.3 4.9 100.0
+  ```
+
+### Visualization (`fvc render`)
+
+Generates interactive visualizations for flight data analysis.
+
+- **Interactive Maps (`fl`)**: Creates a standalone HTML visualization of flight paths.
+  ```bash
+  uv run fvc render fl flight.fvc --output ./map_results
+  ```
+
+### PowerShell Helper (`fvc shell`)
+
+For Windows-based workflows, `fvctools` provides a PowerShell integration that treats CLI outputs as first-class objects, enabling advanced automation and scripting.
+
+1.  **Enable Integration**:
+    ```pwsh
+    Invoke-Expression (fvc shell pwsh)
+    ```
+2.  **Object-Oriented Usage**:
+    Outputs are automatically parsed into PowerShell objects for easy property access:
+    ```pwsh
+    # Access the undulation value directly from the command output
+    $height = (FvcTool calc undulation 52.3 4.9).undulation
+    ```
