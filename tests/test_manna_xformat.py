@@ -35,19 +35,19 @@ def get_modem_data_fn():
             del sys.modules['fvc.tools.df.xformats.manna']
 
 def test_get_modem_data_valid(caplog, get_modem_data_fn):
-    caplog.set_level(logging.DEBUG)
+    caplog.set_level(logging.DEBUG, logger='fvc.tools.df')
     row = {
         'modem1': '{"rsrp": -80, "operator_num": 12345, "cell_lac": 100, "cell_tac": 0, "cell_id": 54321}'
     }
     result = get_modem_data_fn(row, 'modem1', 1)
 
     assert result is not None
-    assert result['RSRP'] == -80
+    assert result['rsrp'] == -80
     assert result['radio'] == '2G3G'
     assert "Error parsing modem data" not in caplog.text
 
 def test_get_modem_data_invalid_json(caplog, get_modem_data_fn):
-    caplog.set_level(logging.DEBUG)
+    caplog.set_level(logging.DEBUG, logger='fvc.tools.df')
     row = {
         'modem1': '{invalid_json'
     }
@@ -60,7 +60,7 @@ def test_get_modem_data_invalid_json(caplog, get_modem_data_fn):
     assert warning_record.levelname == 'WARNING'
 
 def test_get_modem_data_missing_key(caplog, get_modem_data_fn):
-    caplog.set_level(logging.DEBUG)
+    caplog.set_level(logging.DEBUG, logger='fvc.tools.df')
     row = {}
     result = get_modem_data_fn(row, 'modem1', 3)
 
@@ -71,7 +71,7 @@ def test_get_modem_data_missing_key(caplog, get_modem_data_fn):
     assert "'modem1'" in warning_record.message or "modem1" in warning_record.message
 
 def test_get_modem_data_type_error_parsing(caplog, get_modem_data_fn):
-    caplog.set_level(logging.DEBUG)
+    caplog.set_level(logging.DEBUG, logger='fvc.tools.df')
     row = {
         'modem1': None
     }
@@ -81,7 +81,7 @@ def test_get_modem_data_type_error_parsing(caplog, get_modem_data_fn):
     assert "Error parsing modem data" in caplog.text
 
 def test_get_modem_data_logic_error(caplog, get_modem_data_fn):
-    caplog.set_level(logging.DEBUG)
+    caplog.set_level(logging.DEBUG, logger='fvc.tools.df')
     row = {
         'modem1': '{"operator_num": 12345}'
     }

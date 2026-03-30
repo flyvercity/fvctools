@@ -1,21 +1,18 @@
 import sys
-from unittest.mock import MagicMock
-from fvc.tools.render.core import calculate_bounds
+from unittest.mock import MagicMock, patch
 
-# Mock dependencies that are not available in the restricted environment
-# to allow testing the pure logic of calculate_bounds.
-mock_modules = [
-    'boto3',
-    'benedict',
-    'rich',
-    'rich.live',
-    'rich.spinner',
-    'fvc.tools.df.utils',
-    'fvc.tools.render.templates',
-]
-
-for module in mock_modules:
-    sys.modules[module] = MagicMock()
+# We need to mock these before importing fvc.tools.render.core if it imports them at top level.
+# Using a context manager for the whole module is tricky, but we can patch them for the import.
+with patch.dict('sys.modules', {
+    'boto3': MagicMock(),
+    'benedict': MagicMock(),
+    'rich': MagicMock(),
+    'rich.live': MagicMock(),
+    'rich.spinner': MagicMock(),
+    'fvc.tools.df.utils': MagicMock(),
+    'fvc.tools.render.templates': MagicMock(),
+}):
+    from fvc.tools.render.core import calculate_bounds
 
 
 def test_calculate_bounds_empty():
