@@ -132,13 +132,3 @@ def export(params: DFParams):
     lg.info(f'Export complete, output written to {real_output}')
 
 
-def upgrade(params: DFParams):
-    """Parameters:
-    - input_path: input file path
-    - output_path: output file path
-    - x_format: external format
-    """
-
-    # input_path = params['input_path']
-    # output_path = params['output_path']
-    raise NotImplementedError('Upgrade is not implemented')

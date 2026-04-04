@@ -154,24 +154,6 @@ def export_command(params, output_file, **kwargs):
     core.export(params)
 
 
-@df.command(help='Upgrade a FVC file to the latest schema (volatile code)')
-@click.argument('infile', type=click.Path(exists=True, path_type=Path), required=True)
-@click.pass_obj
-def upgrade(params, infile):
-    params['input_path'] = infile
-    params['output_path'] = infile.with_suffix('.fvc')
-
-    with Progress(transient=True) as progress:
-        read_task = progress.add_task('Reading...', total=infile.stat().st_size)
-        write_task = progress.add_task('Writing...', total=infile.stat().st_size)
-
-        core.upgrade(
-            params,
-            lambda s: progress.update(read_task, advance=s),
-            lambda s: progress.update(write_task, advance=s),
-        )
-
-
 @df.command(help='Correlate several flightlogs')
 @click.pass_obj
 @click.argument(
