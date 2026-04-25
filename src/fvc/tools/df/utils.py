@@ -102,7 +102,7 @@ def input_path(params: benedict) -> Path:
     return path
 
 
-class FvcDataset(JsonlinesIO):
+class FvcDataset:
     @staticmethod
     def read(filepath: Path) -> 'FvcDataset':
         with JsonlinesIO(filepath, 'r') as io:
