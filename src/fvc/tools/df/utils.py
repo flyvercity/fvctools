@@ -27,6 +27,7 @@ class JsonlinesIO:
         self._raw = raw
 
     def stat_size(self):
+        # NOTE: This is used by external code, do not delete
         return self._filepath.stat().st_size
 
     def __enter__(self):

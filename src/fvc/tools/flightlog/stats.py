@@ -89,10 +89,7 @@ def calculate_flightlog_stats(dataset: FlightlogDataset, vdim: Optional[str] = N
 
 def print_stats(frames: list[pl.DataFrame], vdim: Optional[str] = None):
     stats = calculate_flightlog_stats(frames, vdim=vdim)
-    _print_stats(stats)
 
-
-def _print_stats(stats: dict):
     def ftime(ts):
         return datetime.fromtimestamp(ts / 1000.0, tz=UTC).strftime('%Y-%m-%d %H:%M:%S UTC')
 
