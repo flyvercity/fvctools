@@ -64,8 +64,6 @@ def convert(
 
 
 def validate(input_path: Path, callback: Callable[[int], None] | None = None) -> bool:
-    # ⚡ Bolt: Use raw dictionaries for validation to avoid benedict wrapping overhead.
-    # This significantly improves performance when validating large files.
     with dfu.JsonlinesIO(input_path, 'r', callback=callback, raw=True) as f:
         try:
             metaline = f.read()
