@@ -26,6 +26,10 @@ class JsonlinesIO:
         # Performance optimization: if True, skip benedict wrapping for read operations
         self._raw = raw
 
+    def stat_size(self):
+        # NOTE: This is used by external code, do not delete
+        return self._filepath.stat().st_size
+
     def __enter__(self):
         self._file = self._filepath.open(f'{self._mode}t', encoding='utf-8', newline=None)
         self._in_line_no = 0
