@@ -64,7 +64,9 @@ def convert(
 
 
 def validate(input_path: Path, callback: Callable[[int], None] | None = None) -> bool:
-    with dfu.JsonlinesIO(input_path, 'r', callback=callback) as f:
+    # ⚡ Bolt: Use raw=True to skip benedict wrapping for performance.
+    # jsonschema is compatible with native dicts and doesn't need benedict's deep key access.
+    with dfu.JsonlinesIO(input_path, 'r', callback=callback, raw=True) as f:
         try:
             metaline = f.read()
 
