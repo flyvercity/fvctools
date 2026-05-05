@@ -228,6 +228,10 @@ TIMESTAMP: &TIMESTAMP
       type: number
       description: "Unix timestamp in milliseconds"
       examples: [1756033206882]
+    rx:
+      type: number
+      description: "Reception timestamp in milliseconds (when data was received by ground system)"
+      examples: [1756033207094]
     original:
       type: string
       description: "Original timestamp string"
@@ -236,6 +240,7 @@ TIMESTAMP: &TIMESTAMP
     - unix
   optional:
     - original
+    - rx
   additionalProperties: false
 
 CELLULAR_SIGNAL: &CELLULAR_SIGNAL

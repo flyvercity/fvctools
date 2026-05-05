@@ -7,7 +7,7 @@
     - <a id="properties/content/oneOf/0"></a>*string*: Current file content descriptor. Must be one of: "flightlog", "radarlog", "fusion.replay", or "capture.message".
     - <a id="properties/content/oneOf/1"></a>*array*
       - <a id="properties/content/oneOf/1/items"></a>**Items** *(string)*: Current file content descriptor. Must be one of: "flightlog", "radarlog", "fusion.replay", or "capture.message".
-- <a id="properties/source"></a>**`source`** *(string)*: Original data format. Must be one of: "airlink", "courageous", "csgroup", "nmea", "senhive", "robinradar", "safirmqtt", "fusion.replay", "artlog", "datcon", "agentfly", "gnettrack", "mqtt", "ulog", or "fvcgen".
+- <a id="properties/source"></a>**`source`** *(string)*: Original data format. Must be one of: "airlink", "courageous", "csgroup", "nmea", "senhive", "robinradar", "safirmqtt", "fusion.replay", "artlog", "datcon", "agentfly", "gnettrack", "mqtt", "ulog", "fvcgen", or "capture.android".
 
   Examples:
   ```json
@@ -34,6 +34,24 @@
   ```
 
 - <a id="properties/polar_sensor"></a>**`polar_sensor`** *(object)*: Polar sensor configuration. Cannot contain additional properties.
+  - <a id="properties/polar_sensor/properties/source"></a>**`source`** *(string)*: Source of the polar sensor. Must be one of: "nmea".
+
+    Examples:
+    ```json
+    "nmea"
+    ```
+
+  - <a id="properties/polar_sensor/properties/origin"></a>**`origin`** *(string)*: Original file name or originating system.
+
+    Examples:
+    ```json
+    "flight_data_20231201.log"
+    ```
+
+    ```json
+    "radar_system_alpha"
+    ```
+
   - <a id="properties/polar_sensor/properties/loc"></a>**`loc`** *(object, required)*: Geographic location of the polar sensor. Cannot contain additional properties.
     - <a id="properties/polar_sensor/properties/loc/properties/lat"></a>**`lat`** *(number, required)*: Latitude in WGS-84.
 

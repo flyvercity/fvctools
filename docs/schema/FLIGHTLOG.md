@@ -25,6 +25,13 @@
     1756033206882
     ```
 
+  - <a id="properties/time/properties/rx"></a>**`rx`** *(number)*: Reception timestamp in milliseconds (when data was received by ground system).
+
+    Examples:
+    ```json
+    1756033207094
+    ```
+
   - <a id="properties/time/properties/original"></a>**`original`** *(string)*: Original timestamp string.
 
     Examples:
@@ -93,7 +100,7 @@
     "BAW456"
     ```
 
-  - <a id="properties/uaid/properties/IP"></a>**`IP`** *(string)*: IP address.
+  - <a id="properties/uaid/properties/ip"></a>**`ip`** *(string)*: IP address.
 
     Examples:
     ```json
@@ -104,7 +111,7 @@
     "10.0.0.5"
     ```
 
-  - <a id="properties/uaid/properties/IMEI"></a>**`IMEI`** *(string)*: IMEI (International Mobile Equipment Identity) number.
+  - <a id="properties/uaid/properties/imei"></a>**`imei`** *(string)*: IMEI (International Mobile Equipment Identity) number.
 
     Examples:
     ```json
@@ -115,7 +122,7 @@
     "987654321098765"
     ```
 
-  - <a id="properties/uaid/properties/IMSI"></a>**`IMSI`** *(string)*: IMSI (International Mobile Subscriber Identity) number.
+  - <a id="properties/uaid/properties/imsi"></a>**`imsi`** *(string)*: IMSI (International Mobile Subscriber Identity) number.
 
     Examples:
     ```json
@@ -264,63 +271,35 @@
       ```
 
 - <a id="properties/cellsig"></a>**`cellsig`** *(object)*: Cellular signal information. Cannot contain additional properties.
-  - <a id="properties/cellsig/properties/radio"></a>**`radio`** *(string)*: Radio technology type. Must be one of: "2G3G", "4GLTE", "5GNSA", or "5GNR".
+  - <a id="properties/cellsig/properties/radio"></a>**`radio`** *(string)*: Radio technology type. Must be one of: "Unknown", "2G3G", "4GLTE", "5GNSA", or "5GNR".
 
     Examples:
     ```json
     "4GLTE"
     ```
 
-    ```json
-    "5GNR"
-    ```
-
-  - <a id="properties/cellsig/properties/RSRP"></a>**`RSRP`** *(number)*: Reference Signal Received Power (dBm).
+  - <a id="properties/cellsig/properties/rsrp"></a>**`rsrp`** *(number)*: Reference Signal Received Power (dBm).
 
     Examples:
     ```json
     -80
     ```
 
-    ```json
-    -100
-    ```
-
-    ```json
-    -120
-    ```
-
-  - <a id="properties/cellsig/properties/RSRQ"></a>**`RSRQ`** *(number)*: Reference Signal Received Quality (dB).
+  - <a id="properties/cellsig/properties/rsrq"></a>**`rsrq`** *(number)*: Reference Signal Received Quality (dB).
 
     Examples:
     ```json
     -10
     ```
 
-    ```json
-    -15
-    ```
-
-    ```json
-    -20
-    ```
-
-  - <a id="properties/cellsig/properties/RSSI"></a>**`RSSI`** *(number)*: Received Signal Strength Indicator (dBm).
+  - <a id="properties/cellsig/properties/rssi"></a>**`rssi`** *(number)*: Received Signal Strength Indicator (dBm).
 
     Examples:
     ```json
     -70
     ```
 
-    ```json
-    -90
-    ```
-
-    ```json
-    -110
-    ```
-
-  - <a id="properties/cellsig/properties/SINR"></a>**`SINR`** *(number)*: Signal-to-Interference-plus-Noise Ratio (dB).
+  - <a id="properties/cellsig/properties/sinr"></a>**`sinr`** *(number)*: Signal-to-Interference-plus-Noise Ratio (dB).
 
     Examples:
     ```json
@@ -335,7 +314,7 @@
     20
     ```
 
-  - <a id="properties/cellsig/properties/CSI-RSRP"></a>**`CSI-RSRP`** *(number)*: CSI Reference Signal Received Power (dBm).
+  - <a id="properties/cellsig/properties/csi-rsrp"></a>**`csi-rsrp`** *(number)*: CSI Reference Signal Received Power (dBm).
 
     Examples:
     ```json
@@ -350,7 +329,7 @@
     -125
     ```
 
-  - <a id="properties/cellsig/properties/CSI-RSRQ"></a>**`CSI-RSRQ`** *(number)*: CSI Reference Signal Received Quality (dB).
+  - <a id="properties/cellsig/properties/csi-rsrq"></a>**`csi-rsrq`** *(number)*: CSI Reference Signal Received Quality (dB).
 
     Examples:
     ```json
@@ -365,7 +344,7 @@
     -22
     ```
 
-  - <a id="properties/cellsig/properties/CSI-RSSI"></a>**`CSI-RSSI`** *(number)*: CSI Received Signal Strength Indicator (dBm).
+  - <a id="properties/cellsig/properties/csi-rssi"></a>**`csi-rssi`** *(number)*: CSI Received Signal Strength Indicator (dBm).
 
     Examples:
     ```json
@@ -380,7 +359,7 @@
     -115
     ```
 
-  - <a id="properties/cellsig/properties/CSI-SINR"></a>**`CSI-SINR`** *(number)*: CSI Signal-to-Interference-plus-Noise Ratio (dB).
+  - <a id="properties/cellsig/properties/csi-sinr"></a>**`csi-sinr`** *(number)*: CSI Signal-to-Interference-plus-Noise Ratio (dB).
 
     Examples:
     ```json
@@ -395,7 +374,7 @@
     18
     ```
 
-  - <a id="properties/cellsig/properties/SS-RSRP"></a>**`SS-RSRP`** *(number)*: Synchronization Signal Reference Signal Received Power (dBm).
+  - <a id="properties/cellsig/properties/ss-rsrp"></a>**`ss-rsrp`** *(number)*: Synchronization Signal Reference Signal Received Power (dBm).
 
     Examples:
     ```json
@@ -410,7 +389,7 @@
     -122
     ```
 
-  - <a id="properties/cellsig/properties/SS-RSRQ"></a>**`SS-RSRQ`** *(number)*: Synchronization Signal Reference Signal Received Quality (dB).
+  - <a id="properties/cellsig/properties/ss-rsrq"></a>**`ss-rsrq`** *(number)*: Synchronization Signal Reference Signal Received Quality (dB).
 
     Examples:
     ```json
@@ -425,7 +404,7 @@
     -21
     ```
 
-  - <a id="properties/cellsig/properties/SS-RSSI"></a>**`SS-RSSI`** *(number)*: Synchronization Signal Received Signal Strength Indicator (dBm).
+  - <a id="properties/cellsig/properties/ss-rssi"></a>**`ss-rssi`** *(number)*: Synchronization Signal Received Signal Strength Indicator (dBm).
 
     Examples:
     ```json
@@ -440,7 +419,7 @@
     -112
     ```
 
-  - <a id="properties/cellsig/properties/SS-SINR"></a>**`SS-SINR`** *(number)*: Synchronization Signal Signal-to-Interference-plus-Noise Ratio (dB).
+  - <a id="properties/cellsig/properties/ss-sinr"></a>**`ss-sinr`** *(number)*: Synchronization Signal Signal-to-Interference-plus-Noise Ratio (dB).
 
     Examples:
     ```json
@@ -455,7 +434,7 @@
     19
     ```
 
-  - <a id="properties/cellsig/properties/ARFCN"></a>**`ARFCN`** *(number)*: Absolute Radio Frequency Channel Number.
+  - <a id="properties/cellsig/properties/arfcn"></a>**`arfcn`** *(number)*: Absolute Radio Frequency Channel Number.
 
     Examples:
     ```json
@@ -489,7 +468,7 @@
     "n78"
     ```
 
-  - <a id="properties/cellsig/properties/CGI"></a>**`CGI`** *(string)*: Cell Global Identity.
+  - <a id="properties/cellsig/properties/cgi"></a>**`cgi`** *(string)*: Cell Global Identity.
 
     Examples:
     ```json
@@ -553,4 +532,26 @@
     false
     ```
 
+- <a id="properties/gnss"></a>**`gnss`** *(object)*: GNSS constellation satellite counts. Cannot contain additional properties.
+  - <a id="properties/gnss/properties/gps"></a>**`gps`** *(object)*: GPS constellation satellite counts. Cannot contain additional properties.
+    - <a id="properties/gnss/properties/gps/properties/in_view"></a>**`in_view`** *(number)*: Number of GPS satellites in view.
+    - <a id="properties/gnss/properties/gps/properties/used"></a>**`used`** *(number)*: Number of GPS satellites used in position fix.
+  - <a id="properties/gnss/properties/glonass"></a>**`glonass`** *(object)*: GLONASS constellation satellite counts. Cannot contain additional properties.
+    - <a id="properties/gnss/properties/glonass/properties/in_view"></a>**`in_view`** *(number)*: Number of GLONASS satellites in view.
+    - <a id="properties/gnss/properties/glonass/properties/used"></a>**`used`** *(number)*: Number of GLONASS satellites used in position fix.
+  - <a id="properties/gnss/properties/galileo"></a>**`galileo`** *(object)*: Galileo constellation satellite counts. Cannot contain additional properties.
+    - <a id="properties/gnss/properties/galileo/properties/in_view"></a>**`in_view`** *(number)*: Number of Galileo satellites in view.
+    - <a id="properties/gnss/properties/galileo/properties/used"></a>**`used`** *(number)*: Number of Galileo satellites used in position fix.
+  - <a id="properties/gnss/properties/beidou"></a>**`beidou`** *(object)*: BeiDou constellation satellite counts. Cannot contain additional properties.
+    - <a id="properties/gnss/properties/beidou/properties/in_view"></a>**`in_view`** *(number)*: Number of BeiDou satellites in view.
+    - <a id="properties/gnss/properties/beidou/properties/used"></a>**`used`** *(number)*: Number of BeiDou satellites used in position fix.
+  - <a id="properties/gnss/properties/qzss"></a>**`qzss`** *(object)*: QZSS constellation satellite counts. Cannot contain additional properties.
+    - <a id="properties/gnss/properties/qzss/properties/in_view"></a>**`in_view`** *(number)*: Number of QZSS satellites in view.
+    - <a id="properties/gnss/properties/qzss/properties/used"></a>**`used`** *(number)*: Number of QZSS satellites used in position fix.
+  - <a id="properties/gnss/properties/irnss"></a>**`irnss`** *(object)*: IRNSS/NavIC constellation satellite counts. Cannot contain additional properties.
+    - <a id="properties/gnss/properties/irnss/properties/in_view"></a>**`in_view`** *(number)*: Number of IRNSS/NavIC satellites in view.
+    - <a id="properties/gnss/properties/irnss/properties/used"></a>**`used`** *(number)*: Number of IRNSS/NavIC satellites used in position fix.
+  - <a id="properties/gnss/properties/sbas"></a>**`sbas`** *(object)*: SBAS constellation satellite counts. Cannot contain additional properties.
+    - <a id="properties/gnss/properties/sbas/properties/in_view"></a>**`in_view`** *(number)*: Number of SBAS satellites in view.
+    - <a id="properties/gnss/properties/sbas/properties/used"></a>**`used`** *(number)*: Number of SBAS satellites used in position fix.
 - <a id="properties/metadata"></a>**`metadata`** *(object)*: Additional metadata.

@@ -13,6 +13,13 @@
       1756033206882
       ```
 
+    - <a id="properties/mqtt/properties/time/properties/rx"></a>**`rx`** *(number)*: Reception timestamp in milliseconds (when data was received by ground system).
+
+      Examples:
+      ```json
+      1756033207094
+      ```
+
     - <a id="properties/mqtt/properties/time/properties/original"></a>**`original`** *(string)*: Original timestamp string.
 
       Examples:

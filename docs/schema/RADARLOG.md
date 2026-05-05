@@ -25,6 +25,13 @@
     1756033206882
     ```
 
+  - <a id="properties/time/properties/rx"></a>**`rx`** *(number)*: Reception timestamp in milliseconds (when data was received by ground system).
+
+    Examples:
+    ```json
+    1756033207094
+    ```
+
   - <a id="properties/time/properties/original"></a>**`original`** *(string)*: Original timestamp string.
 
     Examples:
@@ -93,7 +100,7 @@
     "BAW456"
     ```
 
-  - <a id="properties/uaid/properties/IP"></a>**`IP`** *(string)*: IP address.
+  - <a id="properties/uaid/properties/ip"></a>**`ip`** *(string)*: IP address.
 
     Examples:
     ```json
@@ -104,7 +111,7 @@
     "10.0.0.5"
     ```
 
-  - <a id="properties/uaid/properties/IMEI"></a>**`IMEI`** *(string)*: IMEI (International Mobile Equipment Identity) number.
+  - <a id="properties/uaid/properties/imei"></a>**`imei`** *(string)*: IMEI (International Mobile Equipment Identity) number.
 
     Examples:
     ```json
@@ -115,7 +122,7 @@
     "987654321098765"
     ```
 
-  - <a id="properties/uaid/properties/IMSI"></a>**`IMSI`** *(string)*: IMSI (International Mobile Subscriber Identity) number.
+  - <a id="properties/uaid/properties/imsi"></a>**`imsi`** *(string)*: IMSI (International Mobile Subscriber Identity) number.
 
     Examples:
     ```json
