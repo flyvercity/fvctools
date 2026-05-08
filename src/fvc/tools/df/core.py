@@ -64,7 +64,7 @@ def convert(
 
 
 def validate(input_path: Path, callback: Callable[[int], None] | None = None) -> bool:
-    with dfu.JsonlinesIO(input_path, 'r', callback=callback) as f:
+    with dfu.JsonlinesIO(input_path, 'r', callback=callback, raw=True) as f:
         try:
             metaline = f.read()
 
@@ -130,5 +130,3 @@ def export(params: DFParams):
     real_output = export_fun(params, output_path)
 
     lg.info(f'Export complete, output written to {real_output}')
-
-

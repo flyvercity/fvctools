@@ -27,6 +27,7 @@ class JsonlinesIO:
         self._raw = raw
 
     def stat_size(self):
+        # NOTE: This is used by external code, do not delete
         return self._filepath.stat().st_size
 
     def __enter__(self):
@@ -102,7 +103,7 @@ def input_path(params: benedict) -> Path:
     return path
 
 
-class FvcDataset(JsonlinesIO):
+class FvcDataset:
     @staticmethod
     def read(filepath: Path) -> 'FvcDataset':
         with JsonlinesIO(filepath, 'r') as io:
