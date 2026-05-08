@@ -86,6 +86,8 @@ The `.fvc` format is the unified data standard used by all Flyvercity tools. It 
 {"time": {"unix": 1756033206882}, "pos": {"loc": {"lat": 52.3, "lon": 4.9, "alt": 100.5}}}
 ```
 
+For detailed schema documentation of all record types, see [docs/schema/](docs/schema/README.md).
+
 ## Supported External Formats
 
 Flyvercity CLI tools can convert data from a variety of external aviation and geospatial formats into the unified `.fvc` format.
