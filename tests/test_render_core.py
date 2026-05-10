@@ -16,7 +16,7 @@ with patch.dict('sys.modules', {
 
 
 class FakeJsonlinesIO:
-    last_kwargs = {}
+    last_kwargs = None
 
     def __init__(self, filepath, mode, raw=False):
         self.filepath = filepath
@@ -127,7 +127,7 @@ def test_extract_coordinates_raw_path_and_cellsig(tmp_path, monkeypatch):
     ]
 
 
-def test_extract_coordinates_skips_invalid_lat_lon_and_handles_non_mapping_time(tmp_path, monkeypatch):
+def test_extract_coordinates_handles_malformed_data(tmp_path, monkeypatch):
     """Test extract_coordinates skips bad coordinates and safely handles non-mapping time."""
     fvc_path = tmp_path / 'invalid.fvc'
     write_jsonlines(
