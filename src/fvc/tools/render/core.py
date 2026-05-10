@@ -1,4 +1,5 @@
 import logging as lg
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from itertools import islice
 from pathlib import Path
@@ -80,7 +81,7 @@ def extract_coordinates(file_path: Path) -> List[Dict[str, Any]]:
                         coord_data = {
                             'lat': float(lat),
                             'lon': float(lon),
-                            'time': record.get('time', {}).get('unix'),
+                            'time': time.get('unix') if isinstance((time := record.get('time')), Mapping) else None,
                             'altitude': loc.get('alt'),
                             'amsl': loc.get('amsl'),
                             'height': loc.get('height'),
