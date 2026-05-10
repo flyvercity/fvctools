@@ -26,6 +26,7 @@ class FakeJsonlinesIO:
         return False
 
     def iterate(self):
+        """Yield non-empty JSON-lines records as dictionaries."""
         with self.filepath.open('rt', encoding='utf-8') as f:
             for line in f:
                 if line.strip():
@@ -107,6 +108,7 @@ def test_extract_coordinates_raw_path_and_cellsig(tmp_path, monkeypatch):
     coordinates = render_core.extract_coordinates(fvc_path)
 
     assert tracked_kwargs == {'mode': 'r', 'raw': True}
+    assert len(coordinates) == 2
     assert coordinates == [
         {
             'lat': 10.5,
