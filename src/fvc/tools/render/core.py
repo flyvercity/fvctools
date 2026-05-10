@@ -78,10 +78,11 @@ def extract_coordinates(file_path: Path) -> List[Dict[str, Any]]:
 
                 if lat is not None and lon is not None:
                     try:
+                        time = record.get('time')
                         coord_data = {
                             'lat': float(lat),
                             'lon': float(lon),
-                            'time': time.get('unix') if isinstance((time := record.get('time')), Mapping) else None,
+                            'time': time.get('unix') if isinstance(time, Mapping) else None,
                             'altitude': loc.get('alt'),
                             'amsl': loc.get('amsl'),
                             'height': loc.get('height'),
