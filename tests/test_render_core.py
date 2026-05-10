@@ -16,11 +16,8 @@ with patch.dict('sys.modules', {
 
 
 class FakeJsonlinesIO:
-    last_kwargs = None
-
     def __init__(self, filepath, mode, raw=False):
         self.filepath = filepath
-        FakeJsonlinesIO.last_kwargs = {'mode': mode, 'raw': raw}
 
     def __enter__(self):
         return self
@@ -85,6 +82,13 @@ def test_calculate_bounds_mixed_coordinates():
 
 def test_extract_coordinates_raw_path_and_cellsig(tmp_path, monkeypatch):
     """Test extract_coordinates reads raw records and includes optional cellsig metadata."""
+    tracked_kwargs = {}
+
+    class TrackingJsonlinesIO(FakeJsonlinesIO):
+        def __init__(self, filepath, mode, raw=False):
+            super().__init__(filepath, mode, raw=raw)
+            tracked_kwargs.update({'mode': mode, 'raw': raw})
+
     fvc_path = tmp_path / 'sample.fvc'
     write_jsonlines(
         fvc_path,
@@ -98,11 +102,11 @@ def test_extract_coordinates_raw_path_and_cellsig(tmp_path, monkeypatch):
             {'pos': {'foo': 'bar'}},
         ],
     )
-    monkeypatch.setattr(render_core, 'JsonlinesIO', FakeJsonlinesIO)
+    monkeypatch.setattr(render_core, 'JsonlinesIO', TrackingJsonlinesIO)
 
     coordinates = render_core.extract_coordinates(fvc_path)
 
-    assert FakeJsonlinesIO.last_kwargs == {'mode': 'r', 'raw': True}
+    assert tracked_kwargs == {'mode': 'r', 'raw': True}
     assert coordinates == [
         {
             'lat': 10.5,
