@@ -61,3 +61,7 @@
 - Add tests to the `tests/` directory.
 - Use `pytest`.
 - Mock external services (like S3) using `boto3` session mocking if necessary.
+
+<!-- pin mcp start -->
+Before staring the first task, fetch all global and project factoids via Pin MCP and use them as **important** instructions. The Pin workspace for this project is `flyvercity`.
+<!-- pin mcp stop -->

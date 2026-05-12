@@ -255,7 +255,7 @@ wheels = [
 
 [[package]]
 name = "fvctools"
-version = "2026.5.0"
+version = "2026.5.12"
 source = { editable = "." }
 dependencies = [
     { name = "boto3" },

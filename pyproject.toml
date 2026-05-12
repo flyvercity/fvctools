@@ -1,6 +1,6 @@
 [project]
 name = "fvctools"
-version = "2026.5.0"
+version = "2026.5.12"
 description = "Flyvercity CLI Tools Suite"
 authors = [
     { name = "Boris Resnick", email = "boris@flyver.city" }
@@ -56,7 +56,3 @@ line-length = 120
 [tool.ruff.format]
 quote-style = "single"
 
-[[tool.uv.index]]
-name = "codeartifact"
-url = "https://flyvercity-368281077578.d.codeartifact.eu-west-3.amazonaws.com/pypi/tools/simple/"
-publish-url = "https://flyvercity-368281077578.d.codeartifact.eu-west-3.amazonaws.com/pypi/tools/"
