@@ -101,7 +101,6 @@ Flyvercity CLI tools can convert data from a variety of external aviation and ge
 | **DJI Datcon** | DJI Datcon logs | `datcon` |
 | **GeoJSON** | GeoJSON format | `geojson` |
 | **Gnettrack** | Gnettrack logs | `gnettrack` |
-| **Manna** | Manna drone logs | `manna` |
 | **NMEA** | NMEA GPS logs | `nmea` |
 | **Robin Radar** | Robin Radar XML | `robinradar` |
 | **Safir MQTT** | Safir MQTT logs | `safirmqtt` |
