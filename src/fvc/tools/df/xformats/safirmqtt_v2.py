@@ -91,7 +91,9 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     metadata.update({'content': 'flightlog', 'source': 'safirmqtt'})
     output.write(metadata)
 
-    with JsonlinesIO(input_path, 'r') as input:
+    # ⚡ Bolt: Using raw=True to skip benedict wrapping for performance.
+    # This avoids significant overhead when iterating over many records.
+    with JsonlinesIO(input_path, 'r', raw=True) as input:
         try:
             metadata = input.read()
 
