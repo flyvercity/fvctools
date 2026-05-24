@@ -33,9 +33,16 @@ def _ensure_sorting(infile: Path, check_callback: Callable[[int], None]):
 
     time = None
 
-    with JsonlinesIO(infile, 'r', callback=check_callback) as reader:
+    # ⚡ Bolt: Enable raw=True to skip benedict wrapping for performance.
+    # Sorting check only needs 'time.unix', so we avoid the ~25x overhead of benedict.
+    with JsonlinesIO(infile, 'r', callback=check_callback, raw=True) as reader:
         for record in reader.iterate():
-            record_time = record.get_int('time.unix')
+            # Skip metadata record (first line) which doesn't have a 'time' field.
+            if 'time' not in record:
+                continue
+
+            # Use standard dict access instead of benedict dot-notation.
+            record_time = record['time']['unix']
 
             if time is None:
                 time = record_time
