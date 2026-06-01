@@ -84,8 +84,10 @@ def iterate_nmea_file(input_path: Path, strict: bool = False, message_types: lis
 
             # ⚡ Bolt: Fast string check to skip expensive pynmea2.parse() for irrelevant lines.
             # This can yield ~2x speedup when many message types are present in the log.
-            if message_types and not any(m in line for m in message_types):
-                continue
+            if message_types is not None:
+                header = line.split(',', 1)[0]
+                if not any(header.endswith(message_type) for message_type in message_types):
+                    continue
 
             try:
                 message = pynmea2.parse(line)
