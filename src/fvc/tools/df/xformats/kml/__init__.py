@@ -7,11 +7,40 @@ import simplekml
 import fvc.tools.df.utils as dfu
 
 
+def _validate_number(value, name: str):
+    if isinstance(value, bool) or not isinstance(value, int | float):
+        raise UserWarning(f'Invalid {name} coordinate value: {value}')
+    return value
+
+
+def _kml_coordinates(loc: dict):
+    lon = loc.get('lon')
+    lat = loc.get('lat')
+
+    if lon is None or lat is None:
+        raise UserWarning('Missing required coordinates: lon and lat')
+
+    coordinates = (
+        _validate_number(lon, 'lon'),
+        _validate_number(lat, 'lat'),
+    )
+
+    alt = loc.get('alt')
+    if alt is not None:
+        coordinates = (
+            coordinates[0],
+            coordinates[1],
+            _validate_number(alt, 'alt'),
+        )
+
+    return coordinates
+
+
 def generate_point(params, record, kml):
     loc = record.get('pos', {}).get('loc', {})
 
     pnt = kml.newpoint(
-        coords=[(loc.get('lon'), loc.get('lat'), loc.get('alt'))],
+        coords=[_kml_coordinates(loc)],
         extrude=1,
         altitudemode=simplekml.AltitudeMode.absolute,
     )
@@ -30,14 +59,14 @@ def generate_line(params, record, curr_pos, kml):
 
     kml.newlinestring(
         coords=[
-            (curr_pos.get('lon'), curr_pos.get('lat'), curr_pos.get('alt')),
-            (loc.get('lon'), loc.get('lat'), loc.get('alt')),
+            _kml_coordinates(curr_pos),
+            _kml_coordinates(loc),
         ],
         altitudemode=simplekml.AltitudeMode.absolute,
     )
 
-    curr_pos['lat'] = loc.get('lat')
-    curr_pos['lon'] = loc.get('lon')
+    curr_pos['lat'] = loc['lat']
+    curr_pos['lon'] = loc['lon']
     curr_pos['alt'] = loc.get('alt')
 
 
@@ -73,9 +102,10 @@ def export_from_fvc(params, output_path: Path | None):
             return
 
         loc = first.get('pos', {}).get('loc', {})
+        _kml_coordinates(loc)
         curr_pos = {
-            'lat': loc.get('lat'),
-            'lon': loc.get('lon'),
+            'lat': loc['lat'],
+            'lon': loc['lon'],
             'alt': loc.get('alt'),
         }
 

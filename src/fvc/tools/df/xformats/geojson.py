@@ -5,6 +5,31 @@ import fvc.tools.df.utils as dfu
 from fvc.tools.df.utils import lg
 
 
+def _validate_number(value, name: str):
+    if isinstance(value, bool) or not isinstance(value, int | float):
+        raise UserWarning(f'Invalid {name} coordinate value: {value}')
+    return value
+
+
+def _geojson_coordinates(loc: dict):
+    lon = loc.get('lon')
+    lat = loc.get('lat')
+
+    if lon is None or lat is None:
+        raise UserWarning('Missing required coordinates: lon and lat')
+
+    coordinates = [
+        _validate_number(lon, 'lon'),
+        _validate_number(lat, 'lat'),
+    ]
+
+    alt = loc.get('alt')
+    if alt is not None:
+        coordinates.append(_validate_number(alt, 'alt'))
+
+    return coordinates
+
+
 def generate_point(params, record):
     pos = record.get('pos', {})
     loc = pos.get('loc', {})
@@ -13,7 +38,7 @@ def generate_point(params, record):
         'type': 'Feature',
         'geometry': {
             'type': 'Point',
-            'coordinates': [loc.get('lon'), loc.get('lat'), loc.get('alt')],
+            'coordinates': _geojson_coordinates(loc),
         },
         'properties': {},
     }
@@ -35,15 +60,15 @@ def generate_line(params, record, curr_pos):
         'geometry': {
             'type': 'LineString',
             'coordinates': [
-                [curr_pos.get('lon'), curr_pos.get('lat'), curr_pos.get('alt')],
-                [loc.get('lon'), loc.get('lat'), loc.get('alt')],
+                _geojson_coordinates(curr_pos),
+                _geojson_coordinates(loc),
             ],
         },
         'properties': {},
     }
 
-    curr_pos['lat'] = loc.get('lat')
-    curr_pos['lon'] = loc.get('lon')
+    curr_pos['lat'] = loc['lat']
+    curr_pos['lon'] = loc['lon']
     curr_pos['alt'] = loc.get('alt')
 
     return line
@@ -90,9 +115,10 @@ def export_from_fvc(params, output_path: Path | None):
         # because raw=True returns native dicts, not benedict objects.
         # Using .get() for robustness.
         loc = first.get('pos', {}).get('loc', {})
+        _geojson_coordinates(loc)
         curr_pos = {
-            'lat': loc.get('lat'),
-            'lon': loc.get('lon'),
+            'lat': loc['lat'],
+            'lon': loc['lon'],
             'alt': loc.get('alt'),
         }
 
