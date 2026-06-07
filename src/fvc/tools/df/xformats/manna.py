@@ -119,12 +119,12 @@ def _get_modem_data(row, modem_name, line_number):
             raise ValueError(f'Unknown network technology: {plmnid} {cell_lac} {cell_tac}')
 
         cell_id = modem_data.get('cell_id') or 0
-        
+
         # Ensure we have integers for the format string
         plmnid_str = str(plmnid) if plmnid is not None else ''
         ac_int = int(ac) if ac is not None else 0
         cell_id_int = int(cell_id) if cell_id is not None else 0
-        
+
         cgi = f'{plmnid_str}{ac_int:05d}{cell_id_int:05d}'
 
         cellsig.update({'radio': radio, 'plmnid': plmnid, 'cgi': cgi})
