@@ -93,6 +93,15 @@ class JsonlinesIO:
         else:
             raise RuntimeError('File is not open')
 
+    def read_dataframe(self) -> pl.DataFrame:
+        """Read remaining JSON lines from the file as a Polars DataFrame."""
+        self._check_entered()
+
+        if self._file:
+            return pl.read_ndjson(self._file)
+
+        raise RuntimeError('File is not open')
+
     def iterate(self) -> Generator[benedict | dict, None, None]:
         while data := self.read():
             yield data
@@ -117,7 +126,7 @@ class FvcDataset:
     def read(filepath: Path) -> 'FvcDataset':
         with JsonlinesIO(filepath, 'r') as io:
             metadata = io.read()
-            df = pl.read_ndjson(io._file)
+            df = io.read_dataframe()
             return FvcDataset(metadata, df)
 
     def __init__(self, metadata: benedict, df: pl.DataFrame):
