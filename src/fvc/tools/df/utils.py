@@ -84,6 +84,15 @@ class JsonlinesIO:
         else:
             raise RuntimeError('File is not open')
 
+    def write_dataframe(self, df: pl.DataFrame):
+        """Write a Polars DataFrame as JSON lines to the file."""
+        self._check_entered()
+
+        if self._file:
+            df.write_ndjson(self._file)
+        else:
+            raise RuntimeError('File is not open')
+
     def iterate(self) -> Generator[benedict | dict, None, None]:
         while data := self.read():
             yield data
