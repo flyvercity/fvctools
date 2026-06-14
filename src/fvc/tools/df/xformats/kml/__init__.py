@@ -70,11 +70,6 @@ def generate_line(params, record, curr_pos, kml):
     curr_pos['alt'] = loc.get('alt')
 
 
-def generate_features(params, record, curr_pos, kml):
-    generate_point(params, record, kml)
-    generate_line(params, record, curr_pos, kml)
-
-
 def export_from_fvc(params, output_path: Path | None):
     input_path = params['input'].fetch()
 
@@ -111,7 +106,8 @@ def export_from_fvc(params, output_path: Path | None):
 
         for record in io.iterate():
             try:
-                generate_features(params, record, curr_pos, kml)
+                generate_point(params, record, kml)
+                generate_line(params, record, curr_pos, kml)
             except UserWarning as e:
                 lg.warning(f'Unable to process record: {e}')
                 continue

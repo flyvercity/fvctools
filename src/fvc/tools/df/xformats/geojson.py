@@ -74,13 +74,6 @@ def generate_line(params, record, curr_pos):
     return line
 
 
-def generate_features(params, record, curr_pos):
-    return [
-        generate_point(params, record),
-        generate_line(params, record, curr_pos),
-    ]
-
-
 def generate_geojson(features):
     collection = {'type': 'FeatureCollection', 'features': features}
 
@@ -126,7 +119,12 @@ def export_from_fvc(params, output_path: Path | None):
 
         for record in io.iterate():
             try:
-                features.extend(generate_features(params, record, curr_pos))
+                features.extend(
+                    [
+                        generate_point(params, record),
+                        generate_line(params, record, curr_pos),
+                    ]
+                )
             except UserWarning as e:
                 lg.warning(f'Unable to process record: {e}')
                 continue
