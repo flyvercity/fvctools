@@ -1,6 +1,7 @@
 import json
 import logging
 from pathlib import Path
+from dataclasses import dataclass
 from typing import Generator, Literal
 
 from benedict import benedict
@@ -121,22 +122,14 @@ def input_path(params: benedict) -> Path:
     return path
 
 
+@dataclass
 class FvcDataset:
+    metadata: benedict
+    df: pl.DataFrame
+
     @staticmethod
     def read(filepath: Path) -> 'FvcDataset':
         with JsonlinesIO(filepath, 'r') as io:
             metadata = io.read()
             df = io.read_dataframe()
             return FvcDataset(metadata, df)
-
-    def __init__(self, metadata: benedict, df: pl.DataFrame):
-        self._metadata = metadata
-        self._df = df
-
-    @property
-    def metadata(self) -> benedict:
-        return self._metadata
-
-    @property
-    def df(self) -> pl.DataFrame:
-        return self._df
