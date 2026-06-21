@@ -122,7 +122,7 @@ def input_path(params: benedict) -> Path:
     return path
 
 
-@dataclass
+@dataclass(frozen=True, eq=False, repr=False)
 class FvcDataset:
     metadata: benedict
     df: pl.DataFrame
