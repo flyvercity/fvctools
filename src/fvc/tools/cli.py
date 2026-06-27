@@ -1,6 +1,5 @@
 import logging as lg
 import traceback
-from argparse import ArgumentParser
 from importlib.metadata import version
 
 import boto3
@@ -92,14 +91,7 @@ def main():
 
     except Exception as e:
         lg.error(f'Exception occurred: {e}')
-
-        argparse = ArgumentParser()
-        argparse.add_argument('--verbose', action='store_true')
-        args, _ = argparse.parse_known_args()
-
-        if args.verbose:
-            lg.error(traceback.format_exc())
-
+        lg.debug(traceback.format_exc())
         return 2
 
 
