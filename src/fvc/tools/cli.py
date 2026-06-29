@@ -1,4 +1,5 @@
 import logging as lg
+import traceback
 from importlib.metadata import version
 
 import boto3
@@ -90,7 +91,7 @@ def main():
 
     except Exception as e:
         lg.error(f'Exception occurred: {e}')
-        lg.debug('Exception traceback', exc_info=True)
+        lg.debug(traceback.format_exc())
         return 2
 
 
