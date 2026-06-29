@@ -1,5 +1,5 @@
 import json
-import pytest
+
 from fvc.tools.df.utils import JsonlinesIO
 from fvc.tools.df.xformats.csgroup import convert_to_fvc
 
