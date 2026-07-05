@@ -34,26 +34,26 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     # Filter out rows with missing or empty essential data
     # Note: original code used `if not lat or not lon or not alt:`, which catches empty strings.
     initial_count = df.height
-    df = df.filter(
+    unix_ms = pl.col('timestamp').str.to_datetime(strict=False).dt.timestamp('ms').alias('_unix_ms')
+
+    df = df.with_columns(unix_ms).filter(
         pl.col('vehicle_location_lat').is_not_null()
         & (pl.col('vehicle_location_lat') != '')
         & pl.col('vehicle_location_lon').is_not_null()
         & (pl.col('vehicle_location_lon') != '')
         & pl.col('altitude_gps (m)').is_not_null()
         & (pl.col('altitude_gps (m)') != '')
+        & pl.col('_unix_ms').is_not_null()
     )
 
-    if df.height < initial_count:
-        lg.warning(f'{initial_count - df.height} invalid rows skipped')
+    skipped = initial_count - df.height
+    if skipped:
+        lg.warning(f'{skipped} invalid rows skipped')
 
     # Vectorized transformation to the target structure
     df = df.select(
         [
-            pl.struct(
-                # Use to_datetime with explicit format for robustness and to avoid Polars ambiguity.
-                # Original code returned milliseconds (via datestring_to_ts).
-                unix=pl.col('timestamp').str.to_datetime(format='%Y-%m-%dT%H:%M:%SZ').dt.timestamp('ms')
-            ).alias('time'),
+            pl.struct(unix=pl.col('_unix_ms')).alias('time'),
             pl.struct(
                 int=pl.col('track_id'),
                 serial=pl.col('vehicle_serial_number'),
