@@ -32,6 +32,10 @@ def test_convert_to_fvc_senhive_writes_expected_ndjson(tmp_path):
     }
 
 def test_convert_to_fvc_senhive_skips_invalid_rows(tmp_path, caplog):
+    import logging
+
+    caplog.set_level(logging.WARNING, logger='fvc.tools.df')
+
     input_path = tmp_path / 'test_invalid.senhive'
     input_path.write_text(
         "'timestamp';'track_id';'vehicle_serial_number';'vehicle_location_lat';'vehicle_location_lon';'altitude_gps (m)'\n"
