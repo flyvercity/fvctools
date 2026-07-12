@@ -39,7 +39,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     # ISO-8601 strings in Senhive usually look like 2024-03-10T10:00:00Z
     unix_ms = (
         pl.col('timestamp')
-        .str.to_datetime(format='%Y-%m-%dT%H:%M:%SZ', strict=False)
+        .str.to_datetime(format='%+', strict=False)
         .dt.timestamp('ms')
         .alias('_unix_ms')
     )
