@@ -40,8 +40,7 @@ def test_convert_to_fvc_artlog_writes_expected_ndjson(tmp_path):
 def test_convert_to_fvc_artlog_raises_when_timezone_is_not_utc(tmp_path):
     input_path = tmp_path / 'test.artlog'
     input_path.write_text(
-        'Timestamp_nsec TrackUUID Latitude Longitude Altitude TimeZone\n'
-        '1710000000123456 abc123 55.0 12.0 120.5 CET\n',
+        'Timestamp_nsec TrackUUID Latitude Longitude Altitude TimeZone\n1710000000123456 abc123 55.0 12.0 120.5 CET\n',
         encoding='utf-8',
     )
 
