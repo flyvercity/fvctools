@@ -3,6 +3,7 @@ import json
 from fvc.tools.df.utils import JsonlinesIO
 from fvc.tools.df.xformats.csgroup import convert_to_fvc
 
+
 def test_convert_to_fvc_csgroup_writes_expected_ndjson(tmp_path):
     input_path = tmp_path / 'test.csgroup'
     input_path.write_text(

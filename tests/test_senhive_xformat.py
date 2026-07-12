@@ -2,6 +2,7 @@ import json
 from fvc.tools.df.utils import JsonlinesIO
 from fvc.tools.df.xformats.senhive import convert_to_fvc
 
+
 def test_convert_to_fvc_senhive_writes_expected_ndjson(tmp_path):
     input_path = tmp_path / 'test.senhive'
     # Mixed quotes and no quotes in headers/values to test robustness
@@ -31,6 +32,7 @@ def test_convert_to_fvc_senhive_writes_expected_ndjson(tmp_path):
         'pos': {'loc': {'lat': 52.2, 'lon': 4.2, 'alt': 100.2}},
     }
 
+
 def test_convert_to_fvc_senhive_skips_invalid_rows(tmp_path, caplog):
     import logging
 
@@ -39,8 +41,8 @@ def test_convert_to_fvc_senhive_skips_invalid_rows(tmp_path, caplog):
     input_path = tmp_path / 'test_invalid.senhive'
     input_path.write_text(
         "'timestamp';'track_id';'vehicle_serial_number';'vehicle_location_lat';'vehicle_location_lon';'altitude_gps (m)'\n"
-        "2023-01-01T12:00:00Z;track_1;SN1;52.1;4.1;100.1\n"
-        "2023-01-01T12:00:01Z;track_2;SN2;;4.2;100.2\n", # Missing lat
+        '2023-01-01T12:00:00Z;track_1;SN1;52.1;4.1;100.1\n'
+        '2023-01-01T12:00:01Z;track_2;SN2;;4.2;100.2\n',  # Missing lat
         encoding='utf-8',
     )
 
@@ -50,5 +52,5 @@ def test_convert_to_fvc_senhive_skips_invalid_rows(tmp_path, caplog):
         convert_to_fvc({}, {}, input_path, output)
 
     rows = [json.loads(line) for line in output_path.read_text(encoding='utf-8').splitlines()]
-    assert len(rows) == 2 # Metadata + 1 valid row
-    assert "1 invalid rows skipped" in caplog.text
+    assert len(rows) == 2  # Metadata + 1 valid row
+    assert '1 invalid rows skipped' in caplog.text

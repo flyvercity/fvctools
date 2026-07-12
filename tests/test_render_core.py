@@ -3,15 +3,18 @@ from unittest.mock import MagicMock, patch
 
 # We need to mock these before importing fvc.tools.render.core if it imports them at top level.
 # Using a context manager for the whole module is tricky, but we can patch them for the import.
-with patch.dict('sys.modules', {
-    'boto3': MagicMock(),
-    'benedict': MagicMock(),
-    'rich': MagicMock(),
-    'rich.live': MagicMock(),
-    'rich.spinner': MagicMock(),
-    'fvc.tools.df.utils': MagicMock(JsonlinesIO=MagicMock()),
-    'fvc.tools.render.templates': MagicMock(),
-}):
+with patch.dict(
+    'sys.modules',
+    {
+        'boto3': MagicMock(),
+        'benedict': MagicMock(),
+        'rich': MagicMock(),
+        'rich.live': MagicMock(),
+        'rich.spinner': MagicMock(),
+        'fvc.tools.df.utils': MagicMock(JsonlinesIO=MagicMock()),
+        'fvc.tools.render.templates': MagicMock(),
+    },
+):
     import fvc.tools.render.core as render_core
 
 
