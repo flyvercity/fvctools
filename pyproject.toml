@@ -40,7 +40,6 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "duct>=1.0.1",
-    "flake8>=7.2.0",
     "jsonschema2md>=1.7.0",
     "ptpython>=3.0.30",
     "pytest>=9.0.2",
