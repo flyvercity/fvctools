@@ -166,13 +166,10 @@ def correlate_command(params, infiles: tuple[Path, ...]):
     with Progress() as progress:
         check_tasks = [progress.add_task(f'Checking {infile}...', total=infile.stat().st_size) for infile in infiles]
 
-        merge_task = progress.add_task('Merging...', total=None)
-
         correlate(
             params,
             infiles,
             [lambda s: progress.update(check_tasks[i], advance=s) for i in range(len(check_tasks))],
-            lambda s: progress.update(merge_task, advance=s),
         )
 
 
