@@ -37,12 +37,7 @@ def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
 
     # ⚡ Bolt: Specify format for to_datetime to avoid ambiguity when time zone is present.
     # ISO-8601 strings in Senhive usually look like 2024-03-10T10:00:00Z
-    unix_ms = (
-        pl.col('timestamp')
-        .str.to_datetime(format='%+', strict=False)
-        .dt.timestamp('ms')
-        .alias('_unix_ms')
-    )
+    unix_ms = pl.col('timestamp').str.to_datetime(format='%+', strict=False).dt.timestamp('ms').alias('_unix_ms')
 
     df = df.with_columns(unix_ms).filter(
         pl.col('vehicle_location_lat').is_not_null()
