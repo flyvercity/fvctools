@@ -14,6 +14,12 @@ class FlightlogDataset:
         self.metadata = metadata
         self.frames = frames
 
+    def serialize(self) -> dict:
+        return {
+            'metadata': self.metadata.dict(),
+            'frames': [frame.to_dicts() for frame in self.frames],
+        }
+
     @staticmethod
     def deserialize(data: dict | Path) -> 'FlightlogDataset':
         if isinstance(data, Path):

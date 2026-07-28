@@ -138,12 +138,6 @@ def convert_command(params, output_file, **kwargs):
     lg.info(f'Conversion complete, output written to {output_path}')
 
 
-@df.command(help='Just download and cache external data')
-@click.pass_obj
-def fetch(params):
-    raise NotImplementedError('Fetch is not implemented')
-
-
 @df.command(help='Convert data to an external format')
 @click.pass_obj
 @click.argument('x_format', type=str, required=True)
