@@ -9,7 +9,6 @@ def correlate(
     params: dict[str, Any],
     infiles: tuple[Path, ...],
     check_callbacks: list[Callable[[int], None]],
-    merge_callback: Callable[[int], None],
 ):
     with ThreadPoolExecutor() as executor:
         futures = [executor.submit(_ensure_sorting, infile, check_callbacks[i]) for i, infile in enumerate(infiles)]
