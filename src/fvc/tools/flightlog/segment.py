@@ -14,7 +14,7 @@ class SegmentParams(TypedDict):
     segment_height_meters: float
     airborne_only: bool
     segment_by_idle: bool
-    segment_idle_time_seconds: float
+    idle_time_seconds: float
     filter_by_duration: bool
     filter_duration_seconds: float
 
