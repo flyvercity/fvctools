@@ -35,6 +35,8 @@ def segment(
         if params['airborne_only']:
             frames = [frame for frame in frames if frame['airborne'].max()]
 
+        frames = [frame.drop('airborne') for frame in frames]
+
     _dump(dump_steps, 'airborne', frames)
 
     if params['segment_by_idle']:
