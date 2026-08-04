@@ -1,5 +1,5 @@
 # Files
 
-- [Data Format Architecture](data-formats.md) - Architecture and design of the Flyvercity FVC data format
-- [Architecture Overview](overview.md) - High-level architecture of the Flyvercity CLI Tools Suite
-- [Tools Architecture](tools.md) - Implementation architecture of Flyvercity CLI tools
+- [Data Formats and Schemas](data-formats.md) - Comprehensive guide to Flyvercity Data Format (.fvc) and supported external formats
+- [Architecture Overview](overview.md) - Comprehensive overview of fvctools architecture, components, and design principles
+- [CLI Tools Reference](tools.md) - Complete reference for all CLI tools in fvctools, including commands, options, and examples

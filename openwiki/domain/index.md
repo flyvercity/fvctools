@@ -1,3 +1,4 @@
 # Files
 
-- [Supported Data Formats](formats.md) - Comprehensive list of supported external data formats and their characteristics
+- [Data Formats and Schemas](data-formats.md) - Reference for all data formats, schemas, and domain models used in fvctools
+- [Domain Formats and Models](formats.md)
