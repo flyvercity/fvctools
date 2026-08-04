@@ -8,7 +8,10 @@ from fvc.tools.calc import geoid
 
 def from_safir_ids(safir_ids):
     ids = {}
+    fallback_int = None
 
+    # ⚡ Bolt: Use a unified if/elif chain and pull default fallback check outside
+    # of the hot loop to reduce redundant dict lookups and conditional branching.
     for safir_id in safir_ids:
         system = safir_id.get('system')
         key = safir_id.get('key')
@@ -19,12 +22,15 @@ def from_safir_ids(safir_ids):
             ids['icaoreg'] = key
         elif system == 'CallSign':
             ids['atm'] = key
-        if system == 'Other':
+        elif system == 'Other':
             ids['int'] = key
 
-        if 'int' not in ids:
-            # If no internal ID is present, use the first one found
-            ids['int'] = key
+        if fallback_int is None:
+            fallback_int = key
+
+    if 'int' not in ids and fallback_int is not None:
+        # If no internal ID is present, use the first one found
+        ids['int'] = fallback_int
 
     return ids
 
