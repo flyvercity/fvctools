@@ -1,4 +1,3 @@
-from functools import wraps
 from pathlib import Path
 
 import click
@@ -8,26 +7,22 @@ from fvc.tools.utils import JSON
 
 
 def metadata_args(command_func):
-    @click.option(
-        '--attach-polar-sensor',
-        help='Attach polar sensor information to metadata for this file',
-        is_flag=True,
-    )
-    @click.option(
-        '--polar-sensor-source',
-        help='Add polar sensor information to metadata for this file',
-        type=click.Path(exists=True, path_type=Path),
-    )
-    @click.option(
+    command_func = click.option(
         '--polar-sensor-format',
         help='Format for polar sensor information',
         type=click.Choice(['nmea']),
-    )
-    @wraps(command_func)
-    def wrapper(*args, **kwargs):
-        command_func(*args, **kwargs)
-
-    return wrapper
+    )(command_func)
+    command_func = click.option(
+        '--polar-sensor-source',
+        help='Add polar sensor information to metadata for this file',
+        type=click.Path(exists=True, path_type=Path),
+    )(command_func)
+    command_func = click.option(
+        '--attach-polar-sensor',
+        help='Attach polar sensor information to metadata for this file',
+        is_flag=True,
+    )(command_func)
+    return command_func
 
 
 def create_metadata(origin, params) -> JSON:
