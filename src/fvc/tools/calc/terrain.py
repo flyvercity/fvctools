@@ -58,6 +58,11 @@ class Terrain:
 
         ds = self._get_dataset(lat_deg, lon_deg)
         row, col = ds.index(lon_deg, lat_deg)
+
+        # Clamp to valid pixel range (handles tile-edge boundary case)
+        row = min(max(row, 0), ds.height - 1)
+        col = min(max(col, 0), ds.width - 1)
+
         value = ds.read(1)[row, col]
 
         if value == ds.nodata:
