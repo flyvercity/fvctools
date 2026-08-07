@@ -41,7 +41,6 @@ build-backend = "hatchling.build"
 dev = [
     "duct>=1.0.1",
     "jsonschema2md>=1.7.0",
-    "ptpython>=3.0.30",
     "pytest>=9.0.2",
     "ruff>=0.14.0",
 ]
@@ -54,4 +53,3 @@ quote-style = "single"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/fvc"]
-
