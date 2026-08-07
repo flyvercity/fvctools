@@ -57,11 +57,12 @@ function initializeMap(boundsData, coordinatesData) {
 
     map = L.map('map').fitBounds(bounds);
 
-    let attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+    let attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>';
 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: attribution
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        maxZoom: 20,
+        attribution: attribution,
+        subdomains: 'abcd'
     }).addTo(map);
 
     // Create flight path line
@@ -70,7 +71,7 @@ function initializeMap(boundsData, coordinatesData) {
     });
     
     var flightPath = L.polyline(pathCoords, {
-        color: '#667eea',
+        color: '#a78bfa',
         weight: 3,
         opacity: 0.8
     }).addTo(map);
@@ -82,8 +83,8 @@ function initializeMap(boundsData, coordinatesData) {
         // Create a small, nearly invisible marker for tooltips
         L.circleMarker([coord.lat, coord.lon], {
             radius: 1,
-            fillColor: '#667eea',
-            color: '#667eea',
+            fillColor: '#a78bfa',
+            color: '#a78bfa',
             weight: 0,
             opacity: 0.3,
             fillOpacity: 0.3
@@ -120,14 +121,19 @@ function initializeMap(boundsData, coordinatesData) {
     var legend = L.control({position: 'bottomright'});
     legend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'info legend');
-        div.innerHTML = '<h4>Flight Path</h4>' +
+        div.style.background = '#1e1e1e';
+        div.style.color = '#e0e0e0';
+        div.style.padding = '10px';
+        div.style.borderRadius = '5px';
+        div.style.boxShadow = '0 1px 5px rgba(0,0,0,0.6)';
+        div.innerHTML = '<h4 style="margin:0 0 5px; color:#a78bfa;">Flight Path</h4>' +
                        '<div style="display: flex; align-items: center; margin: 5px 0;">' +
                        '<div style="background-color: #28a745; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px;"></div> Start Point</div>' +
                        '<div style="display: flex; align-items: center; margin: 5px 0;">' +
                        '<div style="background-color: #dc3545; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px;"></div> End Point</div>' +
                        '<div style="display: flex; align-items: center; margin: 5px 0;">' +
-                       '<div style="background-color: #667eea; width: 20px; height: 3px; margin-right: 8px;"></div> Flight Path</div>' +
-                       '<small>Total points: ' + coordinates.length + '</small>';
+                       '<div style="background-color: #a78bfa; width: 20px; height: 3px; margin-right: 8px;"></div> Flight Path</div>' +
+                       '<small style="color:#888;">Total points: ' + coordinates.length + '</small>';
         return div;
     };
     legend.addTo(map);

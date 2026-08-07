@@ -14,8 +14,8 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background-color: #f8f9fa;
+            color: #e0e0e0;
+            background-color: #121212;
             margin: 0;
             padding: 20px;
         }
@@ -23,15 +23,15 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
+            background: #1e1e1e;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
             overflow: hidden;
         }
         
         .header {
-            background: #667eea;
-            color: white;
+            background: #2d1b69;
+            color: #f0f0f0;
             padding: 30px;
             text-align: center;
         }
@@ -39,6 +39,7 @@
         .header h1 {
             margin: 0 0 10px 0;
             font-size: 2.2em;
+            color: #a78bfa;
         }
         
         .content {
@@ -50,8 +51,8 @@
         }
         
         .section h2 {
-            color: #667eea;
-            border-bottom: 2px solid #667eea;
+            color: #a78bfa;
+            border-bottom: 2px solid #a78bfa;
             padding-bottom: 10px;
             margin-bottom: 20px;
         }
@@ -63,14 +64,14 @@
         }
         
         .config-item {
-            background: #f8f9fa;
+            background: #2a2a2a;
             padding: 15px;
             border-radius: 6px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #a78bfa;
         }
         
         .config-item strong {
-            color: #667eea;
+            color: #a78bfa;
         }
         
         #map {
@@ -78,42 +79,44 @@
             width: 100%;
             border-radius: 8px;
             margin-top: 20px;
+            border: 1px solid #333;
         }
         
         .legend {
-            background: white;
+            background: #1e1e1e;
+            color: #e0e0e0;
             padding: 10px;
             border-radius: 5px;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+            box-shadow: 0 1px 5px rgba(0,0,0,0.6);
         }
         
         .legend h4 {
             margin: 0 0 5px;
-            color: #333;
+            color: #a78bfa;
         }
         
         .footer {
             text-align: center;
             padding: 20px;
-            color: #666;
-            border-top: 1px solid #ddd;
-            background: #f8f9fa;
+            color: #888;
+            border-top: 1px solid #333;
+            background: #181818;
         }
         
         /* Custom tooltip styling */
         .trajectory-tooltip {
-            background: rgba(0, 0, 0, 0.9);
-            border: none;
+            background: rgba(30, 30, 30, 0.95);
+            border: 1px solid #a78bfa;
             border-radius: 6px;
-            color: white;
+            color: #e0e0e0;
             padding: 8px 12px;
             font-size: 12px;
             line-height: 1.4;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
         }
         
         .trajectory-tooltip::before {
-            border-top-color: rgba(0, 0, 0, 0.9);
+            border-top-color: rgba(30, 30, 30, 0.95);
         }
     </style>
 </head>
@@ -141,6 +144,13 @@
                         {{ "%.4f"|format(bounds.south) }}, {{ "%.4f"|format(bounds.west) }}<br>
                         to {{ "%.4f"|format(bounds.north) }}, {{ "%.4f"|format(bounds.east) }}
                     </div>
+                    {% if time_extents and time_extents.begin %}
+                    <div class="config-item">
+                        <strong>Time Extents:</strong><br>
+                        {{ time_extents.begin }}<br>
+                        to {{ time_extents.end }}
+                    </div>
+                    {% endif %}
                 </div>
                 
                 <div id="map"></div>

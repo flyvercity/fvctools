@@ -10,6 +10,7 @@ def generate_html_template(
     file_path: str,
     coordinates: List[Dict[str, Any]],
     bounds: Dict[str, float],
+    time_extents: Dict[str, str | None] | None = None,
 ) -> str:
     """Generate the HTML template for the map visualization.
 
@@ -19,6 +20,7 @@ def generate_html_template(
         file_path: Name of the input file
         coordinates: List of coordinate data
         bounds: Map bounds dictionary
+        time_extents: Dictionary with 'begin' and 'end' time strings
 
     Returns:
         HTML content as string
@@ -32,6 +34,7 @@ def generate_html_template(
         file_path=file_path,
         coordinates=coordinates,
         bounds=bounds,
+        time_extents=time_extents,
     )
 
 

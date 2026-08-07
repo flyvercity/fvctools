@@ -34,12 +34,15 @@ def generate_html_map(file_path: Path, output_dir: Path, title: str):
     bounds = calculate_bounds(coordinates)
     lg.info(f'Map bounds: {bounds}')
 
+    time_extents = _compute_time_extents(coordinates)
+
     html_content = generate_html_template(
         title=title,
         generation_time=datetime.now(tz=UTC).strftime('%Y-%m-%d %H:%M:%S'),
         file_path=file_path.name,
         coordinates=coordinates,
         bounds=bounds,
+        time_extents=time_extents,
     )
 
     lg.info('Generating HTML file...')
@@ -144,4 +147,34 @@ def calculate_bounds(coordinates: List[Dict[str, Any]]) -> Dict[str, float]:
         'south': south,
         'east': east,
         'west': west,
+    }
+
+
+
+def _compute_time_extents(
+    coordinates: List[Dict[str, Any]],
+) -> Dict[str, str | None]:
+    """Compute time extents (beginning and end) from coordinate timestamps.
+
+    Args:
+        coordinates: List of coordinate dictionaries with optional 'time' field
+                     containing Unix timestamps in milliseconds.
+
+    Returns:
+        Dictionary with 'begin' and 'end' ISO 8601 strings, or None if unavailable.
+    """
+    timestamps = [c['time'] for c in coordinates if c.get('time') is not None]
+
+    if not timestamps:
+        return {'begin': None, 'end': None}
+
+    begin_ms = min(timestamps)
+    end_ms = max(timestamps)
+
+    begin_dt = datetime.fromtimestamp(begin_ms / 1000, tz=UTC)
+    end_dt = datetime.fromtimestamp(end_ms / 1000, tz=UTC)
+
+    return {
+        'begin': begin_dt.strftime('%Y-%m-%d %H:%M:%S UTC'),
+        'end': end_dt.strftime('%Y-%m-%d %H:%M:%S UTC'),
     }
