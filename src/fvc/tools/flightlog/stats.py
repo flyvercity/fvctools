@@ -53,9 +53,18 @@ def calculate_segment_stats(index: int, df: pl.DataFrame, vdim: Optional[str] = 
 def calculate_flightlog_stats(dataset: FlightlogDataset, vdim: Optional[str] = None) -> dict:
     frames = dataset.frames
 
+    if not frames:
+        return {
+            'num_segments': 0,
+            'empty': True,
+        }
+
     segment_stats = [calculate_segment_stats(inx, frame, vdim=vdim) for inx, frame in enumerate(frames)]
 
+    total_duration = sum(stat['duration'] for stat in segment_stats)
+
     stats = {
+        'num_segments': len(segment_stats),
         'time': {
             'min': min(stat['time']['min'] for stat in segment_stats),
             'max': max(stat['time']['max'] for stat in segment_stats),
@@ -68,8 +77,10 @@ def calculate_flightlog_stats(dataset: FlightlogDataset, vdim: Optional[str] = N
                 max(stat['time']['max'] for stat in segment_stats) / 1000.0, tz=UTC
             ).isoformat(),
         },
-        'duration': max(stat['duration'] for stat in segment_stats),
-        'duration-hours': max(stat['duration'] for stat in segment_stats) / 1000.0 / 3600.0,
+        'total_duration': total_duration,
+        'total_duration_hours': total_duration / 1000.0 / 3600.0,
+        'max_segment_duration': max(stat['duration'] for stat in segment_stats),
+        'max_segment_duration_hours': max(stat['duration'] for stat in segment_stats) / 1000.0 / 3600.0,
         'lon': {
             'min': min(stat['lon']['min'] for stat in segment_stats),
             'max': max(stat['lon']['max'] for stat in segment_stats),
@@ -78,11 +89,13 @@ def calculate_flightlog_stats(dataset: FlightlogDataset, vdim: Optional[str] = N
             'min': min(stat['lat']['min'] for stat in segment_stats),
             'max': max(stat['lat']['max'] for stat in segment_stats),
         },
-        vdim: {
+    }
+
+    if vdim is not None:
+        stats[vdim] = {
             'min': min(stat['vdim']['min'] for stat in segment_stats),
             'max': max(stat['vdim']['max'] for stat in segment_stats),
-        },
-    }
+        }
 
     return stats
 
