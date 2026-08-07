@@ -77,6 +77,15 @@ def segment_airborne(
     result_frames = []
 
     for frame in frames:
+        null_count = frame['derived_height'].null_count()
+
+        if null_count > 0:
+            raise ValueError(
+                f'derived_height contains {null_count} null values '
+                f'({null_count}/{frame.height} rows). '
+                f'Nulls must be resolved by the cleanup step before segmentation.'
+            )
+
         frame = frame.with_columns(frame['derived_height'].gt(segment).alias('airborne'))
 
         change_idx = (frame['airborne'].shift(1) != frame['airborne']).fill_null(True).to_numpy().nonzero()[0]
@@ -122,7 +131,7 @@ def segment_by_idle(
     return result_frames
 
 
-def segment_by_timestamp(frames: list[pl.DataFrame], step_ms: int):
+def segment_by_timestamp(frames: list[pl.DataFrame], step_ms: float):
     result_frames = []
 
     for frame in frames:
@@ -142,7 +151,7 @@ def filter_duration(frames, params: SegmentParams, metaproc: dict):
     duration = params['filter_duration_seconds'] * 1000.0
     dfu.lg.info(f'Filtering by duration {duration} milliseconds')
 
-    result_frames = [frame for frame in frames if frame['timestamp'].max() - frame['timestamp'].min() > duration]
+    result_frames = [frame for frame in frames if frame['timestamp'].max() - frame['timestamp'].min() >= duration]
 
     dfu.lg.info(f'Filtered to {len(result_frames)} frames')
 
