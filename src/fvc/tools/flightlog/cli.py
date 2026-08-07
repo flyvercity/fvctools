@@ -50,11 +50,24 @@ def stats_command(params, **kwargs):
     params.update(kwargs)
 
     with Live(Spinner('aesthetic', 'Analyzing...'), transient=True):
-        frames, metadata = segment.segment(params)
+        input_path = dfu.input_path(params)
+        dataset = load.load_frames(input_path)
+
+        seg_params = segment.SegmentParams(
+            segment_by_height=params.get('segment_by_height', False),
+            segment_height_meters=params.get('segment_height_meters', 10.0),
+            airborne_only=True,
+            segment_by_idle=params.get('segment_by_idle', False),
+            idle_time_seconds=params.get('idle_time_seconds', 60.0),
+            filter_by_duration=params.get('filter_by_duration', False),
+            filter_duration_seconds=params.get('filter_duration_seconds', 300.0),
+        )
+
+        result_dataset, metadata = segment.segment(dataset, seg_params)
 
         dfu.lg.info(f'Processing metadata:\n{json.dumps(metadata, indent=4)}')
 
-        stats.print_stats(frames, vdim=params.get('vdim'))
+        stats.print_stats(result_dataset, vdim=params.get('vdim'))
 
 
 @flightlog_group.command(help='Split a flightlog into daily files')

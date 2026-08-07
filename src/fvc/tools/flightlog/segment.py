@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import TypedDict
 
@@ -166,7 +167,11 @@ def filter_duration(frames, params: SegmentParams, metaproc: dict):
     return result_frames
 
 
+DUMP_DIR = Path(os.getenv('FVC_DUMP_DIR', '.tmp'))
+
+
 def _dump(dump_steps: bool, step: str, frames: list[pl.DataFrame]):
     if dump_steps:
+        DUMP_DIR.mkdir(parents=True, exist_ok=True)
         for inx, frame in enumerate(frames):
-            frame.write_ndjson(Path(f'.tmp/dump_segment_{step}_{inx}'))
+            frame.write_ndjson(DUMP_DIR / f'dump_segment_{step}_{inx}')
