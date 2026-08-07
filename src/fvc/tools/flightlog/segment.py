@@ -8,9 +8,7 @@ from fvc.tools.flightlog.load import FlightlogDataset
 
 
 class SegmentParams(TypedDict):
-    input_path: Path
-    verbose: bool = False
-    segment_by_height: bool = False
+    segment_by_height: bool
     segment_height_meters: float
     airborne_only: bool
     segment_by_idle: bool
