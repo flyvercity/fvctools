@@ -1,3 +1,4 @@
+import math
 import os
 from pathlib import Path
 from typing import TypedDict
@@ -6,6 +7,7 @@ import polars as pl
 
 import fvc.tools.df.utils as dfu
 from fvc.tools.flightlog.load import FlightlogDataset
+from fvc.tools.utils import plnested
 
 
 class SegmentParams(TypedDict):
@@ -16,6 +18,9 @@ class SegmentParams(TypedDict):
     idle_time_seconds: float
     filter_by_duration: bool
     filter_duration_seconds: float
+    filter_by_displacement: bool
+    filter_displacement_lateral_meters: float
+    filter_displacement_vertical_meters: float
 
 
 def segment(
@@ -48,12 +53,20 @@ def segment(
 
     _dump(dump_steps, 'duration', frames)
 
+    if params['filter_by_displacement']:
+        frames = filter_displacement(frames, params, metaproc)
+
+    _dump(dump_steps, 'displacement', frames)
+
     result_dataset = dataset.evolve(
         frames=frames,
         metadata={
             'segment_by_height': params['segment_by_height'],
             'segment_by_idle': params['segment_by_idle'],
             'filter_by_duration': params['filter_by_duration'],
+            'filter_by_displacement': params['filter_by_displacement'],
+            'filter_displacement_lateral_meters': params['filter_displacement_lateral_meters'],
+            'filter_displacement_vertical_meters': params['filter_displacement_vertical_meters'],
         },
     )
 
@@ -163,6 +176,64 @@ def filter_duration(frames, params: SegmentParams, metaproc: dict):
             'filter_duration_out': len(result_frames),
         }
     )
+
+    return result_frames
+
+
+def filter_displacement(frames, params: SegmentParams, metaproc: dict):
+    lateral_threshold = params['filter_displacement_lateral_meters']
+    vertical_threshold = params['filter_displacement_vertical_meters']
+
+    dfu.lg.info(
+        f'Filtering by displacement: lateral >= {lateral_threshold}m '
+        f'or vertical >= {vertical_threshold}m'
+    )
+
+    result_frames = []
+
+    for frame in frames:
+        if frame.is_empty():
+            continue
+
+        stats = frame.select(
+            plnested('pos.loc.lat').min().alias('min_lat'),
+            plnested('pos.loc.lat').max().alias('max_lat'),
+            plnested('pos.loc.lon').min().alias('min_lon'),
+            plnested('pos.loc.lon').max().alias('max_lon'),
+            pl.col('derived_height').min().alias('min_h'),
+            pl.col('derived_height').max().alias('max_h'),
+        ).to_dicts()[0]
+
+        min_lat = stats['min_lat']
+        max_lat = stats['max_lat']
+        min_lon = stats['min_lon']
+        max_lon = stats['max_lon']
+        min_h = stats['min_h']
+        max_h = stats['max_h']
+
+        if min_lat is None or max_lat is None or min_lon is None or max_lon is None:
+            continue
+
+        mean_lat_rad = math.radians((min_lat + max_lat) / 2.0)
+        lat_span_m = (max_lat - min_lat) * 111_320
+        lon_span_m = (max_lon - min_lon) * 111_320 * math.cos(mean_lat_rad)
+        lateral = math.hypot(lat_span_m, lon_span_m)
+
+        vertical = 0.0
+        if min_h is not None and max_h is not None:
+            vertical = max_h - min_h
+
+        if lateral >= lateral_threshold or vertical >= vertical_threshold:
+            result_frames.append(frame)
+
+    dfu.lg.info(f'Displacement filter: {len(frames)} -> {len(result_frames)} frames')
+
+    metaproc.update({
+        'filter_displacement_lateral_meters': lateral_threshold,
+        'filter_displacement_vertical_meters': vertical_threshold,
+        'filter_displacement_in': len(frames),
+        'filter_displacement_out': len(result_frames),
+    })
 
     return result_frames
 

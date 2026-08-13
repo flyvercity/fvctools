@@ -45,6 +45,12 @@ def flightlog_group():
 )
 @click.option('--filter-by-duration', is_flag=True, help='Filter the log by duration')
 @click.option('--filter-duration-seconds', type=float, help='Duration to filter the log by in seconds', default=300.0)
+@click.option('--filter-displacement/--no-filter-displacement', default=False,
+              help='Filter segments by spatial displacement')
+@click.option('--displacement-lateral-meters', type=float, default=200.0,
+              help='Minimum lateral diagonal displacement in meters')
+@click.option('--displacement-vertical-meters', type=float, default=50.0,
+              help='Minimum vertical displacement in meters')
 @click.option('--verbose', is_flag=True, help='Verbose output')
 def stats_command(params, **kwargs):
     params.update(kwargs)
@@ -61,6 +67,9 @@ def stats_command(params, **kwargs):
             idle_time_seconds=params.get('idle_time_seconds', 60.0),
             filter_by_duration=params.get('filter_by_duration', False),
             filter_duration_seconds=params.get('filter_duration_seconds', 300.0),
+            filter_by_displacement=params.get('filter_displacement', False),
+            filter_displacement_lateral_meters=params.get('displacement_lateral_meters', 200.0),
+            filter_displacement_vertical_meters=params.get('displacement_vertical_meters', 50.0),
         )
 
         result_dataset, metadata = segment.segment(dataset, seg_params)
