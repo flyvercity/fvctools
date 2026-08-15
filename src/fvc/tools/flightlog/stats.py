@@ -9,13 +9,6 @@ import rich
 from fvc.tools.utils import plnested
 
 
-def _scalar(value):
-    """Convert Polars scalar to plain Python type."""
-    if hasattr(value, 'item'):
-        return value.item()
-    return value
-
-
 def calculate_segment_stats(index: int, df: pl.DataFrame, vdim: Optional[str] = None):
     projection = df.select(
         plnested('time.unix').alias('time'),
@@ -27,21 +20,21 @@ def calculate_segment_stats(index: int, df: pl.DataFrame, vdim: Optional[str] = 
     stats = {
         'index': index,
         'time': {
-            'min': _scalar(projection['time'].min()),
-            'max': _scalar(projection['time'].max()),
+            'min': projection['time'].min(),
+            'max': projection['time'].max(),
         },
-        'duration': _scalar(projection['time'].max() - projection['time'].min()),
+        'duration': projection['time'].max() - projection['time'].min(),
         'lon': {
-            'min': _scalar(projection['lon'].min()),
-            'max': _scalar(projection['lon'].max()),
+            'min': projection['lon'].min(),
+            'max': projection['lon'].max(),
         },
         'lat': {
-            'min': _scalar(projection['lat'].min()),
-            'max': _scalar(projection['lat'].max()),
+            'min': projection['lat'].min(),
+            'max': projection['lat'].max(),
         },
         'time_diff': {
-            'min': _scalar(time_diff.min()),
-            'max': _scalar(time_diff.max()),
+            'min': time_diff.min(),
+            'max': time_diff.max(),
         },
     }
 
@@ -50,8 +43,8 @@ def calculate_segment_stats(index: int, df: pl.DataFrame, vdim: Optional[str] = 
 
         stats['vdim'] = {
             'name': vdim,
-            'min': _scalar(vdim_projection[vdim].min()),
-            'max': _scalar(vdim_projection[vdim].max()),
+            'min': vdim_projection[vdim].min(),
+            'max': vdim_projection[vdim].max(),
         }
 
     return stats
