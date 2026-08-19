@@ -21,7 +21,10 @@ def flightlog_group():
     pass
 
 
-@flightlog_group.command(help='Calculate statistics for a FVC data file')
+@flightlog_group.command(
+    name='stats',
+    help='Calculate statistics for a FVC data file'
+)
 @click.pass_obj
 @click.option(
     '--vdim',
@@ -79,7 +82,10 @@ def stats_command(params, **kwargs):
         stats.print_stats(result_dataset, vdim=params.get('vdim'))
 
 
-@flightlog_group.command(help='Split a flightlog into daily files')
+@flightlog_group.command(
+    name='split',
+    help='Split a flightlog into daily files'
+)
 @click.pass_obj
 @click.option('--mode', type=click.Choice(['day', 'inactivity']), help='Split mode', default='inactivity')
 @click.option('--inactivity-threshold-seconds', type=float, default=300.0, help='Inactivity threshold in seconds')

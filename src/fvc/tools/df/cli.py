@@ -81,7 +81,7 @@ def xformat_help(x_format: str):
         lg.error(f'No help text found for {x_format}')
 
 
-@df.command()
+@df.command(name='convert')
 @click.pass_obj
 @click.option(
     '--target',
@@ -138,7 +138,10 @@ def convert_command(params, output_file, **kwargs):
     lg.info(f'Conversion complete, output written to {output_path}')
 
 
-@df.command(help='Convert data to an external format')
+@df.command(
+    name='export',
+    help='Convert data to an external format'
+)
 @click.pass_obj
 @click.argument('x_format', type=str, required=True)
 @click.argument('output-file', type=Path, required=False)
@@ -148,7 +151,10 @@ def export_command(params, output_file, **kwargs):
     core.export(params)
 
 
-@df.command(help='Correlate several flightlogs')
+@df.command(
+    name='correlate',
+    help='Correlate several flightlogs'
+)
 @click.pass_obj
 @click.argument(
     'infiles',
