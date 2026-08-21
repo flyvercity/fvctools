@@ -246,3 +246,68 @@ def _dump(dump_steps: bool, step: str, frames: list[pl.DataFrame]):
         DUMP_DIR.mkdir(parents=True, exist_ok=True)
         for inx, frame in enumerate(frames):
             frame.write_ndjson(DUMP_DIR / f'dump_segment_{step}_{inx}')
+
+
+
+def slice_segments(
+    dataset: FlightlogDataset,
+    select_segments: list[int] | None = None,
+    drop_segments: list[int] | None = None,
+) -> FlightlogDataset:
+    """Select or drop segments (frames) from a dataset by index.
+
+    Parameters are mutually exclusive. Indices are deduplicated and sorted
+    ascending to preserve chronological frame order.
+
+    Args:
+        dataset: Input FlightlogDataset with frames to filter.
+        select_segments: Indices of frames to keep (mutually exclusive with drop_segments).
+        drop_segments: Indices of frames to remove (mutually exclusive with select_segments).
+
+    Returns:
+        A new FlightlogDataset with only the selected frames.
+
+    Raises:
+        ValueError: If both parameters are set, or if slicing produces zero frames.
+        IndexError: If any index is out of range.
+    """
+    if select_segments is not None and drop_segments is not None:
+        raise ValueError(
+            'select_segments and drop_segments are mutually exclusive; '
+            'specify one or neither, not both'
+        )
+
+    if select_segments is None and drop_segments is None:
+        return dataset
+
+    n_frames = len(dataset.frames)
+
+    if select_segments is not None:
+        indices = sorted(set(select_segments))
+        for idx in indices:
+            if idx < 0 or idx >= n_frames:
+                raise IndexError(
+                    f'Segment index {idx} out of range for dataset '
+                    f'with {n_frames} segments'
+                )
+        selected_frames = [dataset.frames[i] for i in indices]
+    else:
+        indices = sorted(set(drop_segments))
+        for idx in indices:
+            if idx < 0 or idx >= n_frames:
+                raise IndexError(
+                    f'Segment index {idx} out of range for dataset '
+                    f'with {n_frames} segments'
+                )
+        drop_set = set(indices)
+        selected_frames = [
+            f for i, f in enumerate(dataset.frames) if i not in drop_set
+        ]
+
+    if len(selected_frames) == 0:
+        raise ValueError(
+            f'Segment slicing produced 0 output frames '
+            f'from {n_frames} input frames'
+        )
+
+    return dataset.evolve(frames=selected_frames)
