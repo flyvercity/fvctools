@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:1e0a0b9be943a17bc028dd5453fb3deb2c760c33eaec24977c45a7fa244081c1",
+  "claims": [
+    {
+      "id": "claim_e3cc5989269c4a8e8e491a14da0dd806",
+      "statement": "The Flight Log domain model in fvctools represents aircraft state as time-series telemetry with position in WGS-84 coordinate system (lat/lon/alt/amsl/height), attitude (heading), velocity (groundspeed), quality metrics (hdop/vdop/satellites), and unique aircraft identification (icaohex/icaoreg/atm/int).",
+      "evidence": [
+        {
+          "resource": "repo://docs/schema/FLIGHTLOG.md#L136-L200",
+          "version": "repo-lines-v1:sha256:f73e3e768451d96169868e0e758811377ef99619024209d656a35c6662d84fc9:eyJzZWxlY3RlZExpbmVDb3VudCI6NjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIwZjZmYWFkNzJhMjBlNGFjYWY1YWQ4NzdhN2NkZTlhM2U4Mjk5YzFjY2YxYzRhNDI2ZGFlN2E2ZDQwZTQwMDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImViMTk1MjA4Yjk2YzY0ZTY1NjYxMjdhYzEzYWRkMTk2ZjJjYTIwMDI3MzhlYjI2MTdmMmMyZWRhYWVkZjZhOWQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY1OTM5YzVmOWVhOGQ2MjhhOTliYmNmYTliZmM2YzQ4NDk3NmEwMDYyMGRiMDU1ZWYxZGMzY2NhNzZhNGVjMjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUwYjkxMTQyMzQ1MmFkNzFiN2FkMWNkNTFkNjg2ZWUyNzJiY2ZmMTRmN2VjMzI1MjlhZjBhYzQ2MzlkOGVhNzMifQ"
+        },
+        {
+          "resource": "repo://docs/schema/FLIGHTLOG.md#L160-L192",
+          "version": "repo-lines-v1:sha256:d1cf6fa58cfda7a876fb6438e76f967bf09a22d3354c414df1375e7f033d6bd0:eyJzZWxlY3RlZExpbmVDb3VudCI6MzMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNjZGJhZTNhZjg4YjYxYzA3ZmEyN2JjODcwZDQ5OGI3YjIxODkwZDAzYjYzOTQ5MTI3MGZlZWFiMWNiOTk0NjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdlYjcwMjU3NTkzZGEwNmY2ODJhM2RkZGE1NGE5ZDI2MGQ0ZmM1MTRmNjQ1MjM3ZjVjYTc0YjA4ZjhkYTYxYTYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU4NTRhNDliYWNkMDhlZmVkNGE1NjNmNTlhNWQ4YzFlYzY4ODQwZjc4MmExMzE5YzM0OTlkYjdiMzhmOGNmM2UiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijk1MDJlNGZmYWEyMzlmZWRmNzFhMWY4NzRiMWMxOGNhNDM2YjBjNWQ4NDM0ODY0MzNhNTc4ZTk3OWUzNDlkNjQifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-16T12:24:16.401Z"
+  }
+}

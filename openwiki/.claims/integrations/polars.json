@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:d89b4941276f628f00ea4b80be2f0feaebd1d623a27ebd7a55c80d247b722861",
+  "claims": [
+    {
+      "id": "claim_f2c638f28f1c4b8c9d9b13685b6fc4a9",
+      "statement": "Polars is integrated into fvctools format converters to provide high-performance data processing with automatic parallelization and memory efficiency, achieving 10-25x speedups over row-by-row Python processing.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/agentfly.py#L3-L3",
+          "version": "repo-lines-v1:sha256:646692524ed3020b9cb525c722bf928b8d59cd82e8963a639c21c2a9a30a7ad8:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmY1ZTQxODcxYzQ1M2NjZmM2NGUxOTY3NGFjYTc2MDRmMzkzNTUyMmIyMjdhYWY0NWVhYjcwMTFmNjQyODJhMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDk3N2E2OThjZmJiNGZmOThkY2Y1NjAwODg3M2I5NDJkZWNiZmYxN2I3YTMxYjg2MDZlM2I5ZmJiNDQzNDliMiJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/datcon.py#L2-L2",
+          "version": "repo-lines-v1:sha256:646692524ed3020b9cb525c722bf928b8d59cd82e8963a639c21c2a9a30a7ad8:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjEsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2NiOWZmY2NiYTUxNDZiMmRkMTc3YTMwYzMwNTdhNDM5NWViZDVjNzQ1ZDA3ODlkMmVkOTVkMGNmNGFmZTI3MSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYzE3YmIwODQwNGUzM2JlMGJhODA4MDMzM2Y3ZmRhN2Y1ZTVmY2JjM2NlMDc1Y2FmYWVjMzVkOWZlYjI3MjZkZCJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/senhive.py#L3-L3",
+          "version": "repo-lines-v1:sha256:646692524ed3020b9cb525c722bf928b8d59cd82e8963a639c21c2a9a30a7ad8:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmY1ZTQxODcxYzQ1M2NjZmM2NGUxOTY3NGFjYTc2MDRmMzkzNTUyMmIyMjdhYWY0NWVhYjcwMTFmNjQyODJhMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWVlNDRiNjY1MDljMWJiYWY5ODE0ZThjODlkMGMxNzY5ODNhMGI2Mzk4NzI4NGE1YmUwZTcwYTJhM2ZlOWZlNSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_518b41e21a26456eb84cb91ac7118142",
+      "statement": "Polars is a dependency in fvctools with minimum version 1.35.1 as specified in pyproject.toml.",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml#L27-L27",
+          "version": "repo-lines-v1:sha256:9812d2a1f79fe650bf191e22c0f22fa3dcbf3d3a4a1ca530c148b8ba8be6c285:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTgxMmQyYTFmNzlmZTY1MGJmMTkxZTIyYzBmMjJmYTNkY2JmM2QzYTRhMWNhNTMwYzE0OGI4YmE4YmU2YzI4NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTgxMmQyYTFmNzlmZTY1MGJmMTkxZTIyYzBmMjJmYTNkY2JmM2QzYTRhMWNhNTMwYzE0OGI4YmE4YmU2YzI4NSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZGY1NjE5YTVlY2M5MGY3MmU1NmJlYjRiYjYyODAyNTNhYzRmOTVlODE1NTk5ZjlhNjVhMjY2MDZlYzg2ZTAyMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZGFkOTYwOGE1ODc1ZGFlY2YxYmVlMzc3NTVkZmEwZmQ2ZDM1ZmUwMjJmZTA5YjA2ZDlmMzVhOGVjMzdlYjE3NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_9a440a9662c9466dbc33d32d8063067b",
+      "statement": "Real-world performance benchmarks show AgentFly converter achieves ~11x speedup, DatCon achieves ~10-15x speedup, and SenHive achieves ~25x speedup when using Polars compared to row-by-row Python processing.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/agentfly.py#L13-L15",
+          "version": "repo-lines-v1:sha256:5f9d0b89782fb3eae79dae61d6bbb4dc26877f4cbaa7baea82a8265b2c141e15:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOWZjZjg5ODlmN2Q2MjlhYTE4NDRkMzZhMDY4OTI5MWIxODE3MDM5MTNjY2VjZGE5YTQ3OWFhOTU3MjY0NGQ2MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWVkZjY1NWI4YjVmNjU3MzJhMDRlOTk5Y2M4YWU1MTk5MzJkY2E4OWEzN2EzNDdlM2VkZWRjYTJlMzA2MWQ0MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTA4NWQxNjg1MzM4ODBjNWNlNThjMGZhY2U5MGJkOGU0ZTAzN2U5MjBiMjNlNjgzMTgwNTZkYTQxMDU2NmY4YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjFiNTA2YzJiMTVmYTFkNTkxZDY4MDNhNTAzODU5ODNmNjU1Y2I4ZWQwNjZlOWZiMThkOGNjNjJjMDI5YjllMSJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/datcon.py#L32-L34",
+          "version": "repo-lines-v1:sha256:d4e8d7767bf1739c514eee53c111f39782310bfd3b983e4e33bbf2a99e62c88d:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNWE5YWJjOTkzNGVmMDIxNGY2MDIyNTdjZGM5ZDcwMGMxMWZjYjdkNzdjN2E0NTNiNDg4M2RkZWUwMzBhMTAzNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTRkMDlhOTk2YTVjZWVhZjYxYWRmNDQ3ZDk4Yzc5MzBlZDU2NWUyYzhiYTg4YzM1NjMyODllYTc3YzlkZDY5MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2Y0MWU1Yjg4ZGFkZWViM2VjNmZkMzY0OTBmMzdkZmI5MmFiMGM2OGFiODJjZWE1MzQ4NDJjOTY3NDM4NjA0ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTFlYzRjOWM2ZjZhNzEyMTIzYzI5OGU3ZDhmNDliNjJmOWM1MjAwYTk0N2NjODhmYzNhMzgyYWRjYTZkN2JmYiJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/senhive.py#L9-L11",
+          "version": "repo-lines-v1:sha256:36a18096cc96e6de9f088fd9b91e6fc328686d0d214448b48f98ae82e009be95:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOWZjZjg5ODlmN2Q2MjlhYTE4NDRkMzZhMDY4OTI5MWIxODE3MDM5MTNjY2VjZGE5YTQ3OWFhOTU3MjY0NGQ2MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWVkZjY1NWI4YjVmNjU3MzJhMDRlOTk5Y2M4YWU1MTk5MzJkY2E4OWEzN2EzNDdlM2VkZWRjYTJlMzA2MWQ0MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTA4NWQxNjg1MzM4ODBjNWNlNThjMGZhY2U5MGJkOGU0ZTAzN2U5MjBiMjNlNjgzMTgwNTZkYTQxMDU2NmY4YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzIzYzYzZGQyNmE0NThlNDkyNzA2MWIxZDliYjhlMTkzZTYxZDZkMWQwYjliZDdmMTQ4YjdlMDFlMjM2YWIxYyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_4bf198f3654045a8bfcf4c79e50dc93c",
+      "statement": "fvctools format converters use Polars vectorized operations and struct expressions to create nested JSON output structures efficiently.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/agentfly.py#L26-L37",
+          "version": "repo-lines-v1:sha256:889a18c8d1e454fa4d9980455ff2e8f213c20756ca7b33b4971353c5d6dd4d17:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJiNTYwMjEzY2U1OTRjMDg3M2U1ZWE1MzU5NmVhZTUzYzhiZjIyNDE2MDgwMTMyNDdiZmFmZjViNjJlMzFjMDMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFkZDI0NDU4MmI2ZmIwM2QyM2I4NDE1YWJlY2QzNDZiMGM5ZjQ2NmI2Zjc1MmIwNjgxODljZTdlOWEyZGMzNTAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJhMTE3OWRkYWM4M2FlMjUzYjEzY2ZiMmI1OWY1MTE0N2IwYjNkZGExYjA3ZDgwYjljNDY1YTliNmFlYjM2ZGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImM5ZDVmNzhlNGZkN2YyNDc0MDg5Y2YzMjViNTAwYzViZjA4MWY0OWE1MjMzOTcwYmRlNTUzNDE4MDcyZjBjMDgifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/senhive.py#L56-L72",
+          "version": "repo-lines-v1:sha256:1405423318fa57cd10a4fd47b10768991d25119695fbcdbdce2916534a9ccd42:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM5OWRkOTc4ZGU0Njk4MmNjZDM0MjgxM2Y3NzUxNzllNGZkNjgxNDkzNjUzY2I5OTY0Y2RkODNjMDVjNWNjNmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMwYzFmMTg4ZjE0MmVkN2E4MjQ2ODBiMjA3MTcyYzU1MTliYzYxNGE0OGZkYTdjZjE2N2VkYjhkZGY3OTk1NmMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjMxZmM5MmJkNDcyMjk0YWNhNzhhMTJhYmE1MTY0OGI4M2IzZjM3ZDRiNmIyYzQyMDQzMmE5MDUzMjc1NGIxYzgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZjMmQxYjA1NTJmZjY2NzZmOWY3N2RjMzMxMjhmYWVkMzc0NjQwNjBmNDQ0OTU3ZDU0MTVlNWFlYzQ5M2E4YzkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e843656ca39e42d2a31abb639aaff488",
+      "statement": "Polars provides optimized I/O operations used in fvctools converters, including support for multiple delimiters (comma, semicolon, space, tab) and fast ndjson writing via JsonlinesIO.write_dataframe().",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/utils.py#L88-L95",
+          "version": "repo-lines-v1:sha256:d0cf26e765d250e8d01abd54d22706843d28d5df82ab742048085a10c3e570bb:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDYzYWU2YWFmYWM0NWJmZjZmYzIzMzAxNDZlNjcxNzFlMDFjNjE4NWY3YTM4YTBhNmRjY2UzMzQxOWYzMWMwYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODljNzFlN2Y3OTVjMDhmMjIwYzY3ZjM2MzYwZTVhYWNiYjMzMzRiYWI3MjQ4Y2YzZjk0ZGRhZmQ3OTJiNzNiNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTg4NWYwZmJhYTc5ZDQyZDIwMDk4ZmJiNDljOWY5Mzg1ZWZiY2E5MDZmMjNkZThhMmYzYjEyM2IwMzUwYjc1ZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzBiZmU0M2NjZWFiNTgzNjE2MjlhNmYxZmQyY2ViMTNmNGM4MDlkOGJmM2MxMzE4ODdjYjk4YTE5NmU2Zjg0ZCJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/agentfly.py#L24-L24",
+          "version": "repo-lines-v1:sha256:b9c7d74cef77f33fbf9482c42b0a0ab78049541f9efb96ecebb36b65275be0d0:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjljN2Q3NGNlZjc3ZjMzZmJmOTQ4MmM0MmIwYTBhYjc4MDQ5NTQxZjllZmI5NmVjZWJiMzZiNjUyNzViZTBkMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYjljN2Q3NGNlZjc3ZjMzZmJmOTQ4MmM0MmIwYTBhYjc4MDQ5NTQxZjllZmI5NmVjZWJiMzZiNjUyNzViZTBkMCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzkyMjdjYjk3NWZmODAxNWI1NDE3Zjk1ODI0NmI1YzY4MWY2MTg4MjhiYzczZGNhYmVkYmI0Y2EwOTYyZDljYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjI3YzM1MjY0NGVjNjM1ZWVmNDY1NmIyYTJlNjdkMTQwMDZkMGU4NzQ1ZGU3MjRhMmMwNWZmODJhOTUwMzAxNSJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/datcon.py#L36-L42",
+          "version": "repo-lines-v1:sha256:291880ef3c2257d517e9af54102101cde5cb1597964066d42941350f2c52873c:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDViN2E0MjExYWJiMGNhOTgyYmI0Njc1ZTFkMzgzNjVkODQwN2YyNDdiYjZmOTM4MTRlMDFlMGVkY2QwZjQwMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTkwOWE1M2E2MThkMDI4ZTFkMzAwMGMwYTdhYmNlZWNiZTVmYjM3ZjRlNTExZWZlNDY2NDNmYWQ2ZTY2ODcyZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYWU5NmIyNjU3YmI2YjM2YjAyZTU2MDc0YmExYzkzZDM3YTM2NjU1M2M3ODFlODg1NjQ5NGZhZTQ2YmQ1OTU4YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiN2Y2MGVmMjBlNzllNmJhMDkzYjE5NzM2ZTE5YzQ2YWQ5OGRmNDBhOTU2NWZhYjMwZWYwOTllYjVjYmQ5MTFjZCJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/senhive.py#L13-L13",
+          "version": "repo-lines-v1:sha256:893ec4e203586de0f46f6df2c3fd9991e5c5f7297fddcbce0a2e763ae39685d7:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODkzZWM0ZTIwMzU4NmRlMGY0NmY2ZGYyYzNmZDk5OTFlNWM1ZjcyOTdmZGRjYmNlMGEyZTc2M2FlMzk2ODVkNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODkzZWM0ZTIwMzU4NmRlMGY0NmY2ZGYyYzNmZDk5OTFlNWM1ZjcyOTdmZGRjYmNlMGEyZTc2M2FlMzk2ODVkNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTA5MzRmYzY1ZTU2ODQ4NDM3NjQwMDhhMDE3MzAxMDZjZTljZTQxYjJkMTk1ODNjNTdjOGY3NTJjZWZlZDRhMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2RkZDJiYmEzNjJmNmFmY2FmYzE1MmFiNGRkMDU2M2Q1ZTM1NDFiYWM5YTY3NTFhYzBmMDYwMWZmMDZkNDJmNiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_dbb46f34d3c1440fbdd01d7d815d1765",
+      "statement": "fvctools converters use Polars type conversion with strict=False for lenient casting and handle data quality issues like nulls and empty strings.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/agentfly.py#L27-L28",
+          "version": "repo-lines-v1:sha256:c30a33cd3076a919a80546b5709245778ab96c7947be68d2a4dfe26643cd35a2:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZjQ0ZjNiMGE5OTc0ZWYyYWM1ZmY2OTM1Mzc0YmY3YTI5OWZkZTM1MmRkYmNiMDU1YTFhZmE0NDJkNWIxYTQ0OSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYzNlZTViNjk0ODcwMzE1MTRmYmIzNWJjNTJmN2Y0NmM2MDFiNmQyNDc3ZGZlOWIzMTc4ZDNiMTIxYmMxMjcyMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzI1ZjhhZmFjYWMxMDk4OTkzODhkYzQzYWI3ZDQyMDAzYTZlZDRkMDEzMWZjODhmODIwOGM3NzcwZjQzYjUyNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNWUyNzQxZWY0OGFjNTQ1YTQ5OGVhYzZkZmRlYTA2MDBjODg0MjI5OTU4NTBkMmM2OWQyYzUzNjYzNDIyZmNiYiJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/datcon.py#L53-L56",
+          "version": "repo-lines-v1:sha256:ae5e2e99eca309970cad8930d535816fe8f6ac14d66b2d2cdcdf1f4e0009eef8:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZGQwZDdlNTBlMDFlYWFkNDgxZGE0YTJiMGJjNjQyZTg4OGE1OTM2YTY0OGI1MTg0Yjk0ODlhZjQzYWYxNzMxNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZWE3NDJmN2RkNWU0ZTI5NWYwMWRkYzUwOWE4MDEzZjcxNzI5YmU2NWZjNTdhNGUzYzNmYWYyYTk3MzQ1NjE0NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjBlOWUxZDRlOGZhYTgxMzY2OGY3NDlkOGRlMDA5MzkwNDQ1NjhlOTUyNmMwMGNiYjBlYmY0MGRkZjgwMTg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDkyOWQyY2I5ODQzNWRhYThmZTMzMzhhMDU2ZDBmNjUwNGQ4YzEwYmEwZWQ4YTYxOGM4NmJmZjBmZTgzNDZkYyJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/senhive.py#L32-L33",
+          "version": "repo-lines-v1:sha256:009a7e5f8ca888148f5ef92a3c441577b6491cf1887426575cf12efea9587916:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNzA0NzY3NDAyYmQ0YTY1ZWEyMzM3Mzg0ZDI4MjE4OTBlM2ZiYjNmYjhhMWI1MTJkY2YzMTg3NDgwMDk5NDI4NiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZWE4NTJhMTI1NGQzY2IzOTc1OTVjZDM2NDU0NTQ0ODMzNGU3MDc4ZDNiZWJlMDRiNGY5Njc5MmU1NzAzYmExMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMTk2ZDQxYzBkMzQ4YmQ5MGIxMjViNTIyN2E4OWU3NGJmYTFiZTkwMmRjMmM1ZmEzNTRmODllNDg2MmI2ODUwYSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_d1258543d76f447b97a99a97b4f0da04",
+      "statement": "Polars integration includes error handling for malformed data, empty files, and type conversion issues across fvctools converters.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/datcon.py#L43-L45",
+          "version": "repo-lines-v1:sha256:7f60ef20e79e6ba093b19736e19c46ad98df40a9565fab30ef099eb5cbd911cd:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMGNhMzdjNjY4ZTQ1ZDNkZThlZGUzMDA5ZWEwY2MzODVmN2Q5MjdlM2IzN2RkZDUyZjg2MDhmY2UzNTQ0ODM1NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYWI1YzgyNjMyZmM4MmQ0YjJjMzQwZjQyNTU4YmEzZGZhMzFjNzY1NWRmNmZjYzE2OGI0ZmRjZTU3ZmFjNjA0MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDY0MmRlZWFhMzIwMWE5ZTcwNDU3OGZkZDJjZjZkOTk3ZDM3MTgwY2NhY2QxMTEyZTk1MTQyNTU0OTRlZjA5NiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGJiMjY1OTA4NTRkODI3OWM0ZDAyZjBlMzczOGUzNDQzYzI4N2JjMTgwY2Q3MzRkNzIzNTg1NzY5NmEwZDYyYiJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/senhive.py#L36-L54",
+          "version": "repo-lines-v1:sha256:59c31ff4d6c1de7ef9a77bcfdbc89754d461f6626813eb42713a2d8d68416c8e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRjYWE1YzgxMjgyMTE2MmNmMjVjOWQwMjI1ZGJmMWQ2ZDMxOTJhMjFiODg1MDNjNTRiNWMyOTAzMmVlMWVkMTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc4YTY1YmRjNTY0ZmU3NzdiYjI4MjVhZjJkMTJkYTAxOTk5ODdiMmNiNGJhYmM0MTlhMTNmOGUwYjI0NDZkNTgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBjZDBkZWVmOWI1MzFjZWIxMTc3OGI2MTU5Y2QzNzIzMTM3YTljYWQ5ZGUzYTA5MzY5OGE5NGMwYjk4NDUwMWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg4NDQ2ODg5ZmZmYmUxM2UxODkzNDViNzgwNDIxZWVhYjVhMTUxZmIxOTY5ZTI1ZjE3NGQ4MDgzMjVhYTY0MDMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ca0d09fe26dc490e8591085a5caeb853",
+      "statement": "Polars provides memory efficiency through vectorized operations and appropriate data types, with converters using Float32 for coordinates and Int32/UInt32 for timestamps and IDs.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/agentfly.py#L31-L33",
+          "version": "repo-lines-v1:sha256:2a99c10373d009a87102b438acb9ec2cd8d6678e5a2e1710a719a55f876e1e2a:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTY0MGNjYmYyZDIxODU1OWNkMzI3MDYyZDhkN2YyODI1N2UzNTljOGZjZjU4MzZmOTIyY2YxNDhlZjkwMWI2ZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMmVjNjA1MzhhZmJlOGUxMWQ1MWViODFmYjgzZGFiYWJhZDQ3NDM1MzY2ZjliN2IxOTkxNjIyNGZmMzAwZDk3MiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjRjMTNhNzk1ZWNjMDg1YzM3ZDBlOTExODVlZTFkMTQxMTc4NjMxNmI5YTQ1MTA3YWExMGU3Mjk5MjJkNmMyMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZmU3MjQzNjhjNDlkNzNhM2VhNGQ4NjBmNjU3ZjY2NTZmNzUzMmQ2ODczYjNjZDZmMjM0YTU5NmEwNjZiYTg2YyJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/datcon.py#L59-L61",
+          "version": "repo-lines-v1:sha256:3711ea711aab51e8e786f3af10043f703fe97a385e0d18928286e3285143602e:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTQ0YWNmYzMxZDEwZmMyNGMyMWExZDBiZTgzMGEwMzgzNjAzZWJkODIwZTViZWY4OWQ1YWI5Yzg4ZWNjNzA1YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMThmOTRmZmU1NWEwZmY5ZjY5MThkMTAxZmY2NDU2MmM5NDFhZWQxNGRjMzk5ODdhYzhkOWNmZTRlNmJhMWIyOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjJlNzk2MDg2YTBlYTE4MTNiMDliZTYyYTM5NzEzNmEwYThhMDNlNGI1OWNlZTRkMGRhZWQzM2FkOTM4NjAwYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjY2NTc3ZDg1MGJmODY0MGIwYWRmYzk5YjUzMzE5YzNhMDI2Yjc1MmE0YWI5OTgyZmE5MzQwMTY3YjJkOGUzNCJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/senhive.py#L66-L68",
+          "version": "repo-lines-v1:sha256:32fdabe8253ac9d886a9d0b6887d84c68098194457905593ac8dc06ed7b329dd:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDAzYjAyNzI1OGE3NDliNjQzOWMzYTU2ZjA2MjBlODE2NjEzNzFkMzU4MzZiMmZiODA1M2FkY2JmOTMyZjQ0YyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTJiMzYyMjYxYzU1NGYxYzNhNmVjODRkNTA2NzZkNjgxZDFhNzI5YTNhOGNhOTc3ZmMwMGY0MzE5YTdiZjM3ZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjJlNzk2MDg2YTBlYTE4MTNiMDliZTYyYTM5NzEzNmEwYThhMDNlNGI1OWNlZTRkMGRhZWQzM2FkOTM4NjAwYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjY2NTc3ZDg1MGJmODY0MGIwYWRmYzk5YjUzMzE5YzNhMDI2Yjc1MmE0YWI5OTgyZmE5MzQwMTY3YjJkOGUzNCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_49b74f06ed1a47f78aa4b96bb7f53951",
+      "statement": "Polars automatically parallelizes operations across all CPU cores, providing true parallelism without GIL limitations as evidenced by high CPU utilization in converters.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/agentfly.py#L13-L15",
+          "version": "repo-lines-v1:sha256:5f9d0b89782fb3eae79dae61d6bbb4dc26877f4cbaa7baea82a8265b2c141e15:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOWZjZjg5ODlmN2Q2MjlhYTE4NDRkMzZhMDY4OTI5MWIxODE3MDM5MTNjY2VjZGE5YTQ3OWFhOTU3MjY0NGQ2MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWVkZjY1NWI4YjVmNjU3MzJhMDRlOTk5Y2M4YWU1MTk5MzJkY2E4OWEzN2EzNDdlM2VkZWRjYTJlMzA2MWQ0MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTA4NWQxNjg1MzM4ODBjNWNlNThjMGZhY2U5MGJkOGU0ZTAzN2U5MjBiMjNlNjgzMTgwNTZkYTQxMDU2NmY4YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjFiNTA2YzJiMTVmYTFkNTkxZDY4MDNhNTAzODU5ODNmNjU1Y2I4ZWQwNjZlOWZiMThkOGNjNjJjMDI5YjllMSJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/senhive.py#L9-L11",
+          "version": "repo-lines-v1:sha256:36a18096cc96e6de9f088fd9b91e6fc328686d0d214448b48f98ae82e009be95:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOWZjZjg5ODlmN2Q2MjlhYTE4NDRkMzZhMDY4OTI5MWIxODE3MDM5MTNjY2VjZGE5YTQ3OWFhOTU3MjY0NGQ2MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWVkZjY1NWI4YjVmNjU3MzJhMDRlOTk5Y2M4YWU1MTk5MzJkY2E4OWEzN2EzNDdlM2VkZWRjYTJlMzA2MWQ0MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTA4NWQxNjg1MzM4ODBjNWNlNThjMGZhY2U5MGJkOGU0ZTAzN2U5MjBiMjNlNjgzMTgwNTZkYTQxMDU2NmY4YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzIzYzYzZGQyNmE0NThlNDkyNzA2MWIxZDliYjhlMTkzZTYxZDZkMWQwYjliZDdmMTQ4YjdlMDFlMjM2YWIxYyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_fb349e4bef9b44ffb107e49db670c6e7",
+      "statement": "Six format converters in fvctools use Polars: agentfly, datcon, senhive, ulog, artlog, and csgroup.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/agentfly.py#L1-L1",
+          "version": "repo-lines-v1:sha256:3cb9ffccba5146b2dd177a30c3057a4395ebd5c745d0789d2ed95d0cf4afe271:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiM2NiOWZmY2NiYTUxNDZiMmRkMTc3YTMwYzMwNTdhNDM5NWViZDVjNzQ1ZDA3ODlkMmVkOTVkMGNmNGFmZTI3MSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2NiOWZmY2NiYTUxNDZiMmRkMTc3YTMwYzMwNTdhNDM5NWViZDVjNzQ1ZDA3ODlkMmVkOTVkMGNmNGFmZTI3MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGNlNzIyN2ZkYzU2MTZkNWMwMTkzODhlMDU2YzY3MTRlYzhiYzNmNTk1YTcxMThlZjBlODk4YzFjOGE5Nzg5NiJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/artlog.py#L3-L3",
+          "version": "repo-lines-v1:sha256:646692524ed3020b9cb525c722bf928b8d59cd82e8963a639c21c2a9a30a7ad8:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmY1ZTQxODcxYzQ1M2NjZmM2NGUxOTY3NGFjYTc2MDRmMzkzNTUyMmIyMjdhYWY0NWVhYjcwMTFmNjQyODJhMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDk3N2E2OThjZmJiNGZmOThkY2Y1NjAwODg3M2I5NDJkZWNiZmYxN2I3YTMxYjg2MDZlM2I5ZmJiNDQzNDliMiJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/csgroup.py#L3-L3",
+          "version": "repo-lines-v1:sha256:646692524ed3020b9cb525c722bf928b8d59cd82e8963a639c21c2a9a30a7ad8:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmY1ZTQxODcxYzQ1M2NjZmM2NGUxOTY3NGFjYTc2MDRmMzkzNTUyMmIyMjdhYWY0NWVhYjcwMTFmNjQyODJhMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDk3N2E2OThjZmJiNGZmOThkY2Y1NjAwODg3M2I5NDJkZWNiZmYxN2I3YTMxYjg2MDZlM2I5ZmJiNDQzNDliMiJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/datcon.py#L2-L2",
+          "version": "repo-lines-v1:sha256:646692524ed3020b9cb525c722bf928b8d59cd82e8963a639c21c2a9a30a7ad8:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjEsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2NiOWZmY2NiYTUxNDZiMmRkMTc3YTMwYzMwNTdhNDM5NWViZDVjNzQ1ZDA3ODlkMmVkOTVkMGNmNGFmZTI3MSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYzE3YmIwODQwNGUzM2JlMGJhODA4MDMzM2Y3ZmRhN2Y1ZTVmY2JjM2NlMDc1Y2FmYWVjMzVkOWZlYjI3MjZkZCJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/senhive.py#L3-L3",
+          "version": "repo-lines-v1:sha256:646692524ed3020b9cb525c722bf928b8d59cd82e8963a639c21c2a9a30a7ad8:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmY1ZTQxODcxYzQ1M2NjZmM2NGUxOTY3NGFjYTc2MDRmMzkzNTUyMmIyMjdhYWY0NWVhYjcwMTFmNjQyODJhMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWVlNDRiNjY1MDljMWJiYWY5ODE0ZThjODlkMGMxNzY5ODNhMGI2Mzk4NzI4NGE1YmUwZTcwYTJhM2ZlOWZlNSJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/ulog.py#L5-L5",
+          "version": "repo-lines-v1:sha256:646692524ed3020b9cb525c722bf928b8d59cd82e8963a639c21c2a9a30a7ad8:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ2NjkyNTI0ZWQzMDIwYjljYjUyNWM3MjJiZjkyOGI4ZDU5Y2Q4MmU4OTYzYTYzOWMyMWMyYTlhMzBhN2FkOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzNmNDIyYmY3MmQyOWYyMDQ4YjhjYjdmNDE0Y2M2MTg3MDFjOTNkNTZlMDllOTk1YTk4MWY4NDNjMWQ5ZWE5MiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWNjMDZjYzA5N2Q5Njc2MTNmN2YwYmZiY2EzMTMyYjRkODg2MmMxMTA0M2VkMWU2NTFhYWNlNWFhOTAyNmNmYyJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-16T12:24:16.401Z"
+  }
+}

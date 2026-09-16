@@ -6,6 +6,17 @@ description: Complete guide to setting up fvctools for development and productio
 resource: /pyproject.toml
 
 tags: [setup, installation, development, production, dependencies]
+verified:
+  - by: openwiki/0.5.2
+    at: 2026-09-16T12:24:16.401Z
+sources:
+  - id: openwiki-source-70ce1bfcf13307b342cd09de
+    resource: repo://pwsh/Load-FvcTools.ps1
+  - id: openwiki-source-05ccef8d4cf1698187f20464
+    resource: repo://pyproject.toml
+  - id: openwiki-source-23775c3de52f3ab95a13cb8b
+    resource: repo://README.md
+generated: { by: "openwiki/0.5.2", at: "2026-09-16T12:24:16.401Z" }
 ---
 
 # Development and Production Setup
@@ -20,7 +31,7 @@ fvctools requires careful setup of:
 - **Dependencies** (via uv/pip)
 - **Development tools** (linters, formatters, test runners)
 - **Environment configuration** (environment variables, config files)
-- **CodeArtifact access** (for private package dependencies)
+- **AWS CodeArtifact access** (for private package dependencies, if needed)
 
 ## Prerequisites
 
@@ -67,7 +78,7 @@ Required for version control and cloning:
 
 ```bash
 # Check Git installation
- git --version
+git --version
 
 # Should output: git version 2.x.x or higher
 
@@ -105,7 +116,7 @@ git clone https://github.com/flyvercity/fvctools.git
 cd fvctools
 
 # Install in development mode
-uv pip install -e ".[dev]"
+u pip install -e ".[dev]"
 
 # Verify installation
 fvc --version
@@ -122,7 +133,7 @@ For production use, install normally:
 
 ```bash
 # Install from local directory
-uv pip install .
+u pip install .
 
 # Or install from Git repository
 uv pip install git+https://github.com/flyvercity/fvctools.git
@@ -136,24 +147,20 @@ fvc --version
 - Only production dependencies are installed
 - No development tools
 
-### Method 3: Using Install Scripts
+### Method 3: Using PowerShell Helper (Windows)
 
-fvctools provides installation scripts:
+For Windows users, a PowerShell helper script is available:
 
-```bash
-# Unix Shells (Linux, macOS, WSL)
-source scripts/Login-ToCodeArtifact.sh
-./scripts/Install-FvcTools.sh
+```powershell
+# Load fvctools in a PowerShell session
+."pwsh/Load-FvcTools.ps1"
 
-# PowerShell (Windows)
-."scripts\Login-ToCodeArtifact.ps1"
-."scripts\Install-FvcTools.ps1"
+# This will run: uv run fvc shell pwsh
 ```
 
-**What these scripts do**:
-1. Authenticate with AWS CodeArtifact
-2. Install fvctools with all dependencies
-3. Set up environment variables
+**What this does**:
+- Sets up the fvctools environment in your PowerShell session
+- Provides access to the `fvc` CLI tools
 
 ## Environment Configuration
 
@@ -199,11 +206,11 @@ aws configure
 # Set AWS region
 export AWS_REGION="us-east-1"
 
-# Login to CodeArtifact
-source scripts/Login-ToCodeArtifact.sh
-
-# Or in PowerShell
-."scripts\Login-ToCodeArtifact.ps1"
+# Login to CodeArtifact (if using private packages)
+# Note: This requires valid IAM permissions for CodeArtifact access
+# The repository-specific login command will be provided by your organization
+# Example (replace with your actual CodeArtifact repository URL):
+aws codeartifact login --tool pip --repository my-repo --domain my-domain
 ```
 
 **Required IAM permissions**:
@@ -227,7 +234,7 @@ cd fvctools
 
 ```bash
 # Install with dev dependencies
-uv pip install -e ".[dev]"
+u pip install -e ".[dev]"
 
 # Or install dev dependencies separately
 uv pip install duct jsonschema2md ptpython pytest ruff
@@ -625,7 +632,7 @@ uv pip install --no-deps .
 # Check network connectivity
 ping pypi.org
 
-# Check AWS CodeArtifact access
+# Check AWS CodeArtifact access (if using private packages)
 aws codeartifact get-authorization-token --domain my-domain
 ```
 
@@ -636,8 +643,8 @@ aws codeartifact get-authorization-token --domain my-domain
 **Solutions**:
 
 ```bash
-# Re-authenticate
-source scripts/Login-ToCodeArtifact.sh
+# Re-authenticate (if using private packages)
+aws codeartifact login --tool pip --repository my-repo --domain my-domain
 
 # Check AWS credentials
 aws sts get-caller-identity
@@ -774,8 +781,8 @@ export AWS_SECRET_ACCESS_KEY=...
 ### 3. CodeArtifact Access
 
 ```bash
-# Use temporary credentials
-source scripts/Login-ToCodeArtifact.sh
+# Use temporary credentials (if using private packages)
+aws codeartifact login --tool pip --repository my-repo --domain my-domain
 
 # Tokens expire (typically 12 hours)
 # Re-authenticate as needed
@@ -798,8 +805,8 @@ sudo -u fvctools command
 
 ```bash
 # Monitor memory usage
-/top
-/htop
+top
+htop
 
 # Use lazy evaluation with Polars
 lazy_df = df.lazy()
@@ -815,8 +822,8 @@ for chunk in df.iter_slices(chunk_size):
 
 ```bash
 # Monitor CPU usage
-/top
-/htop
+top
+htop
 
 # Use parallel processing
 find ./input -name "*.nmea" | parallel -j $(nproc) process_file {}
@@ -829,7 +836,7 @@ find ./input -name "*.nmea" | parallel -j $(nproc) process_file {}
 
 ```bash
 # Monitor disk usage
-/df -h
+df -h
 
 # Use efficient file formats
 # JSON-Lines (.jsonl) for streaming
@@ -858,15 +865,15 @@ python -m fvc.tools.cli --log-format json
 
 ```bash
 # Check system resources
-/top
-/htop
-/df -h
+top
+htop
+df -h
 
 # Check Python processes
-/ps aux | grep python
+ps aux | grep python
 
 # Check disk space
-/du -sh /var/lib/fvctools
+du -sh /var/lib/fvctools
 ```
 
 ## Backup and Recovery
@@ -941,6 +948,7 @@ git tag -l
 - [CLI Tools Reference](/openwiki/architecture/tools.md)
 - [Integration Guides](/openwiki/integrations/index.md)
 - [Testing Guide](/openwiki/testing/overview.md)
+- [Development Practices](/openwiki/operations/development.md)
 
 ## Quick Reference
 
@@ -951,8 +959,8 @@ git tag -l
 | Run tests | `pytest` |
 | Format code | `ruff format src/fvc` |
 | Lint code | `ruff check src/fvc` |
-| Login CodeArtifact | `source scripts/Login-ToCodeArtifact.sh` |
-| Install scripts | `./scripts/Install-FvcTools.sh` |
+| Login CodeArtifact | `aws codeartifact login --tool pip --repository <repo> --domain <domain>` |
+| PowerShell helper | `."pwsh/Load-FvcTools.ps1"` |
 
 ## Best Practices
 

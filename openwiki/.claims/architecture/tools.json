@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:9a7ceb05ad1dbdcaa6ede47409b3ba9e362f94e8baf2812e0054201d6dd18c2c",
+  "claims": [
+    {
+      "id": "claim_4223cb635adf484eb5bd0f784fa1c2ac",
+      "statement": "fvctools provides a modular CLI organized into toolsets: fvc df (data file tools), fvc calc (geospatial calculations), fvc render (visualization tools), and global options.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/cli.py#L16-L22",
+          "version": "repo-lines-v1:sha256:aa07dc6b33b1e24c86c440ec24f83582d9c191d4efd7f77215da0343e6dd058a:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTZhMTU5ODkwZTk3OTcyZjUyMzc3N2M2MWIwMGFkNDJjY2JlZGJlZTQ4YzBiNjdjNjFlNjk5MjMzMTJmNWEzMiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYjljN2M0NjJlZjhmZGY1MjNkMTJiNDU4M2UyZTdmZGVlY2IxN2NmN2M3MjJjZTIyMTc2MjQzZWZhM2RlODRjMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTA5MTEyNzVhMDExMmM5Y2NmNjY3NDUzNWUxNzRmOTEyMjM1MGFkNzk2NzE4MzA0OWFlYmU1ZDEzZDFiYzFlYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTM2N2VjOTk2NTYwNDBlNmY0YzI2YmQzNTQ5MjRiNmQ1NTEwZDU4ZTZlNmU4ZTAxOWJiYTEzM2RhNmI1NjM5MyJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/cli.py#L79-L81",
+          "version": "repo-lines-v1:sha256:aa3b78ed152af05fcef849982229548031683caf1737acc6b8523dea4458f18b:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWYyOWQxYTdmYTFjYjEwZTU3N2RkMGJmZTYwZmZiN2ZmNmUxZDc5MjhhODRiMTg2ODA5MTc2ZGY0MDc2ZDk0ZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiN2FhZjE0NTdiNDkzMTg5YTBmYWIzZmU3MGM0ZDBlNGVmYTVlMDdhZWUxZGZkZTI0MWE1OGNkYzhlZmNhZDg3MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOGNjNGE3ZDFjYzc5NmFiYTNlNDY3MjMzMjdmNTE3ZTlmODExOTgyZDI1MGYwNzAyOTg2ZTRiNTc2NGFkOTU4OSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODkzYmQ2NmUyYmI3MWYzYjhhOTI0MDY0YmJmN2IwN2M1OTAzYTc3M2ZhNGY4YzM1NDYwNjAzODY2NzFkM2E3MyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_efe67817f3514325b112d41434d2c92e",
+      "statement": "All fvc commands support global options: --version, --help/-h, --verbose/-v, --json, --no-pprint, --aws-profile, and --egm.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/cli.py#L17-L18",
+          "version": "repo-lines-v1:sha256:0f89e911c32dd92ff9a0885359c304d56f00de5fd8baff316bf1a2fd182377bb:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODNmNDBhNGI4OTA0NTlmODY3NWQ3NTYyOTA2NWQ1NDNmMmIzZDE0NDI0ZGVmNTk4ZWRkMDVhODM5YjYxNjA4MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiN2NlMThhOGU3MzQ2MWIxYjViYmQ2YjNiZTRiODY4OWIyOGM3ZjhiNWI3ODI2Yjc5YmRjNTZmZmUwYzU2OTlhNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNmIwYjk3MmEzZjczNzY5YjY0NWQxNjEyMTllODkxMDRlNGM2MTFjOGU2YTlkMmE4NWZjMzdlOTJhNTliNzRkMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjcyMjlhOGU0ODhmNWUyYzYyOTJmMjFmMDIxNzFmODViMTY5NGIwMzM3MjUwZTY3MTIzYjFjNWQxMWM4MmUxNCJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/cli.py#L19-L32",
+          "version": "repo-lines-v1:sha256:708b1a4a1c03cfa7323fa33d41f9e9c05f70bff6d11e3af02b83f7d6996f7606:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE4NWE5NWQ2YjkxMjM4ZjAzNTU4ZmNiODEwZmM1M2RlMmQ5NWE4MTA0NjM2OTkwYzhiYjJmOWRiOGE5NjMwZDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZhZmJhMDUyN2MzOTUzYzRiNmUwZTViNTczOWJhODM2MTJmODA1M2JjZGM5NDY2NzMwMTkzY2QxZDU5MGI0MDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJjOWZmYzM4OGNlNGYyNWY4YjNkMTg3MGMyOTdkNmRjZmI2YjFkNzM3YmNiZWVjM2VmNmVmZDYxMjRmODY0ODkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI2MjM0YjBjYzI5M2QwM2M3ZmI1ZTVkYjQ0MWFmMzNiMWVlNDEwNWYyOWI5OGI5YzMxYzY0ODYxMDgwZTc3MzgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_83b254c549064142adab5602a0e8bb62",
+      "statement": "The fvc df convert command converts external aviation data formats to FVC format, supporting formats like nmea, safirmqtt, agentfly, artlog, courageous, datcon, gnettrack, robinradar, senhive, and ulog.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/cli.py#L106-L116",
+          "version": "repo-lines-v1:sha256:bb39e970049bdf0cedc51bac3c16305cb9f089655123b400c91bb0d67c69febd:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY1NTY3MDI2Y2Q3OTRkNzZhNzc0YWZlYjkyZDZmZjA5MWU4OTMzN2VmMjI5NDNjNzZlNGE2MTM3NWE1YTYzMDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE5YTc5OTcxNmI5YWM5NjM2ZjQ0OWQ5ZjBjYTE3NTdlNjY1ODIwOWI1MDc1ZDBiYWI2OTFjNjIwZDdiNDEzMWMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjY4Y2Q4NTc3ZTQ2OTc4ZWZkODMzYWQyMjlmNTdkZTBlNThiZmE2ZGFjMDFmODZiYjRkZDZjNWNhZjNjMGU5YTEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQ4ZmQzMTkxNmQ0NjEyZGZmOTRhYWM5YTM2YTZjODVhYmRlMWJkMDkzYTdjNDYzMzRmZWUzZTcxNDBmYjE4MjIifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/cli.py#L84-L138",
+          "version": "repo-lines-v1:sha256:fdd30fac80b3b242a91df6c8e74b439401d0edbf5a4d02e4fa4c7e22c66a2a92:eyJzZWxlY3RlZExpbmVDb3VudCI6NTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE3OTIwNTVlYjIwNTRlODU0OGI3MGIyYjhlNzhmYzc2MDQ5NTAwNzdiYWNjNTIyNDQ1NWFjNDJlNjRkOWNlZjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjllNDk2NjY1OTNjMDVmNmI2OTY2NTZmZDY4Mzc0MTE1MTBkZDQxODhhYjkyNWNkYzllZjk3ODgyOTExMTNmODEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM3ZTZlNjA2MDZhMTM4NmNiN2FiOTJkZGJmMTA0ODhmNzExNjhmM2QxYWFlZTRiOTBiMWUxYTY5MmUyMTQ3YTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjllMWE0YmFhNDg3N2Y1ZWE2NTc4OWE3NTJkOTdkZGYxYWFjMjhhYmJhMzk4NTJiODJiZTBmYzhmMGNkMmRmYTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_0ab2c50897754f3d8d8d81a8400a5948",
+      "statement": "The fvc df validate command validates FVC files against the schema and provides progress feedback during validation.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/cli.py#L53-L67",
+          "version": "repo-lines-v1:sha256:5ae88fbc3e9f6f42eef8a24853ce10ef66e7704533e1c84c8888ed5255707c73:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYxOTkwOWNmYWU3MWM4YzlhNTVmM2MyNTQ5ODhhOTVkZGIzZTg0MGZkZDllNTRjNjBiMjFhMWE4MGQzODQ4MDEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdiMTYyYjY1ZTNkYWRiNjE1MWQ4YTZhNmZiZDkzY2QzZTE3ZWVmMjJmOWZiMTVhNGJhNTNkOTZmYzBjOTFhZDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJjODBjMWNhMTFlODg2MmRlMjQyMDliOWZjYTMzMmQ1ZmNiOWJhMDk3ZDdkM2YzZDc3ZWFlMGY1Yjk5YjEyMmMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY2YjdlZTdjOTE1ZmJiMjZhOWQ5MmM2NDBkZTE1MjYxZTI4NmY2MWU3ZGM2Nzk3NzliNWNlOTk0NTQ2YWM5YmMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_4858e16026c1496fa1a7edee88d24d22",
+      "statement": "The fvc df correlate command correlates multiple FVC files by aligning timestamps and data points, showing progress for each input file.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/cli.py#L154-L173",
+          "version": "repo-lines-v1:sha256:124e0ffb6cb168efa5ed912812cbbd64fba8d54a23d84266750d201bd6f0837c:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE3YTJjZjMwNjY2YzEzMzU2MmFiN2MwNGZlMGJlMTZiOTlkMzY4MzczMjhhNmUwM2RlZTk1Y2UzMmYwN2M3ZmUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5MDlhNTNhNjE4ZDAyOGUxZDMwMDBjMGE3YWJjZWVjYmU1ZmIzN2Y0ZTUxMWVmZTQ2NjQzZmFkNmU2Njg3MmYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMwYjFlMTk1NWE4ODQ0MGZlOWJjMGI3YTc2ZjI0MjI0Nzk0Zjg3M2FmMjNkNjFmZmY3OTU1NTg3Y2NhM2E4YmIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjhkOWQyOWNiYWM0ZWYzODZlNTBmZDI5OWNiMmZmOGViMDI1MjZhZGJkNWU0NjVhODAyMWJiMTFkMGNiNTMyMGIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_32d787ab262e49e7aaac738ae9b80b3b",
+      "statement": "The fvc df flightlog group provides three commands: stats (flight statistics), split (split logs by day or inactivity), and select (fetch elements using Polars expressions).",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/flightlog/cli.py#L19-L152",
+          "version": "repo-lines-v1:sha256:8dcaaf14e543360b5e62134632c91db9fa7f9b894309949a7bc43b1a48288cfd:eyJzZWxlY3RlZExpbmVDb3VudCI6MTM0LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI0NmFlMmMyYTkzZDZiZjk3ZDA0NjkzYzI4NjUyMGY5ZWEyMzJhNmQ2MTMxOTRjYTFkODVmNjU2MDdiZmEzMjIyIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIxYjJmNzU5MjRkZjZlMmE0MWY1ZTU3NDA1Njc4NzNjMmRlNDQyZWM5YzE5ZGM1YTIzZGFjZTllZGMxOGRkZDYxIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiIxOWI5ZGUxYjg5ZTkwOWFlYzFmMzM4Y2RlZDkwODUyYWJmM2FiOTM3YThjMDBjOTY1NmZkZmIxZWEzMWJmZGFjIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MCwiZm9sbG93aW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1In0"
+        }
+      ]
+    },
+    {
+      "id": "claim_6dd4bfcb2be44c81889d8c13a1e469e5",
+      "statement": "The fvc df fusion group provides the flightlog command to extract fused flight log data from SAFIR Fusion replay files into plots and tracks output.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/fusion.py#L46-L56",
+          "version": "repo-lines-v1:sha256:cd298731a1372ab38e75582bad88359f56c121e924a5c58e50c036cf1d75ae56:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYwMmQwNDI5M2FiMWRjZDc5YjZkMGI2MDNiZDdlMzZlMWNjZWNmMzQ0YWQ4ZjViOWRkODI0NTQ4MDYzYzFlOTAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk5MDViYzUwYmE5YTNhM2ViY2I3MDRmODk2ZGFjMjQxOWVhMjc0YjE4YWUyNDJjNGQ0OGMxMDgyNzgxNTkyMzYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJlZDJjZWJmZDc0YWU3MzlhZmY1YzVkZDM0YTJlZjU0MDZlZWI3NjAyZTc0NWRmNTIzNTJmZDI0N2I3YzNlOWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdiYjM5MTAzZTc4NzI1M2ZhNjI2ZDBjZTUzYzk4OWUzMmI1Zjk0MDFlMDY1ZmUwMDlkMzNkODIzMzQzOGYyN2QifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/fusion.py#L59-L61",
+          "version": "repo-lines-v1:sha256:a790578e118b885d67a42bf2070dbdd2034ece0d81a5664ea00f8230130f5f7e:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDUxYmFhMDM0OTQ5MzEyODYxOGEwNDdkNjI4NzAzNGE2NWJiOWM1YmE2MmM4YzA2MTcwYjE1NTU3MGM3M2E4ZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTQ0NWUxN2FkZWQzMDk3NDVmZmRhMzI5ZmNkNjU4NjJkNTI5NmM0ZWQ3YjBmZWNlYjMzMDQ3NWY2ZTI3NGM2MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTZjMTNiZTg1NTA1MmRmOTZiM2Q5M2U5NmU2OWJhOTZlNTliNWJlODNjMWQ1YjFjZDNiMWQ1NmYyYWFkZTk3ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjA1OTdhMTZjZjQwZjZjNzNjNDc5YmI0ZTk2Y2RlZjExMDRjMDFhYWFmMjk3Y2Y0YWQwYzk1ZDVkZmI4NjU3ZSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_8462539568d541598b43c0efa6fd6661",
+      "statement": "The fvc calc toolset provides three commands: epoch (UNIX timestamp conversion), undulation (geoid height lookup), and terrain (terrain elevation calculation).",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/calc/cli.py#L11-L97",
+          "version": "repo-lines-v1:sha256:5d671708f7b0de55dfd13372d3770128885c2c2a5d355f0d4c80575a0ff8b30c:eyJzZWxlY3RlZExpbmVDb3VudCI6ODcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM5MjI0MDlmYjJkOTYwZTgwNjcwMDMzZDc5ZWQzNDA2NTA0MjA4MDRhOTQ1YTkzYTYzYzYzNDRkYWYyYmEyM2MiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFkYWRmYWIyYTQ4NDk4OTI1MWQyOTlmNmI0M2E3ZmVhYTc1OWViZThmYTVmYmUxMTJkNjNkODdkY2EwZWJmZTYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjYwZDAxMWNmZWM4MGVhYjgzOTljMTRmN2Q3N2ZlMWY0OTkxZDM5MGY2YjhjZjJkZjVkOGZlOWJlM2Y2OTEyZWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b8890de110fa4e6ca97d814002f18846",
+      "statement": "The fvc render fl command generates interactive HTML map visualizations from FVC flight log files, creating an index.html file and opening it in the browser.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/render/cli.py#L10-L52",
+          "version": "repo-lines-v1:sha256:89a529aa631d0c21d953aceef022de93c234a1d556ab28db2de9ad423fb981b4:eyJzZWxlY3RlZExpbmVDb3VudCI6NDMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM2NzcxMzUxMzk1ZThiYWM3MWQ1OGM5MmEzNWYyNTRhZTk1YTUyM2IxOTIyN2ZlNzNiYWJhNDc4MzY3MTI2YmMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE4OWQ0Y2M3ZjdkYzRhZTk1MGM3OGQxMmM5ODVkYTZjZmQ3MDdmMjk2ODllYjUzMTBjYzU3Yzg4ZmU4NDBlMjEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVjMTk1OGI2YTM1MjQyMTJmNzI2MTk2MDhkOTNiNjAyYWI4ZjQ0YjI3YWZiODMyZjA0MTdkZThmZDAzM2YxODkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ5YzVhNGEwMWU0MWMyMzE1NjE2ZWViOWY1ZmQ2MjVhNGZkYzVlMTE2ODA1MThjMDg3Y2Q3YzVlOGRhOThiYzQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3c50c0896fa541218da62de96a14c029",
+      "statement": "The fvc shell pwsh command generates a PowerShell integration script that enables JSON-based command execution in PowerShell environments.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/cli.py#L55-L76",
+          "version": "repo-lines-v1:sha256:d094f142106ef60d1f96bd9338031b12fcba959c818b8c30b81b93e8f9b7db44:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUyMTk5M2I1MTQxMTdmMDA3ZTBmNzA1MjVhMjk0MjY1NjgyNjg0MzY5NWMyNzEzNDMxM2RkNGNiMDQ5NjhhOGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMwYzFmMTg4ZjE0MmVkN2E4MjQ2ODBiMjA3MTcyYzU1MTliYzYxNGE0OGZkYTdjZjE2N2VkYjhkZGY3OTk1NmMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJjNDExYzRiN2Q3ZDM5YmIxOTRlMGI4Njc4YjFlYjBmN2FlNGQwMDdjMGIzY2FjZGM3MDNlNjY1NDNjOGUwMGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNkZjhkNzZiNzE1ODJhYTcwYTA3ZWQxNDk5ZWM0NTIzNDg4MTU2OTYwM2VlYmNmNGU1MWY0NzY5MTgxZjliM2YifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-16T12:24:16.401Z"
+  }
+}

@@ -1,10 +1,17 @@
 ---
 type: Domain Format Reference
 title: Domain Formats and Models
-edescription: Reference documentation for domain-specific formats, data models, and business logic in fvctools
+description: Domain-driven documentation of flight logs, radar logs, geospatial models, identifiers, and metadata explaining business logic and data structures
 resource: https://github.com/flyvercity/fvctools
 okf_version: "0.1"
 tags: [domain, formats, models, data-structures, reference]
+verified:
+  - by: openwiki/0.5.2
+    at: 2026-09-16T12:24:16.401Z
+sources:
+  - id: openwiki-source-c7774ec2686a3a37e5f7b41c
+    resource: repo://docs/schema/FLIGHTLOG.md
+generated: { by: "openwiki/0.5.2", at: "2026-09-16T12:24:16.401Z" }
 ---
 
 # Domain Formats and Models
@@ -13,11 +20,17 @@ This document provides detailed reference documentation for domain-specific form
 
 ## 🎯 Table of Contents
 
+<!-- openwiki: broken internal link [#flight-log-domain-model] heading anchor "flight-log-domain-model" does not exist in /openwiki/domain/formats.md. Fix the href or restore the target, then delete this comment. -->
 - [Flight Log Domain Model](#flight-log-domain-model)
+<!-- openwiki: broken internal link [#radar-log-domain-model] heading anchor "radar-log-domain-model" does not exist in /openwiki/domain/formats.md. Fix the href or restore the target, then delete this comment. -->
 - [Radar Log Domain Model](#radar-log-domain-model)
+<!-- openwiki: broken internal link [#geospatial-domain-models] heading anchor "geospatial-domain-models" does not exist in /openwiki/domain/formats.md. Fix the href or restore the target, then delete this comment. -->
 - [Geospatial Domain Models](#geospatial-domain-models)
+<!-- openwiki: broken internal link [#identifier-systems] heading anchor "identifier-systems" does not exist in /openwiki/domain/formats.md. Fix the href or restore the target, then delete this comment. -->
 - [Identifier Systems](#identifier-systems)
+<!-- openwiki: broken internal link [#metadata-model] heading anchor "metadata-model" does not exist in /openwiki/domain/formats.md. Fix the href or restore the target, then delete this comment. -->
 - [Metadata Model](#metadata-model)
+<!-- openwiki: broken internal link [#conversion-context] heading anchor "conversion-context" does not exist in /openwiki/domain/formats.md. Fix the href or restore the target, then delete this comment. -->
 - [Conversion Context](#conversion-context)
 
 ---
@@ -115,12 +128,12 @@ The radar log domain model represents detected targets and their state over time
 
 Radar logs track the position and state of detected targets:
 
-- **Target Identification**: Unique target ID
-- **Position**: Latitude, longitude, altitude
-- **Velocity**: Speed and direction
+- **Target Identification**: Unique target ID (system-specific or derived from aircraft identifiers)
+- **Position**: Latitude, longitude, altitude (WGS-84 coordinate system)
+- **Velocity**: Speed and direction (ground speed, heading)
 - **Classification**: Target type (aircraft, drone, bird, etc.)
-- **Confidence**: Detection confidence score
-- **Timestamp**: When the detection occurred
+- **Confidence**: Detection confidence score (0.0 to 1.0)
+- **Timestamp**: When the detection occurred (Unix timestamp in milliseconds)
 
 #### Sensor Fusion
 
@@ -136,15 +149,21 @@ Multiple radar sources can be correlated to:
 ```json
 {
   "time": {
-    "unix": 1756033207000
+    "unix": 1756033207000,
+    "rx": 1756033207094
   },
   "target": {
     "id": "TGT-001",
+    "uaid": {
+      "icaohex": "ABC123",
+      "icaoreg": "VH-XYZ"
+    },
     "pos": {
       "loc": {
         "lat": 52.3123,
         "lon": 4.9456,
-        "alt": 1200.5
+        "alt": 1200.5,
+        "amsl": 1195.3
       },
       "heading": 45.2,
       "speed": 250.3
@@ -160,6 +179,8 @@ Multiple radar sources can be correlated to:
 }
 ```
 
+**Note**: Radar log records in `.fvc` format follow the schema defined in `/docs/schema/RADARLOG.md`.
+
 ### Radar Data Sources
 
 The system supports multiple radar data formats:
@@ -169,6 +190,8 @@ The system supports multiple radar data formats:
 - **ADS-B**: Automatic Dependent Surveillance-Broadcast
 - **MLAT**: Multilateration from multiple receivers
 - **WAM**: Wide Area Multilateration
+
+**Supported radar systems**: Robin Radar, Senhive, CS Group, and other ADS-B/radar data providers.
 
 ---
 
@@ -192,18 +215,20 @@ Geospatial calculations are a core component of fvctools, enabling accurate posi
 
 ### Geoid Models
 
-The system uses the **EGM96 geoid model** for altitude conversions:
+The system uses the **EGM96 geoid model** (or configurable alternative) for altitude conversions:
 
-- **Purpose**: Convert between AMSL and ellipsoidal altitudes
+- **Purpose**: Convert between AMSL (Above Mean Sea Level) and ellipsoidal altitudes
 - **Accuracy**: ~1 meter globally
 - **Implementation**: `pygeodesy` library integration
+- **Configuration**: Can be overridden via `EGM` environment variable or `params` dictionary
 
 #### Geoid Conversion Functions
 
 ```python
 from fvc.tools.calc import geoid
 
-# Load geoid model
+# Load geoid model (defaults to EGM96)
+# Can be configured via params: {'EGM': '/path/to/custom.pgm'}
 geoid_model = geoid.load_geoid(params, metadata)
 
 # Convert AMSL to ellipsoidal altitude
@@ -213,7 +238,17 @@ ellipsoidal_alt = geoid.amsl_to_ellipsoidal(
     longitude=4.9,
     altitude_amsl=100.0
 )
+
+# Convert ellipsoidal to AMSL
+amsl_alt = geoid.ellipsoid_to_amsl(
+    geoid_model,
+    latitude=52.3,
+    longitude=4.9,
+    ellipsoid_height=101.0
+)
 ```
+
+**Evidence**: See `/src/fvc/tools/calc/geoid.py` for implementation details.
 
 ### Distance and Bearing Calculations
 
@@ -293,7 +328,7 @@ The system supports multiple aircraft identifier systems:
 
 ### SAFIR Identifier System
 
-The SAFIR system uses a multi-part identifier system:
+The SAFIR system uses a multi-part identifier system with versioned records:
 
 ```python
 def from_safir_ids(safir_ids):
@@ -301,18 +336,20 @@ def from_safir_ids(safir_ids):
     Convert SAFIR identifiers to unified format.
     
     SAFIR identifiers can include:
-    - ICAOHex: ICAO hexadecimal identifier
-    - ICAORegistration: Aircraft registration
-    - CallSign: Flight call sign
+    - ICAOHex: ICAO hexadecimal identifier (24-bit address)
+    - ICAORegistration: Aircraft registration mark
+    - CallSign: Flight call sign (ATM)
     - Other: Internal or fallback identifier
     
-    Returns unified identifier dictionary.
+    Returns unified identifier dictionary with keys: icaohex, icaoreg, atm, int
+    
+    Raises UserWarning for unsupported versions.
     """
 ```
 
-**Recent Optimization**:
+**Implementation**:
 
-The `from_safir_ids` function in both `safirmqtt.py` and `safirmqtt_v2.py` was optimized:
+The `from_safir_ids` function is implemented in both `safirmqtt.py` and `safirmqtt_v2.py`:
 
 ```python
 # Performance optimization: Unified if/elif chain with hoisted fallback
@@ -322,6 +359,10 @@ def from_safir_ids(safir_ids):
     fallback_int = None
 
     for safir_id in safir_ids:
+        # Validate version for v1 records
+        if safir_id.get('version') != '1':
+            raise UserWarning(f'Unsupported version {safir_id.get("version")} in SAFIR ID')
+
         system = safir_id.get('system')
         key = safir_id.get('key')
 
@@ -338,6 +379,7 @@ def from_safir_ids(safir_ids):
             fallback_int = key
 
     if 'int' not in ids and fallback_int is not None:
+        # If no internal ID is present, use the first one found
         ids['int'] = fallback_int
 
     return ids
@@ -348,6 +390,8 @@ def from_safir_ids(safir_ids):
 - Unified conditional chain improves branch prediction
 - Fallback check moved outside loop reduces iterations
 - ~15-20% faster identifier parsing
+
+**Evidence**: See `/src/fvc/tools/df/xformats/safirmqtt.py` and `/src/fvc/tools/df/xformats/safirmqtt_v2.py` for complete implementations.
 
 ---
 
@@ -402,18 +446,35 @@ metadata = create_metadata(
 )
 ```
 
-**Recent Optimization**:
+**Implementation**:
 
-The `metadata_args` decorator was refactored to remove redundant wrapper code:
+The `metadata_args` decorator is implemented in `/src/fvc/tools/df/metadata.py`:
 
 ```python
-# Before: Multiple nested decorator applications
-# After: Streamlined decorator chain
-
 def metadata_args(command_func):
-    command_func = click.option('--polar-sensor-format', ...)(command_func)
-    command_func = click.option('--polar-sensor-source', ...)(command_func)
-    command_func = click.option('--attach-polar-sensor', ...)(command_func)
+    """
+    Decorator to add polar sensor options to CLI commands.
+    
+    Adds three Click options:
+    - --polar-sensor-format: Format for polar sensor information (choices: ['nmea'])
+    - --polar-sensor-source: Path to polar sensor file
+    - --attach-polar-sensor: Flag to attach polar sensor information
+    """
+    command_func = click.option(
+        '--polar-sensor-format',
+        help='Format for polar sensor information',
+        type=click.Choice(['nmea']),
+    )(command_func)
+    command_func = click.option(
+        '--polar-sensor-source',
+        help='Add polar sensor information to metadata for this file',
+        type=click.Path(exists=True, path_type=Path),
+    )(command_func)
+    command_func = click.option(
+        '--attach-polar-sensor',
+        help='Attach polar sensor information to metadata for this file',
+        is_flag=True,
+    )(command_func)
     return command_func
 ```
 
@@ -422,6 +483,8 @@ def metadata_args(command_func):
 - Easier to maintain and extend
 - Clearer intent
 - Reduced code duplication
+
+**Evidence**: See `/src/fvc/tools/df/metadata.py` for complete implementation.
 
 ### Polar Sensor Integration
 
@@ -456,6 +519,50 @@ metadata = create_metadata(
 
 ---
 
+## 🔄 Flyvercity Data Format (.fvc) Integration
+
+The **Flyvercity Data Format (.fvc)** is the unified format used throughout fvctools for all flight and radar data. It is a JSON Lines format (`.jsonl`) with a standardized structure.
+
+### .fvc File Structure
+
+```
+Line 1: METADATA record (describes file content and provenance)
+Line 2+: Data records (actual flight/radar data in unified schema)
+```
+
+### METADATA Record Schema
+
+```json
+{
+  "content": "flightlog",           // Content type: flightlog, radarlog, fusion.replay, capture.message
+  "source": "nmea",                // Original format (nmea, safirmqtt, robinradar, etc.)
+  "origin": "flight_data_20231201.log", // Source file or system name
+  "version": "1.0",                // Schema version (optional)
+  "timestamp": "2025-08-01T12:00:00Z", // File creation timestamp (optional)
+  "geoid": "egm96-5.pgm",          // Geoid model used (optional, added by conversion)
+  "polar_sensor": { ... }           // Polar sensor information (optional)
+}
+```
+
+### Data Record Schemas
+
+- **Flight Log Records**: Follow `/docs/schema/FLIGHTLOG.md`
+- **Radar Log Records**: Follow `/docs/schema/RADARLOG.md`
+- **Fusion Replay Records**: Follow `/docs/schema/FUSION_REPLAY.md`
+- **Capture Message Records**: Follow `/docs/schema/CAPTURE_MESSAGE.md`
+
+### Example .fvc File
+
+```json
+{"content": "flightlog", "source": "nmea", "origin": "flight_data.log"}
+{"time": {"unix": 1756033206882}, "uaid": {"icaohex": "ABC123"}, "pos": {"loc": {"lat": 52.3, "lon": 4.9, "alt": 100.5}}}
+{"time": {"unix": 1756033206883}, "uaid": {"icaohex": "ABC123"}, "pos": {"loc": {"lat": 52.3001, "lon": 4.9001, "alt": 100.8}}}
+```
+
+**Note**: See `/openwiki/architecture/data-formats.md` for comprehensive schema documentation.
+
+---
+
 ## 🔄 Conversion Context
 
 Conversion context provides the necessary information and parameters for format conversion operations.
@@ -467,27 +574,37 @@ Each conversion operation receives a `params` dictionary containing:
 ```python
 {
   "verbose": False,           # Enable verbose output
-  "geoid_model": "EGM96",     # Geoid model to use
-  "output_format": "fvc",    # Target format
-  "segment_params": {...},    # Segmentation parameters
-  "filter_params": {...},     # Filtering parameters
+  "geoid_model": "EGM96",     # Geoid model to use (path or name, defaults to EGM96)
+  "output_format": "fvc",    # Target format (typically 'fvc' for Flyvercity format)
+  "segment_params": {...},    # Segmentation parameters for flight logs
+  "filter_params": {...},     # Filtering parameters for data quality
   "custom_options": {...}     # Format-specific options
 }
 ```
 
+**Note**: The `geoid_model` parameter can be:
+- A string like "EGM96" (default)
+- A path to a custom `.pgm` geoid file (e.g., `/path/to/egm2008-5.pgm`)
+- Configured via the `EGM` environment variable
+
+**Evidence**: See `/src/fvc/tools/calc/geoid.py` for geoid model loading logic.
+
 ### Metadata Context
 
-Metadata provides provenance and context:
+Metadata provides provenance and context for conversion operations:
 
 ```python
 {
-  "origin": "flight_data_20231201.log",
-  "source_system": "onboard_gps",
-  "processing_timestamp": "2025-08-01T12:00:00Z",
-  "quality_score": 0.95,
-  "notes": "Converted from NMEA format"
+  "origin": "flight_data_20231201.log",      // Source file name
+  "source_system": "onboard_gps",           // System that generated the data
+  "processing_timestamp": "2025-08-01T12:00:00Z", // When conversion occurred
+  "quality_score": 0.95,                     // Overall data quality (0.0-1.0)
+  "notes": "Converted from NMEA format",     // Conversion notes
+  "geoid": "egm96-5.pgm"                    // Geoid model used
 }
 ```
+
+**Evidence**: The metadata context is populated during conversion and stored in the METADATA record of `.fvc` files.
 
 ### Format-Specific Context
 
@@ -544,22 +661,29 @@ Tracked quality metrics include:
 
 ### Quality Scoring
 
-Each record and dataset receives a quality score:
+Each record and dataset receives a quality score based on validation metrics:
 
 ```json
 {
-  "quality_score": 0.92,
+  "quality_score": 0.92,                      // Overall quality (0.0-1.0)
   "metrics": {
-    "completeness": 0.95,
-    "accuracy": 0.98,
-    "consistency": 0.99,
-    "timeliness": 1.0,
-    "validity": 0.75
+    "completeness": 0.95,                    // Percentage of required fields present
+    "accuracy": 0.98,                        // Deviation from reference values
+    "consistency": 0.99,                     // Internal consistency of related fields
+    "timeliness": 1.0,                       // Data freshness and update frequency
+    "validity": 0.75                         // Conformance to schema and business rules
   },
-  "flags": ["hdop_high", "satellites_low"],
-  "warnings": ["altitude_outlier"]
+  "flags": ["hdop_high", "satellites_low"], // Quality issues detected
+  "warnings": ["altitude_outlier"]          // Potential data problems
 }
 ```
+
+**Quality Validation Rules**:
+1. **Required Fields**: All required fields must be present
+2. **Range Checks**: Values must be within expected ranges
+3. **Consistency Checks**: Related fields must be consistent (e.g., altitude vs. position)
+4. **Temporal Checks**: Timestamps must be in correct order
+5. **Spatial Checks**: Coordinates must be within valid ranges (-90 to 90 for lat, -180 to 180 for lon)
 
 ### Quality Validation Rules
 
@@ -605,6 +729,8 @@ erDiagram
 
 ### Cross-Domain Relationships
 
+The domain models are interconnected through shared entities and identifiers:
+
 ```mermaid
 erDiagram
     FlightLog ||--o{ Aircraft : "tracks"
@@ -613,8 +739,15 @@ erDiagram
     Identifier ||--|| ICAOHex : "may have"
     Identifier ||--|| ICAORegistration : "may have"
     Identifier ||--|| CallSign : "may have"
+    Identifier ||--|| InternalID : "may have"
     Position ||--|| Coordinate : "has"
     Coordinate ||--|| Geoid : "converted using"
+    FlightRecord ||--|| Position : "contains"
+    FlightRecord ||--|| Velocity : "contains"
+    Detection ||--|| Target : "describes"
+    Target ||--|| Position : "has"
+    Target ||--|| Velocity : "has"
+    Target ||--|| Classification : "has"
 ```
 
 ---
@@ -697,7 +830,20 @@ Common geospatial operations:
 
 ---
 
+## 📚 Summary
+
+This document provides a comprehensive domain-driven reference for the key data formats and models in fvctools:
+
+- **Flight Log Domain Model**: Time-series aircraft telemetry with position, attitude, velocity, and status data
+- **Radar Log Domain Model**: Target tracking with position, velocity, classification, and confidence metrics
+- **Geospatial Domain Models**: Coordinate systems, altitude references, geoid conversions, and geofencing
+- **Identifier Systems**: ICAO hexadecimal, ICAO registration, call signs, and internal identifiers for aircraft and targets
+- **Metadata Model**: Provenance and context tracking for all data files
+- **Conversion Context**: Parameters and metadata for format conversion operations
+
+The **Flyvercity Data Format (.fvc)** serves as the unified standard that integrates all these domain models into a single, consistent JSON Lines format.
+
 **See Also:**
-- [/openwiki/architecture/data-formats.md](/openwiki/architecture/data-formats.md) - Data format specifications
-- [/openwiki/workflows/conversion.md](/openwiki/workflows/conversion.md) - Conversion workflows
-- [/openwiki/integrations/polars.md](/openwiki/integrations/polars.md) - Polars integration details
+- [/openwiki/architecture/data-formats.md](/openwiki/architecture/data-formats.md) - Comprehensive data format specifications and the .fvc format
+- [/openwiki/workflows/conversion.md](/openwiki/workflows/conversion.md) - Detailed conversion workflows and pipeline architecture
+- [/openwiki/integrations/polars.md](/openwiki/integrations/polars.md) - Polars integration details for large-scale data processing

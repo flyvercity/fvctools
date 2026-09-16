@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:eb9d40b0100801bbac904761048cc886d61c1f2634434f8efaaf6af2b7a50de6",
+  "claims": [
+    {
+      "id": "claim_88b7e35462dc4fc8aed7884dda16a90f",
+      "statement": "fvctools is a modular Python-based CLI suite designed for processing, converting, and validating geospatial aviation data, serving as the backbone of Flyvercity's data pipeline.",
+      "evidence": [
+        {
+          "resource": "repo://README.md",
+          "version": "repo-file-v1:sha256:bface58a48b3fab36de74cce382010dac3a882d2c94b6c7847ae36b3880164b9"
+        }
+      ]
+    },
+    {
+      "id": "claim_0dc2a883b382456ca89c20987e453482",
+      "statement": "The fvctools CLI uses Click framework for subcommands organized by toolset (df, calc, render) with consistent argument parsing and error handling, defined in /src/fvc/tools/cli.py.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/cli.py",
+          "version": "repo-file-v1:sha256:c57a12087db726534ba34599e7c482e69a0e11dba16b76f568b368a4ab5905bf"
+        }
+      ]
+    },
+    {
+      "id": "claim_5f57a77f8c274a02ad37f130ebdcafd2",
+      "statement": "The Flyvercity Data Format (.fvc) uses JSON-Lines with METADATA record as first line and data records following, supporting content types documented in /docs/schema/README.md and /docs/schema/METADATA.md.",
+      "evidence": [
+        {
+          "resource": "repo://docs/schema/METADATA.md",
+          "version": "repo-file-v1:sha256:7a037f62775e4ea57a5e1944e3bb2fb9fa56fa3dae560759b19e7aa999cea1ed"
+        },
+        {
+          "resource": "repo://docs/schema/README.md",
+          "version": "repo-file-v1:sha256:3d82b83287fbaba5f5c36adb1266e8ac00016f877ee90e1d902cdfbeed0ddd2a"
+        }
+      ]
+    },
+    {
+      "id": "claim_db46a3b1090549c59d372e4a960a8224",
+      "statement": "Format converters exist for multiple aviation formats in /src/fvc/tools/df/xformats/ including NMEA, ULog, SAFIR MQTT, DatCon, SenHive, AgentFly, GeoJSON, and KML.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/agentfly.py",
+          "version": "repo-file-v1:sha256:94d34fd34c8ae59d31ba94b50040cc2c562f523dd0c6b1a5f6410e6fea1ef5be"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/datcon.py",
+          "version": "repo-file-v1:sha256:9d7d56088d32b6350e30059814a7ac268de5575d711025b59392032884ea6d25"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/geojson.py",
+          "version": "repo-file-v1:sha256:cabd16620c0a9535a24eb3e90f000e922d29e150f9f22c303f3db3aee1c634f8"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/kml/__init__.py",
+          "version": "repo-file-v1:sha256:a393c767d2fb4f927ef2d0988e80f5f58d498bed368c77af58ad9119351a678b"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/nmea.py",
+          "version": "repo-file-v1:sha256:e08cc8347bdead78ae13c10ebf58d374cd93ceb7f7f78853f949fc94b2553a5b"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/safirmqtt.py",
+          "version": "repo-file-v1:sha256:d14e1e1a161d27c84f3aae06df8a087e3e1bbb26ea3d9e5f178e5a6644bb5489"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/senhive.py",
+          "version": "repo-file-v1:sha256:140412f06ecf90e76d76a50cce6421197d0e06d3447640c520bc0449a11fa090"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/ulog.py",
+          "version": "repo-file-v1:sha256:4bbec3ae8f58bfba2d61522e0befcd1f428ae11452f92be5f43fe82ed580f6cc"
+        }
+      ]
+    },
+    {
+      "id": "claim_18528247b20148278ad291957e0b9ca1",
+      "statement": "Polars is integrated into format converters providing performance optimizations: agentfly.py, datcon.py, senhive.py, and safirmqtt_v2.py use Polars for 10-100x speed improvements through lazy evaluation and automatic multi-core parallelization.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/agentfly.py",
+          "version": "repo-file-v1:sha256:94d34fd34c8ae59d31ba94b50040cc2c562f523dd0c6b1a5f6410e6fea1ef5be"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/datcon.py",
+          "version": "repo-file-v1:sha256:9d7d56088d32b6350e30059814a7ac268de5575d711025b59392032884ea6d25"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/safirmqtt_v2.py",
+          "version": "repo-file-v1:sha256:306752653c6c6194b6679dbdf3c2bee5d2113cf50926498d766d9b62963c03ba"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/senhive.py",
+          "version": "repo-file-v1:sha256:140412f06ecf90e76d76a50cce6421197d0e06d3447640c520bc0449a11fa090"
+        }
+      ]
+    },
+    {
+      "id": "claim_a92c13ba286a49d989bb527597da8c19",
+      "statement": "The pytest-based test suite follows the test pyramid with unit tests, component tests, and integration/E2E tests, using fixtures and parallel execution as configured in /pyproject.toml.",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml",
+          "version": "repo-file-v1:sha256:b6161c3ca7ac7fc91ca7004c97ecffe9cf942e304106aa9774e37db828d22e72"
+        },
+        {
+          "resource": "repo://tests/test_agentfly_xformat.py",
+          "version": "repo-file-v1:sha256:59483ae57b5a0c157bef7ae515dd05c909431056f2557b1d7034dcf9c340514f"
+        },
+        {
+          "resource": "repo://tests/test_nmea_xformat.py",
+          "version": "repo-file-v1:sha256:4e29e666b5dd1ca50f842e944fb699617c19400bce0e0c356f8b7f15412579ec"
+        },
+        {
+          "resource": "repo://tests/test_render_core.py",
+          "version": "repo-file-v1:sha256:8a7687e4d1925f5368fa97ddfbc0be40c3db7faa7e202d6b7b76098cea63bf90"
+        }
+      ]
+    },
+    {
+      "id": "claim_965b8733a652495ba8bab9ccf88ee60a",
+      "statement": "Development setup requires Python 3.12+, uv package manager, and Git as specified in /pyproject.toml (requires-python = '>= 3.12'), with fvctools packaged as a CLI tool via 'fvc = fvc.tools.cli:main'.",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml",
+          "version": "repo-file-v1:sha256:b6161c3ca7ac7fc91ca7004c97ecffe9cf942e304106aa9774e37db828d22e72"
+        }
+      ]
+    },
+    {
+      "id": "claim_6beea9a2f7084bf284078eaa9ea2d823",
+      "statement": "fvctools CLI commands include 'fvc df' for data file operations (convert, validate, correlate), 'fvc calc' for geospatial calculations (geoid undulation, terrain elevation), and 'fvc render' for visualization, defined in /src/fvc/tools/df/cli.py, /src/fvc/tools/calc/cli.py, and /src/fvc/tools/render/cli.py.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/calc/cli.py",
+          "version": "repo-file-v1:sha256:80c78f70b23d511658dadb28cb4671b636de6ed7aa183ce771a57344e8d7e235"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/cli.py",
+          "version": "repo-file-v1:sha256:25300e8819642d942a18968c3b1f7fc20b0039b831f1df5381e603ccda181483"
+        },
+        {
+          "resource": "repo://src/fvc/tools/render/cli.py",
+          "version": "repo-file-v1:sha256:317664a1d65ebe7893708692a3309c4e2c30cb291131c4966cdfd554bbdd9ddb"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-16T12:24:16.401Z"
+  }
+}

@@ -1,9 +1,10 @@
 ---
-okf_version: "0.1"
+okf_version: "0.2"
 ---
 
 # Files
 
+- [OpenWiki Home](Home.md)
 - [Quickstart Guide](quickstart.md) - Get started with fvctools - install, convert data, validate, and visualize flight logs
 
 # Directories

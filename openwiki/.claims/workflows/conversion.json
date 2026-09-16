@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:7c094aa0317b90e8282868ba69366d03fc68a4309f1563aa7e63a151c1cd73fa",
+  "claims": [
+    {
+      "id": "claim_badef1d8f2734e85aa78d1ff449ad174",
+      "statement": "The data conversion workflow in fvctools is responsible for converting external aviation and geospatial data formats into the unified Flyvercity (.fvc) format through a standardized pipeline consisting of format detection, validation, format-specific parsing, and output generation.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L24-L63",
+          "version": "repo-lines-v1:sha256:45068b54a0883a0bb6f689529cc07284ca1b0409f2ce6903906ae6106dfe3bb2:eyJzZWxlY3RlZExpbmVDb3VudCI6NDAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1ZjRjYjZiNDhhOGZhMzI3ZTEwMzBjZTZiNzJjYTY0NjczNTE1ZWZhNDM5MjUzOWUzNWUzOWZkYmExYjJkNjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlkM2ZmY2U3M2MwMjNiOWNmZDg1YThkOGZkMjUxYmFjMmM4ZmYyNTUwZDRmY2ViMDgzOTZjMmQ5Yjk1N2E5YzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRiOGIzZWFlZDcyYzA3ZWZmOWYxYWQxNTQ5NTZmYjBhYWNkOTQ4N2YwMmZjOTM4NGFjZDZhNTBjOTc5ZTNhZGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFlYmVlMDZlYzE1NjA2ZjZjNzkxNjY2ZTIwNDQ0Y2RkODkzZjU3YjUzODkzMzE2MmM2MTAxODA3MWNkNjFkY2MifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/nmea.py#L25-L75",
+          "version": "repo-lines-v1:sha256:6f92d4527dae9da8924bac0b1b6154d055590aa38a22ba69792478dd516a506b:eyJzZWxlY3RlZExpbmVDb3VudCI6NTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhMWJkMjcwYjAxNjcyNjAwMDBkZTc3NWFmZmQzNDVlNDU5MTY3NjZjNmFmYjRmZDY0YmY5YTVkOTQ4ZWQ3MzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRiYzVkNTNmMWEzNGFiZWZlZGVkZDVhOTRhODhjYTNhMTYyYjZiM2JkMmUyODM1MjI3NTA3MGUzOTRiYjliNzUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMzZGY4NGM5MjY4NTBjNTE5MjE1NjNlODBkN2QwN2E2MmVmNTNiZDMwYWM4ZDBmNGUwNjZmZDY5YjcxODE1NGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJjYzYwOTU5ODcyZjg0M2QyZjI0NzJmZWQwMmQxZGYzNDM0ZDA0Yjc1ZDNhODM2NDU5MGMzM2Q1MDk1OTJmNTAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e124f8cfa6144b9688882a9ba43bcd9f",
+      "statement": "Format detection in fvctools uses Python module imports to dynamically load format-specific converters from xformats/*.py, with error handling for unknown formats and input validation preventing input/output path collisions.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L15-L22",
+          "version": "repo-lines-v1:sha256:ccc4c21b6d1cf4890ecc2a5267edf6a293273336d397461e60182ad477e612e1:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTAyZDI2YTYxNjEzYmE2ZmIxMzU2NzA0Njc2YmYwYTNiYjIwNGQ1NTRkOTJjZDkwNTAzZjAxYjI2NmZkM2QwZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjZhODMzZmUxY2RjMzlhZjMyMDE1MjhiN2Q3OTU4NTQyZjAwNTVkMDY0MWUwYWExNmEwNTRmMmNkOGRjNWI5YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWUxZjkxYTk5NmM2NmZmNGJkY2M5N2U2OGRiNzlmNzg5MWE0ODMwN2IwYjRjYzdlZWM4MDNjNTk1Y2IyNjk0NCJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L40-L63",
+          "version": "repo-lines-v1:sha256:65107984e9f17542e1728c0b2f6570aa65608589c05db19b51d74cb89a7c26f9:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY3MDY5N2M5Zjg4MDhmYTg0N2ZlNzI0NDQyZGM5MGQxZjU5MWFlMGMxNjE1MzhiNTU5ZWMwYWI5OTI1ZWY4M2EiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlkM2ZmY2U3M2MwMjNiOWNmZDg1YThkOGZkMjUxYmFjMmM4ZmYyNTUwZDRmY2ViMDgzOTZjMmQ5Yjk1N2E5YzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI1MjFmMDVkNzc0MTg4NWRkYmQ3YWM5YjZmOWQ1MmEwM2U1Yjc3OTAxZmQ5MmVmNjE1ZGM5NzBkZjBiYmI5ODIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFlYmVlMDZlYzE1NjA2ZjZjNzkxNjY2ZTIwNDQ0Y2RkODkzZjU3YjUzODkzMzE2MmM2MTAxODA3MWNkNjFkY2MifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a3a797b8a8ad461686ec5cf93a9c3181",
+      "statement": "The NMEA converter requires a base-date parameter for temporal context and implements performance optimizations including fast string-based message filtering (~2x speedup) and geoid separation correction for altitude calculations.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/nmea.py#L25-L75",
+          "version": "repo-lines-v1:sha256:6f92d4527dae9da8924bac0b1b6154d055590aa38a22ba69792478dd516a506b:eyJzZWxlY3RlZExpbmVDb3VudCI6NTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhMWJkMjcwYjAxNjcyNjAwMDBkZTc3NWFmZmQzNDVlNDU5MTY3NjZjNmFmYjRmZDY0YmY5YTVkOTQ4ZWQ3MzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRiYzVkNTNmMWEzNGFiZWZlZGVkZDVhOTRhODhjYTNhMTYyYjZiM2JkMmUyODM1MjI3NTA3MGUzOTRiYjliNzUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMzZGY4NGM5MjY4NTBjNTE5MjE1NjNlODBkN2QwN2E2MmVmNTNiZDMwYWM4ZDBmNGUwNjZmZDY5YjcxODE1NGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJjYzYwOTU5ODcyZjg0M2QyZjI0NzJmZWQwMmQxZGYzNDM0ZDA0Yjc1ZDNhODM2NDU5MGMzM2Q1MDk1OTJmNTAifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/nmea.py#L78-L100",
+          "version": "repo-lines-v1:sha256:fad457a71d64f372be640a83dbeb05274a40db1244c753d8724335c8d4a94fd3:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNjYTgwZDFjNDA1NWJmOTliMWRjZjhlMTkwNGQ1ZGJkNGIyZTIxZDQxYzNhMjJlNzA3MmY5MTNlOWFkN2I1ZTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlkOGE5ZTljMzI1MjgyMGM2NWE4MTY1MjBiOGRiNDkzMjI4MDg0OWVjOGM3ZDJlYjYyNzJhZmRmZWJlMDU5YzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNkMmEzNGNhMGZhMWE1ZDY5NGY2OWRkNTllZmExMDJmMWZkZTcyZjRjMDViMjk0NTRhZTg3ZjgxNDg0MGE4ZWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQyZjE2OTI3ZDE1NDMyNTI4ZjZkNzkxMTUyMDI1YjRiYTZhY2ExNmMwMTBhMWEyZjJkMWViNDRkODE3Y2U2ZDAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_22f0ea04e0d341cfa917d78144246184",
+      "statement": "The SAFIR MQTT converter implements a unified if/elif chain with hoisted fallback check for identifier parsing, achieving ~15-20% performance improvement over naive implementations.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/safirmqtt.py#L9-L38",
+          "version": "repo-lines-v1:sha256:bdb52d420c7b9553643cb9aca1e6e04ae5a980ffc125efda995593fd3e8428d6:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBlNDM4NTg0ZTkwMTI1ZWJkMTdkZmY3Y2FiYWE4OWJiNmIxZTg3MzM4ZjYyM2YwZDM1ZDQyYmM1MmRlNjExZDgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQwNjJlNGMyOGMzZDJmOGFiYTBiMmUyMjdjODc0OTY2OTlmOTMxNTViNWU1OTAzZTIxZmRmMTdhZTZhNmJmMWUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUxZDZjYzBhNjA0OWU0NjNhYTljYzk3NDA1YjhiODI4N2M3NzAwNGFkZjcwZjAyMDY5MjAxNGMzMTQ0YmFmMjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRiNTNmNmIyMjNmZDg2ZGU5MTYzMjQzZDQzZWQyYmViZDc1MDNkYTNiOWMxMThhOGRiNWE3ZjEwZjc0NmQ3NDQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_227a434b0c1a487b972080cd50ad3eb5",
+      "statement": "The validation workflow validates .fvc files against JSON Schema, creates validators once per file to avoid recompilation overhead, and tracks up to 100 errors before stopping to prevent excessive output on corrupted files.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L66-L113",
+          "version": "repo-lines-v1:sha256:78e9d77d3dd9ca46ae0914b6b83f26d7d464aa74ceb9fc95089ef78aa408c723:eyJzZWxlY3RlZExpbmVDb3VudCI6NDgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE4ZjFiNTRkZGIzYjkyMmNiMmFhZmQ3MjZiYTAzOGIxOTAxNTMyMDAyYjgyNzI3NzUyNjMxOWU3NjNlN2FmNjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIyZDAzNWFjN2IzNzUzOTg4M2M2MWRkYTE2MGQ2OWQ3YTc1OTVkYzk2NzdjZDc5ZjQyZDMzMmU3OWIyNzcwODMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ1MDk5MzdmOGVkODU4NjQ4NDBlZDIwMzZhZGU2ODhhY2YwMjg3ODdkZmU2YTE0YTM4ZmExMmZmNzFkZjY5NmIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3YTU2MDkxN2VhMjU4ZjA3MDBiNjNkNTQ4OWIzN2RkNjk3MTFiYTcxNWFlZWZjZmVjNjBjYzAzNGI4OGY3ZWMifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L89-L93",
+          "version": "repo-lines-v1:sha256:f1d6bfb65e14417387bc7e7542fe0a1c21766e0ad238278e076b05242d698757:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTNiZDU0M2VkYzljZTk5ZTc2Mjc2ZmEwYmZjNWQxYTY1NTNjODdmZDAyY2E0M2Q3NmZjMTFjZmQ0NmE1MWJhZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzcwN2Q0MGQzNDZlMmIyZTM1ZDViYTc2YjZiYjU3ZTg4YmMyM2IyZWNhMDdkODIyYTI4MmQ1YmZmMTM4YjI4NSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzIxMWM0NmU1YmUwMzZkODRiNDUwMTMwNzllYWRjOWQyOWNhODVjYTI4YTM1ODRhNzQ4MzkyNzU0MjgxYTJhNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWNjYTA2NjE2YTc0NmYxMWU0YjczNjZhOGQ2YThiMzdiNzQ1NDZhZmVlOGUxNjMyNjI5YjMyNjNhOTljMmIwZSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_e3387e14828b44129271e7925c6ec62b",
+      "statement": "fvctools supports conversion from at least 16 external formats including NMEA, SAFIR MQTT (v1 and v2), DJI Datcon, PX4 ULog, AgentFly, Senhive, GeoJSON, KML, Robin Radar, Manna, ART, Courageous, CS Group, and G-NetTrack.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/agentfly.py",
+          "version": "repo-file-v1:sha256:94d34fd34c8ae59d31ba94b50040cc2c562f523dd0c6b1a5f6410e6fea1ef5be"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/artlog.py",
+          "version": "repo-file-v1:sha256:75a6c304487495d00941aa71378004c04b6e5278c7fb8b0cc884987de0af8106"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/courageous.py",
+          "version": "repo-file-v1:sha256:61cb1dc3e2cefe642850fb24e1c778964194dddb4428d3706a61267727276943"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/csgroup.py",
+          "version": "repo-file-v1:sha256:1faf2af0994af206dfd35ce726c7b63ffe3c1eca6db7ff1c36c0ac52522f42dc"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/datcon.py",
+          "version": "repo-file-v1:sha256:9d7d56088d32b6350e30059814a7ac268de5575d711025b59392032884ea6d25"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/geojson.py",
+          "version": "repo-file-v1:sha256:cabd16620c0a9535a24eb3e90f000e922d29e150f9f22c303f3db3aee1c634f8"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/gnettrack.py",
+          "version": "repo-file-v1:sha256:cfdd0507e6bfef4157b9f013658e91f4da5a87f43fa0e87d9f2e7da53db55118"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/manna.py",
+          "version": "repo-file-v1:sha256:c3b0d8b647b248515ebaf5655317fa6e80aff45268bc0bde9bcaec8d615bd864"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/nmea.py",
+          "version": "repo-file-v1:sha256:e08cc8347bdead78ae13c10ebf58d374cd93ceb7f7f78853f949fc94b2553a5b"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/robinradar.py",
+          "version": "repo-file-v1:sha256:ab57207da69c7d7100255642e19667092dccc9c75d67fd7dc8bbf15a486e98c9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/safirmqtt.py",
+          "version": "repo-file-v1:sha256:d14e1e1a161d27c84f3aae06df8a087e3e1bbb26ea3d9e5f178e5a6644bb5489"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/safirmqtt_v2.py",
+          "version": "repo-file-v1:sha256:306752653c6c6194b6679dbdf3c2bee5d2113cf50926498d766d9b62963c03ba"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/senhive.py",
+          "version": "repo-file-v1:sha256:140412f06ecf90e76d76a50cce6421197d0e06d3447640c520bc0449a11fa090"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/ulog.py",
+          "version": "repo-file-v1:sha256:4bbec3ae8f58bfba2d61522e0befcd1f428ae11452f92be5f43fe82ed580f6cc"
+        }
+      ]
+    },
+    {
+      "id": "claim_b6ea099e3b71489584bc8aa348e5afc2",
+      "statement": "The .fvc format uses JSON-Lines specification where the first line is a METADATA record and subsequent lines are data records, enabling streaming processing and efficient validation.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L58-L59",
+          "version": "repo-lines-v1:sha256:cdd5abeec15c77158afa5e72a1553d5f5d41f91b426b8416460a2c30125834a2:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDMxMDk3OGI1YTYwNTkwNTQxZWUzZjQzMzAyYTFhNTU1Yzg3OWYyYjgyMDUwY2Y1OTU2ZGQ5YjRiMmE5NjhiNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiY2E0ZDE4YjM1MWNiMGU0ZTUxNzU5MGYzNmMwZWU2YzQyYmYzNWQ1YjcxOTc4MGI2MmFhOGYxNThlM2JlN2E4NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOGU3ZDZiOTZjOTlkMzdmY2ZiMmJjYjFjZGFiOWI2OWVlYzE4NjA2OWI5MTNiMDIxNjFlMWRiNWRiMzhkYTMyZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTAzN2Q5YWI1NjIyYTc1NThlYmNkYmZmZDgxMjc1NjNhZDE2NzU1M2RkN2IxNDFlYzM4MjY3OTdjMDNkZDRmNCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_16295b1c9cba415ba13eacdb9c0ab62d",
+      "statement": "The fvc df toolset includes export functionality to convert .fvc files back to external formats, completing the round-trip data pipeline.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L116-L132",
+          "version": "repo-lines-v1:sha256:bb6089bc9ca414a32f06cd0e7d42115b031d9a91320626b22afa2f4db2e74a5f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAzZWMzZTYxYWI0YjUxMDZhODRkNDVlNTBkZjY3Y2I2YWI0NGQwZGRiZTBjZmQyZWZhZTEyZjQ2ZWZhYWE2ODAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVlZGZhYzIzNGIyYWJiNDI5ZDljM2FiZWFlOTczZDllYzQ2N2U1ODEzN2I4MzExYjk1YTdiMzJkOTFhNTYyZDQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU4OGI0Y2ZjOGM0NWEwYjQzZGZiMGVlNTZkNmYyZDYwZTRiMGZjZmRmYzVhMTU5Y2I2MGQyMmFmMGZjNTU0YzQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_4d0d57fe847b4c8ebec3fc240de5af9f",
+      "statement": "The correlation workflow synchronizes multiple .fvc files by finding common time ranges and merging data records sorted by timestamp.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L116-L132",
+          "version": "repo-lines-v1:sha256:bb6089bc9ca414a32f06cd0e7d42115b031d9a91320626b22afa2f4db2e74a5f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAzZWMzZTYxYWI0YjUxMDZhODRkNDVlNTBkZjY3Y2I2YWI0NGQwZGRiZTBjZmQyZWZhZTEyZjQ2ZWZhYWE2ODAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVlZGZhYzIzNGIyYWJiNDI5ZDljM2FiZWFlOTczZDllYzQ2N2U1ODEzN2I4MzExYjk1YTdiMzJkOTFhNTYyZDQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU4OGI0Y2ZjOGM0NWEwYjQzZGZiMGVlNTZkNmYyZDYwZTRiMGZjZmRmYzVhMTU5Y2I2MGQyMmFmMGZjNTU0YzQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-16T12:24:16.401Z"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:b10afb7849d71fe2451b46b9e6888abc74ec56bd09924797804673801e937799",
+  "claims": [
+    {
+      "id": "claim_0112799fe149419fa80d47edfef2894f",
+      "statement": "fvctools is a modular Python-based CLI suite designed for processing, converting, and validating geospatial aviation data, with a primary interface through Click-based CLI commands organized into toolsets (df, calc, render, flightlog).",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/cli.py",
+          "version": "repo-file-v1:sha256:c57a12087db726534ba34599e7c482e69a0e11dba16b76f568b368a4ab5905bf"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-16T12:24:16.401Z"
+  }
+}

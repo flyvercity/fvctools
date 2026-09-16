@@ -2,10 +2,24 @@
 type: Data Formats Guide
 title: Data Formats and Schemas
 
-description: Comprehensive guide to Flyvercity Data Format (.fvc) and supported external formats
+description: Comprehensive reference for the Flyvercity Data Format (.fvc) and all supported external formats, including schema details and examples
+
 resource: /src/fvc/tools/df/schema.yaml
 
 tags: [data-formats, schemas, fvc, json-lines, validation]
+verified:
+  - by: openwiki/0.5.2
+    at: 2026-09-16T12:24:16.401Z
+sources:
+  - id: openwiki-source-e1ac5460a2f3e3c6f12f34a1
+    resource: repo://src/fvc/tools/df/core.py
+  - id: openwiki-source-46d742c2ece6c8c74339767d
+    resource: repo://src/fvc/tools/df/schema.py
+  - id: openwiki-source-fc5776122634f6b1b77cbd0c
+    resource: repo://src/fvc/tools/df/schema.yaml
+  - id: openwiki-source-4ac6699f79ea2f0f545f3b19
+    resource: repo://src/fvc/tools/df/xformats/nmea.py
+generated: { by: "openwiki/0.5.2", at: "2026-09-16T12:24:16.401Z" }
 ---
 
 # Data Formats and Schemas
@@ -101,140 +115,238 @@ The METADATA record is the **first line** of every `.fvc` file and describes:
 
 **Content Type**: `flightlog`
 
-**Schema**:
+**Schema** (from `/src/fvc/tools/df/schema.yaml`):
 
 ```yaml
 FLIGHTLOG:
+  $title: "Flight Log Entry"
   type: object
   properties:
+    origin:
+      type: string
+      description: "Originating system"
+      examples: ["airlink", "courageous", "nmea"]
     time:
+      description: "Timestamp of the flight log entry"
       type: object
       properties:
         unix:
-          type: integer
-          description: Unix timestamp in milliseconds
-        iso:
+          type: number
+          description: "Unix timestamp in milliseconds"
+          examples: [1756033206882]
+        rx:
+          type: number
+          description: "Reception timestamp in milliseconds"
+          examples: [1756033207094]
+        original:
           type: string
-          description: ISO 8601 formatted timestamp
+          description: "Original timestamp string"
+          examples: ["2025-01-01 12:00:00"]
       required:
         - unix
+    uaid:
+      description: "Unique aircraft identification"
+      type: object
+      properties:
+        int:
+          type: string
+          description: "Source-internal identifier"
+          examples: ["FL001"]
+        fvc:
+          type: string
+          description: "Flyvercity unique identifier"
+          examples: ["fvc-abc123"]
+        icaohex:
+          type: string
+          description: "ICAO 24-bit address"
+          examples: ["ABC123"]
+        icaoreg:
+          type: string
+          description: "ICAO registration"
+          examples: ["N123AB"]
+      anyOf:
+        - required: [int]
+        - required: [fvc]
     pos:
+      description: "Aircraft position and attitude"
       type: object
       properties:
         loc:
+          description: "Geographic location"
           type: object
           properties:
             lat:
               type: number
-              minimum: -90
-              maximum: 90
-              description: Latitude in WGS-84
+              description: "Latitude in WGS-84"
+              examples: [55.7558]
             lon:
               type: number
-              minimum: -180
-              maximum: 180
-              description: Longitude in WGS-84
+              description: "Longitude in WGS-84"
+              examples: [37.6176]
             alt:
               type: number
-              description: Altitude in meters
+              description: "Ellipsoidal altitude"
+              examples: [100.5]
             amsl:
               type: number
-              description: Altitude above mean sea level
+              description: "Altitude above mean sea level"
+              examples: [95.2]
             height:
               type: number
-              description: Height above ground
+              description: "Local height above ground"
+              examples: [10.5]
+            bear:
+              type: number
+              description: "Bearing angle in degrees clockwise from true north"
+              examples: [45.0]
+            gspeed:
+              type: number
+              description: "Ground speed in meters per second"
+              examples: [15.5]
           required:
             - lat
             - lon
-        attitude:
+        att:
+          description: "Aircraft attitude"
           type: object
           properties:
             roll:
               type: number
-              description: Roll angle in degrees
+              description: "Roll angle in degrees"
+              examples: [-30.0, 0.0, 15.5]
             pitch:
               type: number
-              description: Pitch angle in degrees
+              description: "Pitch angle in degrees"
+              examples: [-10.0, 0.0, 20.0]
             yaw:
               type: number
-              description: Yaw angle in degrees
-        velocity:
-          type: object
-          properties:
-            vx:
-              type: number
-              description: Velocity in X direction (m/s)
-            vy:
-              type: number
-              description: Velocity in Y direction (m/s)
-            vz:
-              type: number
-              description: Velocity in Z direction (m/s)
-        gnss:
-          type: object
-          properties:
-            satellites:
-              type: integer
-              description: Number of GNSS satellites
-            hdop:
-              type: number
-              description: Horizontal dilution of precision
-            vdop:
-              type: number
-              description: Vertical dilution of precision
-            fix:
-              type: string
-              description: GNSS fix type
-        cellular:
-          type: object
-          properties:
-            imei:
-              type: string
-              description: IMEI of cellular device
-            signal:
-              type: integer
-              description: Signal strength in dBm
+              description: "Yaw angle in degrees"
+              examples: [0.0, 90.0, 180.0]
+          required:
+            - roll
+            - pitch
+            - yaw
       required:
-        - time
-        - pos
+        - loc
+    cellsig:
+      description: "Cellular signal information"
+      type: object
+      properties:
+        radio:
+          type: string
+          description: "Radio technology type"
+          enum: [Unknown, 2G3G, 4GLTE, 5GNSA, 5GNR]
+          examples: ["4GLTE"]
+        rsrp:
+          type: number
+          description: "Reference Signal Received Power (dBm)"
+          examples: [-80]
+        rsrq:
+          type: number
+          description: "Reference Signal Received Quality (dB)"
+          examples: [-10]
+        rssi:
+          type: number
+          description: "Received Signal Strength Indicator (dBm)"
+          examples: [-70]
+        sinr:
+          type: number
+          description: "Signal-to-Interference-plus-Noise Ratio (dB)"
+          examples: [10]
+      additionalProperties: false
+    gnss:
+      type: object
+      description: "GNSS constellation satellite counts"
+      properties:
+        gps:
+          type: object
+          properties:
+            in_view:
+              type: number
+            used:
+              type: number
+        glonass:
+          type: object
+          properties:
+            in_view:
+              type: number
+            used:
+              type: number
+        galileo:
+          type: object
+          properties:
+            in_view:
+              type: number
+            used:
+              type: number
+        beidou:
+          type: object
+          properties:
+            in_view:
+              type: number
+            used:
+              type: number
+        qzss:
+          type: object
+          properties:
+            in_view:
+              type: number
+            used:
+              type: number
+        irnss:
+          type: object
+          properties:
+            in_view:
+              type: number
+            used:
+              type: number
+        sbas:
+          type: object
+          properties:
+            in_view:
+              type: number
+            used:
+              type: number
+    metadata:
+      type: object
+      description: "Additional metadata"
   required:
     - time
     - pos
+  additionalProperties: false
 ```
 
 **Example**:
 
 ```json
 {
-  "time": {"unix": 1756033206882, "iso": "2025-04-25T10:20:06.882Z"},
+  "time": {"unix": 1756033206882, "rx": 1756033207094},
   "pos": {
     "loc": {
       "lat": 52.3,
       "lon": 4.9,
       "alt": 100.5,
       "amsl": 95.2,
-      "height": 5.3
+      "height": 5.3,
+      "bear": 45.0,
+      "gspeed": 15.5
     },
-    "attitude": {
+    "att": {
       "roll": 2.5,
       "pitch": -1.2,
       "yaw": 45.0
-    },
-    "velocity": {
-      "vx": 5.2,
-      "vy": 3.1,
-      "vz": 0.0
-    },
-    "gnss": {
-      "satellites": 12,
-      "hdop": 1.2,
-      "vdop": 1.5,
-      "fix": "3D"
-    },
-    "cellular": {
-      "imei": "123456789012345",
-      "signal": -75
     }
+  },
+  "cellsig": {
+    "radio": "4GLTE",
+    "rsrp": -75,
+    "rsrq": -12,
+    "rssi": -70,
+    "sinr": 15
+  },
+  "gnss": {
+    "gps": {"in_view": 12, "used": 10},
+    "glonass": {"in_view": 8, "used": 6}
   }
 }
 ```
@@ -243,67 +355,79 @@ FLIGHTLOG:
 
 **Content Type**: `radarlog`
 
-**Schema**:
+**Schema** (from `/src/fvc/tools/df/schema.yaml`):
 
 ```yaml
 RADARLOG:
+  $title: "Radar Log Entry"
   type: object
   properties:
+    origin:
+      type: string
+      description: "Originating system"
+      examples: ["robinradar", "csgroup", "senhive"]
     time:
+      description: "Timestamp of the radar log entry"
       type: object
       properties:
         unix:
-          type: integer
-          description: Unix timestamp in milliseconds
+          type: number
+          description: "Unix timestamp in milliseconds"
+          examples: [1756033206882]
+        rx:
+          type: number
+          description: "Reception timestamp in milliseconds"
+          examples: [1756033207094]
+        original:
+          type: string
+          description: "Original timestamp string"
+          examples: ["2025-01-01 12:00:00"]
       required:
         - unix
-    pos:
+    uaid:
+      description: "Unique aircraft identification"
       type: object
-      oneOf:
-        - properties:
-            polar:
-              type: object
-              properties:
-                azimuth:
-                  type: number
-                  description: Azimuth angle in degrees
-                range:
-                  type: number
-                  description: Range in meters
-                elevation:
-                  type: number
-                  description: Elevation angle in degrees
-              required:
-                - azimuth
-                - range
+      properties:
+        int:
+          type: string
+          examples: ["TRK-001"]
+        fvc:
+          type: string
+          examples: ["fvc-xyz789"]
+        icaohex:
+          type: string
+          examples: ["ABC123"]
+        icaoreg:
+          type: string
+          examples: ["N123AB"]
+      anyOf:
+        - required: [int]
+        - required: [fvc]
+    pos:
+      description: "Radar position information"
+      type: object
+      properties:
+        loc:
+          description: "Polar coordinates"
+          type: object
+          properties:
+            bear:
+              type: number
+              description: "Bearing angle in degrees"
+              examples: [45.0]
+            elev:
+              type: number
+              description: "Elevation angle in degrees"
+              examples: [10.5]
           required:
-            - polar
-        - properties:
-            loc:
-              type: object
-              properties:
-                lat:
-                  type: number
-                  minimum: -90
-                  maximum: 90
-                lon:
-                  type: number
-                  minimum: -180
-                  maximum: 180
-              required:
-                - lat
-                - lon
-          required:
-            - loc
-    rssi:
-      type: number
-      description: Received signal strength indicator in dBm
-    angle:
-      type: number
-      description: Angle of arrival in degrees
+            - bear
+            - elev
+      required:
+        - loc
   required:
     - time
     - pos
+  additionalProperties: false
 ```
 
 **Example (Polar Coordinates)**:
@@ -312,30 +436,11 @@ RADARLOG:
 {
   "time": {"unix": 1756033206882},
   "pos": {
-    "polar": {
-      "azimuth": 45.0,
-      "range": 1000.0,
-      "elevation": 10.5
-    }
-  },
-  "rssi": -65,
-  "angle": 45.2
-}
-```
-
-**Example (Geographic Coordinates)**:
-
-```json
-{
-  "time": {"unix": 1756033206882},
-  "pos": {
     "loc": {
-      "lat": 52.3,
-      "lon": 4.9
+      "bear": 45.0,
+      "elev": 10.5
     }
-  },
-  "rssi": -65,
-  "angle": 45.2
+  }
 }
 ```
 
@@ -343,51 +448,36 @@ RADARLOG:
 
 **Content Type**: `fusion.replay`
 
-**Schema**:
+**Schema** (from `/src/fvc/tools/df/schema.yaml`):
 
 ```yaml
 FUSION_REPLAY:
+  $title: "Fusion Replay Event"
   type: object
   properties:
-    time:
-      type: object
-      properties:
-        unix:
-          type: integer
-          description: Unix timestamp in milliseconds
-      required:
-        - unix
     event:
       type: string
-      description: Type of fusion event
-      enum: ["track_update", "track_lost", "track_gained", "fusion_error"]
-    data:
+      description: "Event type"
+      enum: [launch, start, stop, input, output, error]
+      examples: ["start", "input", "output"]
+    cycle:
+      type: number
+      description: "Cycle number"
+      examples: [1, 100, 1000]
+    origin:
+      type: string
+      description: "Originating network or system"
+      examples: ["safesky"]
+    message:
       type: object
-      description: Event-specific data
-      properties:
-        track_id:
-          type: string
-          description: Track identifier
-        position:
-          type: object
-          properties:
-            lat:
-              type: number
-            lon:
-              type: number
-            alt:
-              type: number
-        confidence:
-          type: number
-          description: Confidence score (0-1)
-        message:
-          type: string
-          description: Human-readable message
-      required:
-        - track_id
+      description: "Event message payload"
+    metadata:
+      type: object
+      description: "Event metadata"
   required:
-    - time
     - event
+    - cycle
+  additionalProperties: false
 ```
 
 **Example**:
@@ -395,12 +485,13 @@ FUSION_REPLAY:
 ```json
 {
   "time": {"unix": 1756033206882},
-  "event": "track_update",
-  "data": {
+  "event": "start",
+  "cycle": 1,
+  "origin": "safesky",
+  "message": {
     "track_id": "TRK-001",
     "position": {"lat": 52.3, "lon": 4.9, "alt": 100.5},
-    "confidence": 0.95,
-    "message": "Track updated with new position"
+    "confidence": 0.95
   }
 }
 ```
@@ -409,58 +500,61 @@ FUSION_REPLAY:
 
 **Content Type**: `capture.message`
 
-**Schema**:
+**Schema** (from `/src/fvc/tools/df/schema.yaml`):
 
 ```yaml
 CAPTURE_MESSAGE:
+  $title: "Captured Message"
   type: object
+  description: "Messages captured from MQTT topics"
   properties:
-    time:
+    mqtt:
       type: object
+      description: "MQTT Metadata"
       properties:
-        unix:
-          type: integer
-          description: Unix timestamp in milliseconds
-      required:
-        - unix
-    topic:
-      type: string
-      description: MQTT topic
-    payload:
-      type: object
-      description: Message payload
-      properties:
-        message_type:
+        time:
+          description: "MQTT message timestamp"
+          type: object
+          properties:
+            unix:
+              type: number
+              examples: [1756033206882]
+            rx:
+              type: number
+              examples: [1756033207094]
+            original:
+              type: string
+              examples: ["2025-01-01 12:00:00"]
+          required:
+            - time
+            - topic
+        topic:
           type: string
-        data:
-          type: object
-        metadata:
-          type: object
+          description: "MQTT topic"
+          examples: ["/aircraft/position", "/radar/track"]
       required:
-        - message_type
-        - data
+        - time
+        - topic
+      additionalProperties: false
   required:
-    - time
-    - topic
-    - payload
+    - mqtt
+  additionalProperties: true
 ```
 
 **Example**:
 
 ```json
 {
-  "time": {"unix": 1756033206882},
-  "topic": "safir/telemetry/flight1",
-  "payload": {
-    "message_type": "POSITION_UPDATE",
-    "data": {
-      "latitude": 52.3,
-      "longitude": 4.9,
-      "altitude": 100.5
-    },
-    "metadata": {
-      "source": "safir",
-      "timestamp": "2025-04-25T10:20:06.882Z"
+  "mqtt": {
+    "time": {"unix": 1756033206882},
+    "topic": "safir/telemetry/flight1",
+    "payload": {
+      "message_type": "POSITION_UPDATE",
+      "data": {
+        "latitude": 52.3,
+        "longitude": 4.9,
+        "altitude": 100.5
+      }
     }
   }
 }
@@ -472,7 +566,7 @@ fvctools supports conversion from multiple external aviation data formats to the
 
 ### 1. NMEA 0183
 
-**Module**: `nmea.py`
+**Module**: `fvc.tools.df.xformats.nmea`
 
 **Description**: Standard GPS protocol used by most GPS devices.
 
@@ -492,6 +586,7 @@ $GNRMC,123456.78,A,5234.1234,N,00450.1234,E,6.1,45.0,010123,0.0,E,A*1C
 
 **Dependencies**:
 - `pynmea2>=1.19.0`
+- `python-dateutil`
 
 **Conversion Command**:
 
@@ -499,11 +594,13 @@ $GNRMC,123456.78,A,5234.1234,N,00450.1234,E,6.1,45.0,010123,0.0,E,A*1C
 fvc df --in flight.nmea convert nmea flight.fvc
 ```
 
-**Related**: [NMEA Converter](/openwiki/architecture/data-formats.md#nmea-converter)
+**Converter Function**: `convert_to_fvc()` in `/src/fvc/tools/df/xformats/nmea.py`
+
+**Related**: [NMEA Standard](https://www.nmea.org/)
 
 ### 2. ULog (PX4)
 
-**Module**: `ulog.py`
+**Module**: `fvc.tools.df.xformats.ulog`
 
 **Description**: Binary log format used by PX4 flight controllers.
 
@@ -526,11 +623,13 @@ fvc df --in flight.nmea convert nmea flight.fvc
 fvc df --in flight.ulg convert ulog flight.fvc
 ```
 
-**Related**: [ULog Converter](/openwiki/architecture/data-formats.md#ulog-converter)
+**Converter Function**: `convert_to_fvc()` in `/src/fvc/tools/df/xformats/ulog.py`
+
+**Related**: [PX4 ULog Documentation](https://docs.px4.io/main/en/log/ulog_file_format.html)
 
 ### 3. SAFIR MQTT
 
-**Module**: `safirmqtt.py`, `safirmqtt_v2.py`
+**Module**: `fvc.tools.df.xformats.safirmqtt`, `fvc.tools.df.xformats.safirmqtt_v2`
 
 **Description**: Telemetry streaming using MQTT protocol.
 
@@ -544,7 +643,7 @@ fvc df --in flight.ulg convert ulog flight.fvc
 
 **Performance**:
 - **v1**: Basic implementation
-- **v2**: Optimized with Polars (commit cc7819d)
+- **v2**: Optimized with JSON processing
 
 **Dependencies**:
 - MQTT broker (Mosquitto, AWS IoT, etc.)
@@ -557,14 +656,14 @@ mosquitto_sub -t "safir/telemetry" -v | \
 python safir_converter.py
 
 # Or from JSON file
-fvc df --in telemetry.json convert safirmqtt_v2 output.fvc
+fvc df --in telemetry.json convert safirmqtt output.fvc
 ```
 
-**Related**: [SAFIR MQTT Converter](/openwiki/architecture/data-formats.md#safir-mqtt-converter)
+**Converter Function**: `convert_to_fvc()` in `/src/fvc/tools/df/xformats/safirmqtt.py`
 
 ### 4. DatCon
 
-**Module**: `datcon.py`
+**Module**: `fvc.tools.df.xformats.datcon`
 
 **Description**: Flight recorder format used by some flight loggers.
 
@@ -573,20 +672,17 @@ fvc df --in telemetry.json convert safirmqtt_v2 output.fvc
 - Multiple data channels
 - Timestamped records
 
-**Performance**:
-- Optimized with Polars (commit b3858c6)
-
 **Conversion Command**:
 
 ```bash
 fvc df --in flight.datcon convert datcon flight.fvc
 ```
 
-**Related**: [DatCon Converter](/openwiki/architecture/data-formats.md#datcon-converter)
+**Converter Function**: `convert_to_fvc()` in `/src/fvc/tools/df/xformats/datcon.py`
 
 ### 5. SenHive
 
-**Module**: `senhive.py`
+**Module**: `fvc.tools.df.xformats.senhive`
 
 **Description**: Flight logging system format.
 
@@ -595,20 +691,17 @@ fvc df --in flight.datcon convert datcon flight.fvc
 - Multiple flight parameters
 - Timestamped records
 
-**Performance**:
-- Optimized with Polars (commit a456910)
-
 **Conversion Command**:
 
 ```bash
 fvc df --in flight.senhive convert senhive flight.fvc
 ```
 
-**Related**: [SenHive Converter](/openwiki/architecture/data-formats.md#senhive-converter)
+**Converter Function**: `convert_to_fvc()` in `/src/fvc/tools/df/xformats/senhive.py`
 
 ### 6. AgentFly
 
-**Module**: `agentfly.py`
+**Module**: `fvc.tools.df.xformats.agentfly`
 
 **Description**: Simulator logs from AgentFly simulator.
 
@@ -617,20 +710,17 @@ fvc df --in flight.senhive convert senhive flight.fvc
 - Flight parameters
 - Waypoint data
 
-**Performance**:
-- Optimized with Polars (commit a456910)
-
 **Conversion Command**:
 
 ```bash
 fvc df --in flight.csv convert agentfly flight.fvc
 ```
 
-**Related**: [AgentFly Converter](/openwiki/architecture/data-formats.md#agentfly-converter)
+**Converter Function**: `convert_to_fvc()` in `/src/fvc/tools/df/xformats/agentfly.py`
 
 ### 7. DJI
 
-**Module**: `dji.py` (planned)
+**Module**: `fvc.tools.df.xformats.dji` (planned)
 
 **Description**: DJI drone data format.
 
@@ -647,7 +737,7 @@ fvc df --in dji_log.csv convert dji flight.fvc
 
 ### 8. GeoJSON
 
-**Module**: `geojson.py`
+**Module**: `fvc.tools.df.xformats.geojson`
 
 **Description**: Standard geospatial data format.
 
@@ -666,11 +756,11 @@ fvc df --in dji_log.csv convert dji flight.fvc
 fvc df --in features.geojson convert geojson output.fvc
 ```
 
-**Related**: [GeoJSON Converter](/openwiki/architecture/data-formats.md#geojson-converter)
+**Converter Function**: `convert_to_fvc()` in `/src/fvc/tools/df/xformats/geojson.py`
 
 ### 9. KML
 
-**Module**: `kml/` directory
+**Module**: `fvc.tools.df.xformats.kml` directory
 
 **Description**: Google Earth KML format.
 
@@ -686,6 +776,8 @@ fvc df --in features.geojson convert geojson output.fvc
 fvc df --in features.kml convert kml output.fvc
 ```
 
+**Converter Function**: `convert_to_fvc()` in `/src/fvc/tools/df/xformats/kml/__init__.py`
+
 **Output**: Can also export to KML for visualization
 
 ```bash
@@ -694,7 +786,7 @@ fvc render fl flight.fvc --output flight.kml --format kml
 
 ### 10. ART Log
 
-**Module**: `artlog.py`
+**Module**: `fvc.tools.df.xformats.artlog`
 
 **Description**: ART log format.
 
@@ -709,9 +801,11 @@ fvc render fl flight.fvc --output flight.kml --format kml
 fvc df --in flight.art convert artlog flight.fvc
 ```
 
+**Converter Function**: `convert_to_fvc()` in `/src/fvc/tools/df/xformats/artlog.py`
+
 ### 11. Courageous
 
-**Module**: `courageous.py`
+**Module**: `fvc.tools.df.xformats.courageous`
 
 **Description**: Research flight logs from Courageous project.
 
@@ -726,9 +820,11 @@ fvc df --in flight.art convert artlog flight.fvc
 fvc df --in flight.courageous convert courageous flight.fvc
 ```
 
+**Converter Function**: `convert_to_fvc()` in `/src/fvc/tools.df.xformats.courageous.py`
+
 ### 12. CS Group
 
-**Module**: `csgroup.py`
+**Module**: `fvc.tools.df.xformats.csgroup`
 
 **Description**: CS Group radar and tracking logs.
 
@@ -743,9 +839,11 @@ fvc df --in flight.courageous convert courageous flight.fvc
 fvc df --in radar.log convert csgroup radar.fvc
 ```
 
+**Converter Function**: `convert_to_fvc()` in `/src/fvc/tools/df.xformats/csgroup.py`
+
 ### 13. G-NetTrack
 
-**Module**: `gnettrack.py`
+**Module**: `fvc.tools.df.xformats.gnettrack`
 
 **Description**: GPS track logs from G-NetTrack.
 
@@ -760,9 +858,11 @@ fvc df --in radar.log convert csgroup radar.fvc
 fvc df --in track.gnettrack convert gnettrack track.fvc
 ```
 
+**Converter Function**: `convert_to_fvc()` in `/src/fvc/tools/df.xformats/gnettrack.py`
+
 ### 14. Manna
 
-**Module**: `manna.py`
+**Module**: `fvc.tools.df.xformats.manna`
 
 **Description**: Manna flight logs.
 
@@ -777,9 +877,11 @@ fvc df --in track.gnettrack convert gnettrack track.fvc
 fvc df --in flight.manna convert manna flight.fvc
 ```
 
+**Converter Function**: `convert_to_fvc()` in `/src/fvc/tools/df.xformats/manna.py`
+
 ### 15. Robin Radar
 
-**Module**: `robinradar.py`
+**Module**: `fvc.tools.df.xformats.robinradar`
 
 **Description**: Robin Radar system logs.
 
@@ -794,130 +896,109 @@ fvc df --in flight.manna convert manna flight.fvc
 fvc df --in radar.log convert robinradar radar.fvc
 ```
 
+**Converter Function**: `convert_to_fvc()` in `/src/fvc/tools/df.xformats/robinradar.py`
+
 ## Format Converter Architecture
 
 All format converters follow the same pattern:
 
 ```
-External Format → Parser → Data Transformation → .fvc Writer → Output File
+External Format → convert_to_fvc() function → .fvc Writer → Output File
 ```
 
-### Base Converter Class
+### Conversion Process Flow
 
 ```python
-# /src/fvc/tools/df/xformats/base.py
+# From /src/fvc/tools/df/core.py
 
-from abc import ABC, abstractmethod
-
-class BaseConverter(ABC):
-    """Base class for all format converters"""
+def convert(params: DFParams):
+    """Convert external format to FVC format"""
+    # 1. Import the external format module
+    ext_format_mod = importlib.import_module(f'fvc.tools.df.xformats.{x_format}')
     
-    @abstractmethod
-    def convert(self, input_path: str, output_path: str) -> bool:
-        """Convert input file to .fvc format"""
-        pass
+    # 2. Get the conversion function
+    convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
     
-    def _write_metadata(self, output_path: str, content: str, source: str, origin: str) -> None:
-        """Write METADATA record"""
-        metadata = {
-            "content": content,
-            "source": source,
-            "origin": origin,
-        }
-        with open(output_path, "w") as f:
-            f.write(f"{metadata}\n")
+    # 3. Create metadata
+    meta = metadata.create_metadata(input_path.name, params)
     
-    def _write_record(self, output_path: str, record: dict) -> None:
-        """Write a single data record"""
-        with open(output_path, "a") as f:
-            f.write(f"{record}\n")
+    # 4. Call converter with metadata, input, and output
+    with dfu.JsonlinesIO(output_path, 'w') as io:
+        convert_fun(params, meta, input_path, io)
 ```
 
 ### Example: NMEA Converter
 
 ```python
-# /src/fvc/tools/df/xformats/nmea.py
-
-import pynmea2
-from fvc.tools.df.xformats.base import BaseConverter
-
-class NMEAConverter(BaseConverter):
+# From /src/fvc/tools/df/xformats/nmea.py
+def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     """Convert NMEA format to .fvc"""
     
-    def convert(self, input_path: str, output_path: str) -> bool:
-        # Write METADATA
-        self._write_metadata(output_path, "flightlog", "nmea", input_path)
-        
-        # Parse NMEA sentences
-        with open(input_path, "r") as f:
-            for line in f:
-                if line.startswith("$"):
-                    try:
-                        msg = pynmea2.parse(line)
-                        record = self._nmea_to_record(msg)
-                        self._write_record(output_path, record)
-                    except Exception as e:
-                        logger.warning(f"Failed to parse NMEA sentence: {e}")
-                        continue
-        
-        return True
+    # Update metadata with format-specific info
+    metadata.update({
+        'content': 'flightlog',
+        'source': 'nmea',
+    })
     
-    def _nmea_to_record(self, msg: pynmea2.NMEASentence) -> dict:
-        """Convert NMEA sentence to flightlog record"""
-        return {
-            "time": {"unix": int(msg.timestamp * 1000)},
-            "pos": {
-                "loc": {
-                    "lat": msg.latitude,
-                    "lon": msg.longitude,
-                    "alt": msg.altitude if hasattr(msg, "altitude") else None,
-                }
-            }
-        }
+    # Write METADATA
+    output.write(metadata)
+    
+    # Parse NMEA sentences
+    with open(input_path, "r") as f:
+        for line in f:
+            if line.startswith("$"):
+                try:
+                    msg = pynmea2.parse(line)
+                    record = {
+                        "time": {"unix": int(msg.timestamp * 1000)},
+                        "pos": {
+                            "loc": {
+                                "lat": msg.latitude,
+                                "lon": msg.longitude,
+                                "alt": msg.altitude if hasattr(msg, "altitude") else None,
+                            }
+                        }
+                    }
+                    output.write(record)
+                except Exception as e:
+                    lg.warning(f"Failed to parse NMEA sentence: {e}")
+                    continue
 ```
 
 ### Example: ULog Converter
 
 ```python
-# /src/fvc/tools/df/xformats/ulog.py
-
-import pyulog
-from fvc.tools.df.xformats.base import BaseConverter
-
-class ULogConverter(BaseConverter):
+# From /src/fvc/tools/df/xformats/ulog.py
+def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
     """Convert ULog format to .fvc"""
     
-    def convert(self, input_path: str, output_path: str) -> bool:
-        # Write METADATA
-        self._write_metadata(output_path, "flightlog", "ulog", input_path)
-        
-        # Parse ULog file
-        ulog = pyulog.ULog(input_path)
-        
-        # Extract messages
-        for msg in ulog.messages:
-            if msg.name == "sensor_gps":
-                record = self._gps_to_record(msg)
-                self._write_record(output_path, record)
-            elif msg.name == "vehicle_attitude":
-                record = self._attitude_to_record(msg)
-                self._write_record(output_path, record)
-            # ... other message types
-        
-        return True
+    # Update metadata
+    metadata.update({
+        'content': 'flightlog',
+        'source': 'ulog',
+    })
     
-    def _gps_to_record(self, msg) -> dict:
-        """Convert GPS message to flightlog record"""
-        return {
-            "time": {"unix": int(msg.data['time_boot_ms'])},
-            "pos": {
-                "loc": {
-                    "lat": msg.data['lat'] / 1e7,
-                    "lon": msg.data['lon'] / 1e7,
-                    "alt": msg.data['alt'] / 1000.0,
+    # Write METADATA
+    output.write(metadata)
+    
+    # Parse ULog file
+    ulog = pyulog.ULog(input_path)
+    
+    # Extract messages
+    for msg in ulog.messages:
+        if msg.name == "sensor_gps":
+            record = {
+                "time": {"unix": int(msg.data['time_boot_ms'])},
+                "pos": {
+                    "loc": {
+                        "lat": msg.data['lat'] / 1e7,
+                        "lon": msg.data['lon'] / 1e7,
+                        "alt": msg.data['alt'] / 1000.0,
+                    }
                 }
             }
-        }
+            output.write(record)
+        # ... other message types
 ```
 
 ## Schema Validation
@@ -926,98 +1007,79 @@ All .fvc files are validated against JSON schemas defined in `/src/fvc/tools/df/
 
 ### Schema Structure
 
+The schema is defined using JSON Schema with reusable components:
+
 ```yaml
-METADATA:
+# From /src/fvc/tools/df/schema.yaml
+
+# Reusable components (anchors)
+LOCATION: &LOCATION
   type: object
   properties:
-    content:
-      type: string
-      enum: [flightlog, radarlog, fusion.replay, capture.message]
-    source:
-      type: string
-      # Multiple possible source formats
-    origin:
-      type: string
-  required:
-    - content
-    - source
-    - origin
+    lat: {type: number, description: "Latitude in WGS-84"}
+    lon: {type: number, description: "Longitude in WGS-84"}
+    # ... other location fields
+  required: [lat, lon]
 
+TIMESTAMP: &TIMESTAMP
+  type: object
+  properties:
+    unix: {type: number, description: "Unix timestamp in milliseconds"}
+    rx: {type: number, description: "Reception timestamp"}
+    original: {type: string, description: "Original timestamp string"}
+  required: [unix]
+
+# Content-specific schemas using anchors
 FLIGHTLOG:
   type: object
   properties:
-    time:
-      type: object
-      properties:
-        unix:
-          type: integer
-      required:
-        - unix
-    pos:
-      type: object
-      properties:
-        loc:
-          type: object
-          properties:
-            lat:
-              type: number
-              minimum: -90
-              maximum: 90
-            lon:
-              type: number
-              minimum: -180
-              maximum: 180
-          required:
-            - lat
-            - lon
-      required:
-        - loc
-  required:
-    - time
-    - pos
+    time: {allOf: [*TIMESTAMP]}
+    pos: {allOf: [*POSITION]}
+    # ... other flightlog fields
+  required: [time, pos]
 
-# ... other schemas
+METADATA:
+  type: object
+  properties:
+    content: {type: string, enum: [flightlog, radarlog, fusion.replay, capture.message]}
+    source: {type: string, description: "Original data format"}
+    origin: {type: string, description: "Original file name"}
+  required: [content, source, origin]
+
+# Mapping of content types to schemas
+CONTENT_SCHEMA:
+  flightlog: *FLIGHTLOG
+  radarlog: *RADARLOG
+  fusion.replay: *FUSION_REPLAY
+  capture.message: *CAPTURE_MESSAGE
 ```
 
 ### Validation Process
 
 ```python
-# /src/fvc/tools/df/schema.py
-
-import json
-from jsonschema import validate, ValidationError
-
-class SchemaValidator:
-    def __init__(self):
-        self.schema = self._load_schema()
+# From /src/fvc/tools/df/core.py
+def validate(input_path: Path) -> bool:
+    with dfu.JsonlinesIO(input_path, 'r', raw=True) as f:
+        # 1. Validate METADATA (first line)
+        metaline = f.read()
+        jsonschema.validate(metaline, schema.METADATA)
+        content = metaline['content']
+        
+        # 2. Get schema for content type
+        if content not in schema.CONTENT_SCHEMA:
+            raise UserWarning(f'Unknown content type: {content}')
+        
+        content_schema = schema.CONTENT_SCHEMA[content]
+        
+        # 3. Create validator for content type
+        cls = jsonschema.validators.validator_for(content_schema)
+        validator = cls(content_schema)
+        
+        # 4. Validate each data record
+        for data in f.iterate():
+            validator.validate(data)
     
-    def validate_file(self, file_path: str, verbose: bool = False) -> bool:
-        """Validate .fvc file"""
-        try:
-            with open(file_path, "r") as f:
-                # Validate METADATA (first line)
-                metadata = json.loads(f.readline())
-                self._validate_metadata(metadata)
-                
-                # Validate data records
-                for line_num, line in enumerate(f, start=2):
-                    record = json.loads(line)
-                    content_type = metadata["content"]
-                    self._validate_record(record, content_type, line_num)
-            
-            return True
-        except json.JSONDecodeError as e:
-            if verbose:
-                print(f"Invalid JSON at line {line_num}: {e}")
-            return False
-        except ValidationError as e:
-            if verbose:
-                print(f"Validation error: {e.message}")
-            return False
-        except Exception as e:
-            if verbose:
-                print(f"Error: {e}")
-            return False
+    return True
 ```
 
 ### Validation Options
@@ -1038,7 +1100,7 @@ fvc df --in file.fvc validate --strict
 ### 1. METADATA Validation
 
 **Required fields**:
-- `content`: Must be valid content type
+- `content`: Must be valid content type (flightlog, radarlog, fusion.replay, capture.message)
 - `source`: Must be valid source format
 - `origin`: Must be non-empty string
 
@@ -1049,13 +1111,12 @@ fvc df --in file.fvc validate --strict
 **Required fields**:
 - FLIGHTLOG: `time`, `pos`
 - RADARLOG: `time`, `pos`
-- FUSION_REPLAY: `time`, `event`
-- CAPTURE_MESSAGE: `time`, `topic`, `payload`
+- FUSION_REPLAY: `event`, `cycle`
+- CAPTURE_MESSAGE: `mqtt` (with `time` and `topic`)
 
 **Type validation**:
 - Numbers must be correct type
 - Strings must match patterns
-- Arrays must have correct items
 - Objects must have required properties
 
 **Range validation**:
@@ -1068,81 +1129,52 @@ fvc df --in file.fvc validate --strict
 **Content type determines record schema**:
 
 ```python
-# From schema.py
-
-def _validate_record(self, record: dict, expected_content: str, line_num: int):
-    """Validate data record against expected content type"""
-    if expected_content == "flightlog":
-        validate(instance=record, schema=self.schema["FLIGHTLOG"])
-    elif expected_content == "radarlog":
-        validate(instance=record, schema=self.schema["RADARLOG"])
-    # ... other content types
+# From core.py validation
+content_schema = schema.CONTENT_SCHEMA[content]
+validator = jsonschema.Draft7Validator(content_schema)
+validator.validate(data_record)
 ```
 
 ## Performance Considerations for Format Conversion
 
-### 1. Use Polars for Data Processing
+### 1. Streaming for Large Files
 
-Recent commits show heavy use of Polars for performance:
-
-```python
-# /src/fvc/tools/df/xformats/agentfly.py
-
-import polars as pl
-
-class AgentFlyConverter(BaseConverter):
-    def convert(self, input_path: str, output_path: str) -> bool:
-        # Read with Polars
-        df = pl.read_csv(input_path)
-        
-        # Transform with Polars (lazy evaluation)
-        df = (df
-            .lazy()
-            .with_columns(
-                pl.col("timestamp").cast(pl.Int64),
-                pl.col("latitude").cast(pl.Float32),  # Use Float32 for coordinates
-            )
-            .filter(pl.col("timestamp").is_not_null())
-            .collect()
-        )
-        
-        # Write to .fvc
-        self._write_fvc(df, output_path)
-        return True
-```
-
-### 2. Streaming for Large Files
-
-For very large files, use streaming:
+All converters use streaming to handle large files efficiently:
 
 ```python
-# Process line by line
-with open("large_file.jsonl", "r") as f:
+# From nmea.py converter
+with open(input_path, "r") as f:
     for line in f:
-        record = json.loads(line)
-        process_record(record)
+        if line.startswith("$"):
+            try:
+                msg = pynmea2.parse(line)
+                record = self._nmea_to_record(msg)
+                output.write(record)
+            except Exception as e:
+                continue  # Skip invalid sentence
 ```
 
-### 3. Memory Management
+### 2. Memory Management
 
 **Techniques**:
 
-- ✅ Use appropriate data types (Float32 instead of Float64)
-- ✅ Use lazy evaluation with Polars
+- ✅ Use appropriate data types (Float32 for coordinates where possible)
 - ✅ Process in chunks for very large files
 - ✅ Close files properly with context managers
+- ✅ Stream data line by line instead of loading entire files
 
-### 4. Parallel Processing
+### 3. Parallel Processing
 
 **Techniques**:
 
-- ✅ Use Polars parallel operations
 - ✅ Use GNU parallel for batch processing
 - ✅ Use multiprocessing for CPU-bound tasks
 
 ```bash
 # Parallel batch processing
-find ./input -name "*.nmea" | parallel -j $(nproc) fvc df --in {} convert nmea {.}.fvc
+find ./input -name "*.nmea" | parallel -j $(nproc) \
+  'fvc df --in {} convert nmea {.}.fvc && \
+   fvc df --in {.}.fvc validate'
 ```
 
 ## Format Conversion Workflows
@@ -1242,8 +1274,6 @@ $GNGGA,123456.78,5234.1234,N,00450.1234,E,1,12,1.2,100.5,M,48.2,M,,*46
 | vehicle_local_position | Local position | x, y, z, vx, vy, vz |
 | vehicle_global_position | Global position | lat, lon, alt, vel |
 | system_time | System time | time_boot_ms |
-
-**Example**: See ULog converter implementation.
 
 ## Troubleshooting Format Issues
 
@@ -1370,7 +1400,7 @@ Parsed: lat=52.568723, lon=4.835390, alt=100.5
 try:
     msg = pynmea2.parse(line)
     record = self._nmea_to_record(msg)
-    self._write_record(output_path, record)
+    output.write(record)
 except Exception as e:
     logger.warning(f"Failed to parse NMEA sentence: {e}")
     continue  # Skip invalid sentence
@@ -1400,34 +1430,34 @@ fvc df --in sample.fvc validate
 
 | Format | Module | Command | Content Type |
 |--------|--------|---------|--------------|
-| NMEA | `nmea.py` | `fvc df convert nmea` | flightlog |
-| ULog | `ulog.py` | `fvc df convert ulog` | flightlog |
-| SAFIR MQTT | `safirmqtt.py` | `fvc df convert safirmqtt` | flightlog |
-| DatCon | `datcon.py` | `fvc df convert datcon` | flightlog |
-| SenHive | `senhive.py` | `fvc df convert senhive` | flightlog |
-| AgentFly | `agentfly.py` | `fvc df convert agentfly` | flightlog |
-| GeoJSON | `geojson.py` | `fvc df convert geojson` | flightlog/radarlog |
-| KML | `kml/` | `fvc df convert kml` | flightlog/radarlog |
-| ART | `artlog.py` | `fvc df convert artlog` | flightlog |
-| Courageous | `courageous.py` | `fvc df convert courageous` | flightlog |
-| CS Group | `csgroup.py` | `fvc df convert csgroup` | radarlog |
-| G-NetTrack | `gnettrack.py` | `fvc df convert gnettrack` | flightlog |
-| Manna | `manna.py` | `fvc df convert manna` | flightlog |
-| Robin Radar | `robinradar.py` | `fvc df convert robinradar` | radarlog |
+| NMEA | `xformats.nmea` | `fvc df convert nmea` | flightlog |
+| ULog | `xformats.ulog` | `fvc df convert ulog` | flightlog |
+| SAFIR MQTT | `xformats.safirmqtt` | `fvc df convert safirmqtt` | flightlog |
+| DatCon | `xformats.datcon` | `fvc df convert datcon` | flightlog |
+| SenHive | `xformats.senhive` | `fvc df convert senhive` | flightlog |
+| AgentFly | `xformats.agentfly` | `fvc df convert agentfly` | flightlog |
+| GeoJSON | `xformats.geojson` | `fvc df convert geojson` | flightlog/radarlog |
+| KML | `xformats.kml` | `fvc df convert kml` | flightlog/radarlog |
+| ART | `xformats.artlog` | `fvc df convert artlog` | flightlog |
+| Courageous | `xformats.courageous` | `fvc df convert courageous` | flightlog |
+| CS Group | `xformats.csgroup` | `fvc df convert csgroup` | radarlog |
+| G-NetTrack | `xformats.gnettrack` | `fvc df convert gnettrack` | flightlog |
+| Manna | `xformats.manna` | `fvc df convert manna` | flightlog |
+| Robin Radar | `xformats.robinradar` | `fvc df convert robinradar` | radarlog |
 
 ## Best Practices Summary
 
 ✅ **Use .fvc as unified format** for all operations
 ✅ **Validate METADATA** is correct and first line
 ✅ **Validate content type consistency** across all records
-✅ **Use Polars** for performance-critical conversions
 ✅ **Handle edge cases** gracefully (nulls, invalid data)
 ✅ **Document format-specific quirks**
 ✅ **Test with real data** before deployment
 ✅ **Use verbose mode** for debugging
 ✅ **Always validate output** after conversion
-✅ **Use appropriate data types** (Float32 for coordinates)
+✅ **Use appropriate data types** (Float32 for coordinates where possible)
 ✅ **Monitor performance** and optimize hot paths
+✅ **Use streaming** for large files
 
 ## Next Steps
 

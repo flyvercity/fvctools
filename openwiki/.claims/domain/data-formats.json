@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:9be75e7c378b47998bac04430439819773a8890ffec7c99ae913a5b46e42ccf3",
+  "claims": [
+    {
+      "id": "claim_441919a532ea41a29dcd00f14ae834be",
+      "statement": "The fvctools suite converts multiple aviation, geospatial, and telemetry data formats into the unified Flyvercity Data Format (.fvc) using specialized converter modules in /src/fvc/tools/df/xformats/.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/nmea.py#L25-L76",
+          "version": "repo-lines-v1:sha256:78f24e19459b311753c7e7e483fbd3f31d655aa3a6077d4093684d7248d4aaa6:eyJzZWxlY3RlZExpbmVDb3VudCI6NTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhMWJkMjcwYjAxNjcyNjAwMDBkZTc3NWFmZmQzNDVlNDU5MTY3NjZjNmFmYjRmZDY0YmY5YTVkOTQ4ZWQ3MzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMzZGY4NGM5MjY4NTBjNTE5MjE1NjNlODBkN2QwN2E2MmVmNTNiZDMwYWM4ZDBmNGUwNjZmZDY5YjcxODE1NGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUxZWIzY2NjMWZjMWI3ZTQ5OGQ5MmQ0ZDQ1ZjQ2MzEwNzgwMTQ3ODVlNzgxNDQwZWQ3MTUzZTdmMzQ4OWM1NDQifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/safirmqtt.py#L92-L107",
+          "version": "repo-lines-v1:sha256:de662ad0693df2114ba0753eeed1fe9619c3045e83d7010595e4d6fce5152463:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhMWJkMjcwYjAxNjcyNjAwMDBkZTc3NWFmZmQzNDVlNDU5MTY3NjZjNmFmYjRmZDY0YmY5YTVkOTQ4ZWQ3MzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIwNDBlZmVmNmI5NzMzOTc5YmYzZjEzMjM4MmM4NzZhZDE4Mjg4ZjA0MWNiY2YxNGU1Y2I1NjNkNzQzMDY1YjgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNiNzczOGI0NDI3ZGEyM2E5NzQ2MDIxOWFjOTE0ZTNmMTM5NWUzMjRlMDQ1NTAxMDUwYzI4MGJhMGI3MWE0ZDIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/ulog.py#L11-L65",
+          "version": "repo-lines-v1:sha256:abd6bbf49b01c73bd246e12541a66a2eae08aad0b184c9be60767ab5799c1ef1:eyJzZWxlY3RlZExpbmVDb3VudCI6NTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhMWJkMjcwYjAxNjcyNjAwMDBkZTc3NWFmZmQzNDVlNDU5MTY3NjZjNmFmYjRmZDY0YmY5YTVkOTQ4ZWQ3MzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFjNDEyNzFmMTNmMDg1YmJkNzE0N2JlYjc5NzdlMzRkMmMzYjBkODNlNDBlZGE5MzQ1ZmQ1MjMzYTEwYzYyN2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjYzMDQ2NTQ3OTYxZWVlNmViNmZhMzdlYTNhYjllZDA2OWFjNjJiNGMxODRlZDU4OTZmMDJmMmU3YWEyMWM2MzgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZmY2RiNmE5OTNmNjI4Y2VmZjdiZDA4MWJmZWE4MDY1YmVjNGQwODE5MmFiMTUxODg3ZWI5Mzk5MDRjN2QwMTgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_27528af34f10492481fbe884c8edebf5",
+      "statement": "NMEA 0183 converter (nmea.py) requires base-date parameter for timestamp construction and uses pynmea2 library for parsing with fast string-based filtering for performance optimization.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/nmea.py#L25-L76",
+          "version": "repo-lines-v1:sha256:78f24e19459b311753c7e7e483fbd3f31d655aa3a6077d4093684d7248d4aaa6:eyJzZWxlY3RlZExpbmVDb3VudCI6NTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhMWJkMjcwYjAxNjcyNjAwMDBkZTc3NWFmZmQzNDVlNDU5MTY3NjZjNmFmYjRmZDY0YmY5YTVkOTQ4ZWQ3MzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMzZGY4NGM5MjY4NTBjNTE5MjE1NjNlODBkN2QwN2E2MmVmNTNiZDMwYWM4ZDBmNGUwNjZmZDY5YjcxODE1NGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUxZWIzY2NjMWZjMWI3ZTQ5OGQ5MmQ0ZDQ1ZjQ2MzEwNzgwMTQ3ODVlNzgxNDQwZWQ3MTUzZTdmMzQ4OWM1NDQifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/nmea.py#L52-L90",
+          "version": "repo-lines-v1:sha256:9c632cafe4443bbf1b36f028b7c4907dcce242403257d45826dd3680171ed4d0:eyJzZWxlY3RlZExpbmVDb3VudCI6MzksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFiNzAwYmExYTI1OTk4Y2U0Y2E5NjFiZGVhNDdkNjc1MmM1MDFlYTcyMjE3ZGFlZDEwN2MwYTA5NDE5NDdkZTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEyNmU0MzY4ZjIxZjg4OTFjZWQyNGNmYWY3Y2EzYmY5OTg1YjNmNDY5ZDRhNjgyNTZlMTYwOWQ2NTZmMWE3OWUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM5OTgwYmQyNTlhYzgyMTIyMzE3MzEwYzRjZmNlMDE4NjkwZTAxZTdiMWFkMjAxMTdjNmE3NWRkYTc4ZTM2ZjMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIwNDVjMzM5MzYzZjMwYTFjNTRkMjBkZDhlZDMyNzY1Mzc3YmQxNTc4NDEwMjkzYmJlZDhhNDkwZmIxMzFkYTIifQ"
+        },
+        {
+          "resource": "repo://tests/test_nmea_xformat.py#L6-L20",
+          "version": "repo-lines-v1:sha256:34ba32539651e55987dd6d319e32adf7dbb85dfef27d0a3dcc37681d3c1950db:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMxMDNhNWI2MDUzMWY2MjA3Y2E4ZDI1NjgxN2QzYjc4OTU3ZWQxNGRiMTE2MDNlZDgyMWRmYTJhZGNmZDZjNjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFjNzE4MzkwMWE5Nzg1NTgxOWFlZWYwZjFmNDc3OWMyNWJjMjU1OTk3MmVlOWRhNDdkZjViZWEwOTQ5ZjFkMDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJjYjAzNzJlMTJjNWUzM2Q5YTQzNzI1N2JkNDQ4NWFhMTM0YTQ2YzFiNDU1YWM3ZDk4ODJjZWJhOGZmZGFiMzEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAyMmNiZGZiMDBkZjVkNGYxNTQyMDA1M2FlMzM1OWY2MTVlZjg1Yjc4YzMxN2YwZTIwZGQxZDA2NDhjZjY1OWMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_727b52e15645423ab33c28fe6c8b63ba",
+      "statement": "ULog (PX4) converter (ulog.py) uses Polars for vectorized processing achieving 5-6x speedup, extracts UAV ID from filename, and handles both datetime extraction and boot timestamp fallback.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/ulog.py#L11-L65",
+          "version": "repo-lines-v1:sha256:abd6bbf49b01c73bd246e12541a66a2eae08aad0b184c9be60767ab5799c1ef1:eyJzZWxlY3RlZExpbmVDb3VudCI6NTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhMWJkMjcwYjAxNjcyNjAwMDBkZTc3NWFmZmQzNDVlNDU5MTY3NjZjNmFmYjRmZDY0YmY5YTVkOTQ4ZWQ3MzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFjNDEyNzFmMTNmMDg1YmJkNzE0N2JlYjc5NzdlMzRkMmMzYjBkODNlNDBlZGE5MzQ1ZmQ1MjMzYTEwYzYyN2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjYzMDQ2NTQ3OTYxZWVlNmViNmZhMzdlYTNhYjllZDA2OWFjNjJiNGMxODRlZDU4OTZmMDJmMmU3YWEyMWM2MzgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZmY2RiNmE5OTNmNjI4Y2VmZjdiZDA4MWJmZWE4MDY1YmVjNGQwODE5MmFiMTUxODg3ZWI5Mzk5MDRjN2QwMTgifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/ulog.py#L39-L41",
+          "version": "repo-lines-v1:sha256:6771d49f02a39684508a7f25632c2b3f1600a15c35d543fc9175e0a994410abd:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOWZjZjg5ODlmN2Q2MjlhYTE4NDRkMzZhMDY4OTI5MWIxODE3MDM5MTNjY2VjZGE5YTQ3OWFhOTU3MjY0NGQ2MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWVkZjY1NWI4YjVmNjU3MzJhMDRlOTk5Y2M4YWU1MTk5MzJkY2E4OWEzN2EzNDdlM2VkZWRjYTJlMzA2MWQ0MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjliMjg2YzU2YjZlY2QwMjlmMTkxMzVmNDRjMmJiYTQ0OWZmMzFhOGU5YTEzMzVkMWFkZTk4NGZiNDEwMzk3NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMTA5ZjlkMzBjNDI0ZDc3MTg5ZTNlNTllZWUwZTkxMGVhMTZhNGNjZTcwNmI1NzYwZGY2ZmMwNGIzZGY1MGQwOSJ9"
+        },
+        {
+          "resource": "repo://tests/test_ulog_xformat.py#L1-L51",
+          "version": "repo-lines-v1:sha256:b5751d401101f63d9fb0ab3b4f9213bdccc713c022c907ed695a4a5e634852d6:eyJzZWxlY3RlZExpbmVDb3VudCI6NTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI2MWE5MTEyYTI5MThlMmFiYTAzZTE5YTJmMjIxYTAyN2FiNGI2ZjllOTQ2YTZjMzk4MTRmNTRlMThlMDdkZmMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc0NmI0ZjY4ZmMyZWQ3MDdkOGFlYTNkNGMzYjAyNmJlOWU1MDY4YTFkYzcyMmVjNzI0ZWYzYTMzMGZlMGM0ZmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_affbe3062df94f508f21d7a088bdf316",
+      "statement": "SAFIR MQTT has two converter versions (v1 and v2) with v2 optimized for performance using raw JSON parsing and hoisted fallback checks, both performing geodetic altitude conversion using pygeodesy.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/safirmqtt.py#L13-L38",
+          "version": "repo-lines-v1:sha256:4333f5ad9af0b1d7e8efdace7ed117a3376295508ee5be114704f599b777aef9:eyJzZWxlY3RlZExpbmVDb3VudCI6MjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIxMGQ0ZTkxODhkYjQwY2EzOThkNjA2NDFlNGUwZjhkOWI1OTEyODM1MTdiMTg1YTAzZTA1NDU0YzJlYTU2MjQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQwNjJlNGMyOGMzZDJmOGFiYTBiMmUyMjdjODc0OTY2OTlmOTMxNTViNWU1OTAzZTIxZmRmMTdhZTZhNmJmMWUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM3ZmI0ODk3ZTMzMDkzNjVjZWU0OWEzYjc1YTcwZTFhNTVlYWUxYTRlMzhhNzBiMmEwZTVhMDNkMWQwMWNjZTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRiNTNmNmIyMjNmZDg2ZGU5MTYzMjQzZDQzZWQyYmViZDc1MDNkYTNiOWMxMThhOGRiNWE3ZjEwZjc0NmQ3NDQifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/safirmqtt.py#L92-L107",
+          "version": "repo-lines-v1:sha256:de662ad0693df2114ba0753eeed1fe9619c3045e83d7010595e4d6fce5152463:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhMWJkMjcwYjAxNjcyNjAwMDBkZTc3NWFmZmQzNDVlNDU5MTY3NjZjNmFmYjRmZDY0YmY5YTVkOTQ4ZWQ3MzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIwNDBlZmVmNmI5NzMzOTc5YmYzZjEzMjM4MmM4NzZhZDE4Mjg4ZjA0MWNiY2YxNGU1Y2I1NjNkNzQzMDY1YjgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNiNzczOGI0NDI3ZGEyM2E5NzQ2MDIxOWFjOTE0ZTNmMTM5NWUzMjRlMDQ1NTAxMDUwYzI4MGJhMGI3MWE0ZDIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/safirmqtt_v2.py#L95-L117",
+          "version": "repo-lines-v1:sha256:ec6d025beef3a02ccc29c992360c5e65648f93529537736991b62f3d57a2d568:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhMWJkMjcwYjAxNjcyNjAwMDBkZTc3NWFmZmQzNDVlNDU5MTY3NjZjNmFmYjRmZDY0YmY5YTVkOTQ4ZWQ3MzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIwNDBlZmVmNmI5NzMzOTc5YmYzZjEzMjM4MmM4NzZhZDE4Mjg4ZjA0MWNiY2YxNGU1Y2I1NjNkNzQzMDY1YjgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk1YTlkOTQ1MGUwNTVmZTQ2MDkwN2ZhMGI2YmM1ZTQ1NzZlMjk4ZTZkNGQzMDM3MTcwNzg3NDRhOGQxZjU3YTQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_912df023702a46389d9b74887f09c97a",
+      "statement": "Polars integration in converters (datcon.py, senhive.py, agentfly.py, ulog.py) provides 5-25x performance improvements by using vectorized operations, lazy evaluation, and bypassing Python loop overhead.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/datcon.py#L32-L34",
+          "version": "repo-lines-v1:sha256:d4e8d7767bf1739c514eee53c111f39782310bfd3b983e4e33bbf2a99e62c88d:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNWE5YWJjOTkzNGVmMDIxNGY2MDIyNTdjZGM5ZDcwMGMxMWZjYjdkNzdjN2E0NTNiNDg4M2RkZWUwMzBhMTAzNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTRkMDlhOTk2YTVjZWVhZjYxYWRmNDQ3ZDk4Yzc5MzBlZDU2NWUyYzhiYTg4YzM1NjMyODllYTc3YzlkZDY5MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2Y0MWU1Yjg4ZGFkZWViM2VjNmZkMzY0OTBmMzdkZmI5MmFiMGM2OGFiODJjZWE1MzQ4NDJjOTY3NDM4NjA0ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTFlYzRjOWM2ZjZhNzEyMTIzYzI5OGU3ZDhmNDliNjJmOWM1MjAwYTk0N2NjODhmYzNhMzgyYWRjYTZkN2JmYiJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/senhive.py#L9-L12",
+          "version": "repo-lines-v1:sha256:bfdecb12cf0790795de449399d9867430b0134bcfa041d443d186416edce6e62:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOWZjZjg5ODlmN2Q2MjlhYTE4NDRkMzZhMDY4OTI5MWIxODE3MDM5MTNjY2VjZGE5YTQ3OWFhOTU3MjY0NGQ2MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMGQyMzQ1MDc5Y2RmOWFhZGI3YjI3ODJlZTY5MWM4MTUzNDIxMTJjNzkxYTdjNWFiMzJhYmE4NTY3NWNjZjY4ZSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTA4NWQxNjg1MzM4ODBjNWNlNThjMGZhY2U5MGJkOGU0ZTAzN2U5MjBiMjNlNjgzMTgwNTZkYTQxMDU2NmY4YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYzM4YWQxMGYzMGFiZmU3NjBiN2E1MDQ2ZmMyODcyN2YxNDNiZWJkOGM0NWRkOTQ2NWJiODZjY2FhZTY3ZGYzMCJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/ulog.py#L39-L41",
+          "version": "repo-lines-v1:sha256:6771d49f02a39684508a7f25632c2b3f1600a15c35d543fc9175e0a994410abd:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOWZjZjg5ODlmN2Q2MjlhYTE4NDRkMzZhMDY4OTI5MWIxODE3MDM5MTNjY2VjZGE5YTQ3OWFhOTU3MjY0NGQ2MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWVkZjY1NWI4YjVmNjU3MzJhMDRlOTk5Y2M4YWU1MTk5MzJkY2E4OWEzN2EzNDdlM2VkZWRjYTJlMzA2MWQ0MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjliMjg2YzU2YjZlY2QwMjlmMTkxMzVmNDRjMmJiYTQ0OWZmMzFhOGU5YTEzMzVkMWFkZTk4NGZiNDEwMzk3NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMTA5ZjlkMzBjNDI0ZDc3MTg5ZTNlNTllZWUwZTkxMGVhMTZhNGNjZTcwNmI1NzYwZGY2ZmMwNGIzZGY1MGQwOSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_71c585d3043a49108a1cc1dd9688f5cf",
+      "statement": "All .fvc files follow JSON-Lines format with METADATA as first line, data records as subsequent lines, and are validated against schema.yaml using jsonschema library with validation implemented in core.validate() function.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/cli.py#L53-L67",
+          "version": "repo-lines-v1:sha256:5ae88fbc3e9f6f42eef8a24853ce10ef66e7704533e1c84c8888ed5255707c73:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYxOTkwOWNmYWU3MWM4YzlhNTVmM2MyNTQ5ODhhOTVkZGIzZTg0MGZkZDllNTRjNjBiMjFhMWE4MGQzODQ4MDEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdiMTYyYjY1ZTNkYWRiNjE1MWQ4YTZhNmZiZDkzY2QzZTE3ZWVmMjJmOWZiMTVhNGJhNTNkOTZmYzBjOTFhZDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJjODBjMWNhMTFlODg2MmRlMjQyMDliOWZjYTMzMmQ1ZmNiOWJhMDk3ZDdkM2YzZDc3ZWFlMGY1Yjk5YjEyMmMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY2YjdlZTdjOTE1ZmJiMjZhOWQ5MmM2NDBkZTE1MjYxZTI4NmY2MWU3ZGM2Nzk3NzliNWNlOTk0NTQ2YWM5YmMifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L66-L132",
+          "version": "repo-lines-v1:sha256:27a47d054e58f9f449067c08ed85abd068cdc900ad43384c077ea68c2fcc5e3b:eyJzZWxlY3RlZExpbmVDb3VudCI6NjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE4ZjFiNTRkZGIzYjkyMmNiMmFhZmQ3MjZiYTAzOGIxOTAxNTMyMDAyYjgyNzI3NzUyNjMxOWU3NjNlN2FmNjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVlZGZhYzIzNGIyYWJiNDI5ZDljM2FiZWFlOTczZDllYzQ2N2U1ODEzN2I4MzExYjk1YTdiMzJkOTFhNTYyZDQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ1MDk5MzdmOGVkODU4NjQ4NDBlZDIwMzZhZGU2ODhhY2YwMjg3ODdkZmU2YTE0YTM4ZmExMmZmNzFkZjY5NmIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/schema.yaml",
+          "version": "repo-file-v1:sha256:47dc936269a6f42b39bc66e00f422505c337925eeb9330387387a281a1770a3f"
+        }
+      ]
+    },
+    {
+      "id": "claim_f320ff4c6da34feaadb622ca1c2ae328",
+      "statement": "Geospatial operations use pygeodesy for EGM96 geoid model enabling altitude conversions, with usage in SAFIR and ULog converters.",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/calc/geoid.py",
+          "version": "repo-file-v1:sha256:54a9c422ead3191881d43d6d576071e7433c7cd2225238f1bf69e15f9703b82b"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/safirmqtt.py#L6-L6",
+          "version": "repo-lines-v1:sha256:bde37c7728203d4435d65f2756f66d3468ebfa92245c7ed971043a9ef1f1b4da:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYmRlMzdjNzcyODIwM2Q0NDM1ZDY1ZjI3NTZmNjZkMzQ2OGViZmE5MjI0NWM3ZWQ5NzEwNDNhOWVmMWYxYjRkYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYmRlMzdjNzcyODIwM2Q0NDM1ZDY1ZjI3NTZmNjZkMzQ2OGViZmE5MjI0NWM3ZWQ5NzEwNDNhOWVmMWYxYjRkYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiODRhNzQ2Yzk5MTFjNjFjOTRjNDE0OWY1YzM2MTE3YzUzM2VhMzc0Njc5MGY0YjFkY2M2Y2MwZmVmMDk5NDIzYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTJiN2Q1NDZmMWY3YWIyOGI1Yzc3OTA4ZGRmMzc5MTE5MDc1YzcwYzhlZjdlOWY0MTJiNDYxYTVjMDk0MGJkYiJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/ulog.py#L56-L60",
+          "version": "repo-lines-v1:sha256:3f69232e213c0bb5b8614cf91a21f36dfa5ed7146dabe4765d0b6894d611cc39:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzk2YTg5MzEwOTIwMjgwM2IxMTJhYzI1OTI5ZTJkNWY0ODVmMjRjNjk1NTc4NzNiZGM0NTY0ZjRiOGEzZGRmNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTEwMzQ4MWM1N2QwZjBkYzBmNzZjZDJjYzhiMzYwNGM0ZTgyOTZkYTQxMjJhZGQxOWU4MTc0NWRjN2UzMzFhNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjFmMjk3YTk3OGQ0ODc3MGNmY2IxZTUxMGYyZmI2NWUyOTlhN2I2MDFlNTc0ZDA4MWUzNjFkYmEyOGMyZjE2ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjhmMGZmYzkwZjllNGU5YTA2ZjA5MTQ3NjQ3MjYyNzVlYjI4NWM2Njg3ZTViMDA2MThmNzk2NTJlNWE5ZjhiNyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_f2bf64c2d951407ab7b8d6cf3913d9a0",
+      "statement": "Performance-critical converters have dedicated tests verifying correctness and performance: test_agentfly_xformat.py, test_datcon_xformat.py, test_safirmqtt_xformat.py, test_senhive_xformat.py, test_nmea_xformat.py, test_ulog_xformat.py.",
+      "evidence": [
+        {
+          "resource": "repo://tests/test_agentfly_xformat.py",
+          "version": "repo-file-v1:sha256:59483ae57b5a0c157bef7ae515dd05c909431056f2557b1d7034dcf9c340514f"
+        },
+        {
+          "resource": "repo://tests/test_datcon_xformat.py",
+          "version": "repo-file-v1:sha256:feb003073c3c8dad97d0e7eeb0bd3f147359c7d605f33af9e734e4b87af5608e"
+        },
+        {
+          "resource": "repo://tests/test_nmea_xformat.py",
+          "version": "repo-file-v1:sha256:4e29e666b5dd1ca50f842e944fb699617c19400bce0e0c356f8b7f15412579ec"
+        },
+        {
+          "resource": "repo://tests/test_safirmqtt_xformat.py",
+          "version": "repo-file-v1:sha256:33836f7e8ebef955436b24708e88934a33b915b2c104d2bb148598e729e9a33f"
+        },
+        {
+          "resource": "repo://tests/test_senhive_xformat.py",
+          "version": "repo-file-v1:sha256:b97f02a7db7cb09e5bf02826a935f8c510c2de3a3c749fcaa95d3d9c1ba75989"
+        },
+        {
+          "resource": "repo://tests/test_ulog_xformat.py",
+          "version": "repo-file-v1:sha256:b5751d401101f63d9fb0ab3b4f9213bdccc713c022c907ed695a4a5e634852d6"
+        }
+      ]
+    },
+    {
+      "id": "claim_e9cbfedb5ea84be9af824b85dd5fca95",
+      "statement": "Schema documentation is auto-generated from schema.yaml via scripts/generate_schema_docs.py, updating all .md files in /docs/schema/ directory.",
+      "evidence": [
+        {
+          "resource": "repo://scripts/generate_schema_docs.py",
+          "version": "repo-file-v1:sha256:9d019274819770f1e3c0aeb37875f6f5d86993fda91abfde18e1746c840f0fb7"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/schema.yaml",
+          "version": "repo-file-v1:sha256:47dc936269a6f42b39bc66e00f422505c337925eeb9330387387a281a1770a3f"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-16T12:24:16.401Z"
+  }
+}

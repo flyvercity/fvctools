@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:1204eb181582f36416a7f5f9754170f35b38d31430e5495cdbe4623a4cb62180",
+  "claims": [
+    {
+      "id": "claim_c1254d01b59b4740867b8c1d4f595fee",
+      "statement": "fvctools follows a modular architecture with clear separation between CLI, data file tools (df), geospatial calculations (calc), and visualization (render) components",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/calc/cli.py",
+          "version": "repo-file-v1:sha256:80c78f70b23d511658dadb28cb4671b636de6ed7aa183ce771a57344e8d7e235"
+        },
+        {
+          "resource": "repo://src/fvc/tools/cli.py#L11-L81",
+          "version": "repo-lines-v1:sha256:401449b6983e7b5006c9801386597af59d095e370ab62a73ae4bc7158ab91f06:eyJzZWxlY3RlZExpbmVDb3VudCI6NzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMwMGI2MWU5OTU5YjNmYjY5MTZiMDFmYjBmMjY5OThmY2UwODlhMjVkNzRjMmI4NDNkMDM4NmUwNzY3Yjg2NzQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdhYWYxNDU3YjQ5MzE4OWEwZmFiM2ZlNzBjNGQwZTRlZmE1ZTA3YWVlMWRmZGUyNDFhNThjZGM4ZWZjYWQ4NzAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjlkYjhlZTE2NTNlNmZhMzRkZjUwNjExNDRkZmQ5ZmQ3NzJlMGI0YTYyNTFiY2JjYjZjYmVhOWU0ODcwZTNlOTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg5M2JkNjZlMmJiNzFmM2I4YTkyNDA2NGJiZjdiMDdjNTkwM2E3NzNmYTRmOGMzNTQ2MDYwMzg2NjcxZDNhNzMifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/cli.py#L28-L177",
+          "version": "repo-lines-v1:sha256:ce9be2d59d1a443cf655d9d1342a669d87e79aed63aac1b3e040d0424bdfd212:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUwLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJhNDgyODA4NzI5M2NhODdkOTEzMTk4MDk3ODI5NjY3MmZiZTkxNDhkOTljOTE4NGE5Yjc0YzM3MzVmOGNmYjQ4IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIyMjY5NGMwNGMzYTYwNTU1MzMyZWNmMzdlYTkzNzNkYjRjNGE2ZWFjNWM2ZWEwZjZjMzE2NjJjYTdhY2M0YTVjIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiIzOGFlNjBhMDlhNzg0YjQ3ZWEwODUzMTZiZmY5MmM2ODAxMWRkNjcwZDg5ZjI4ZGFmNWRhOWJiNmFlNDFiYzQyIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MCwiZm9sbG93aW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1In0"
+        },
+        {
+          "resource": "repo://src/fvc/tools/render/cli.py",
+          "version": "repo-file-v1:sha256:317664a1d65ebe7893708692a3309c4e2c30cb291131c4966cdfd554bbdd9ddb"
+        }
+      ]
+    },
+    {
+      "id": "claim_c2f1b48b5a9e45a1854b790ecc5d1cca",
+      "statement": "Data File tools (df) use a converter function pattern (convert_to_fvc) rather than class inheritance, with each format module implementing its own conversion logic",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L24-L64",
+          "version": "repo-lines-v1:sha256:43ab4f5698763e842a24db4a2776da0200ffa339890095d50659c3ec6be12f71:eyJzZWxlY3RlZExpbmVDb3VudCI6NDEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1ZjRjYjZiNDhhOGZhMzI3ZTEwMzBjZTZiNzJjYTY0NjczNTE1ZWZhNDM5MjUzOWUzNWUzOWZkYmExYjJkNjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRiOGIzZWFlZDcyYzA3ZWZmOWYxYWQxNTQ5NTZmYjBhYWNkOTQ4N2YwMmZjOTM4NGFjZDZhNTBjOTc5ZTNhZGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjY0ZWY2NDlkZmY3Y2YyNDQxY2RlZGRkOGE1ZjA4NTlhZmNkMDk3MDIxMzExZjUwNTcyZDkxY2M4MDdjY2Q3MTkifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/datcon.py",
+          "version": "repo-file-v1:sha256:9d7d56088d32b6350e30059814a7ac268de5575d711025b59392032884ea6d25"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/nmea.py#L25-L75",
+          "version": "repo-lines-v1:sha256:6f92d4527dae9da8924bac0b1b6154d055590aa38a22ba69792478dd516a506b:eyJzZWxlY3RlZExpbmVDb3VudCI6NTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhMWJkMjcwYjAxNjcyNjAwMDBkZTc3NWFmZmQzNDVlNDU5MTY3NjZjNmFmYjRmZDY0YmY5YTVkOTQ4ZWQ3MzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRiYzVkNTNmMWEzNGFiZWZlZGVkZDVhOTRhODhjYTNhMTYyYjZiM2JkMmUyODM1MjI3NTA3MGUzOTRiYjliNzUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMzZGY4NGM5MjY4NTBjNTE5MjE1NjNlODBkN2QwN2E2MmVmNTNiZDMwYWM4ZDBmNGUwNjZmZDY5YjcxODE1NGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJjYzYwOTU5ODcyZjg0M2QyZjI0NzJmZWQwMmQxZGYzNDM0ZDA0Yjc1ZDNhODM2NDU5MGMzM2Q1MDk1OTJmNTAifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/ulog.py",
+          "version": "repo-file-v1:sha256:4bbec3ae8f58bfba2d61522e0befcd1f428ae11452f92be5f43fe82ed580f6cc"
+        }
+      ]
+    },
+    {
+      "id": "claim_ff85ca3697364f5fb3dfa0d099b2ef07",
+      "statement": "fvctools uses Click for CLI with hierarchical command structure and supports data conversion, validation, correlation, and export operations",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/cli.py#L16-L81",
+          "version": "repo-lines-v1:sha256:f46c357e237128cadc0737eacbb80c91a3a430b41d33f9c746e3982c139e0252:eyJzZWxlY3RlZExpbmVDb3VudCI6NjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE2YTE1OTg5MGU5Nzk3MmY1MjM3NzdjNjFiMDBhZDQyY2NiZWRiZWU0OGMwYjY3YzYxZTY5OTIzMzEyZjVhMzIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdhYWYxNDU3YjQ5MzE4OWEwZmFiM2ZlNzBjNGQwZTRlZmE1ZTA3YWVlMWRmZGUyNDFhNThjZGM4ZWZjYWQ4NzAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjUwOTExMjc1YTAxMTJjOWNjZjY2NzQ1MzVlMTc0ZjkxMjIzNTBhZDc5NjcxODMwNDlhZWJlNWQxM2QxYmMxZWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg5M2JkNjZlMmJiNzFmM2I4YTkyNDA2NGJiZjdiMDdjNTkwM2E3NzNmYTRmOGMzNTQ2MDYwMzg2NjcxZDNhNzMifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/cli.py#L28-L177",
+          "version": "repo-lines-v1:sha256:ce9be2d59d1a443cf655d9d1342a669d87e79aed63aac1b3e040d0424bdfd212:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUwLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJhNDgyODA4NzI5M2NhODdkOTEzMTk4MDk3ODI5NjY3MmZiZTkxNDhkOTljOTE4NGE5Yjc0YzM3MzVmOGNmYjQ4IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIyMjY5NGMwNGMzYTYwNTU1MzMyZWNmMzdlYTkzNzNkYjRjNGE2ZWFjNWM2ZWEwZjZjMzE2NjJjYTdhY2M0YTVjIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiIzOGFlNjBhMDlhNzg0YjQ3ZWEwODUzMTZiZmY5MmM2ODAxMWRkNjcwZDg5ZjI4ZGFmNWRhOWJiNmFlNDFiYzQyIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MCwiZm9sbG93aW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1In0"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L66-L113",
+          "version": "repo-lines-v1:sha256:78e9d77d3dd9ca46ae0914b6b83f26d7d464aa74ceb9fc95089ef78aa408c723:eyJzZWxlY3RlZExpbmVDb3VudCI6NDgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE4ZjFiNTRkZGIzYjkyMmNiMmFhZmQ3MjZiYTAzOGIxOTAxNTMyMDAyYjgyNzI3NzUyNjMxOWU3NjNlN2FmNjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIyZDAzNWFjN2IzNzUzOTg4M2M2MWRkYTE2MGQ2OWQ3YTc1OTVkYzk2NzdjZDc5ZjQyZDMzMmU3OWIyNzcwODMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ1MDk5MzdmOGVkODU4NjQ4NDBlZDIwMzZhZGU2ODhhY2YwMjg3ODdkZmU2YTE0YTM4ZmExMmZmNzFkZjY5NmIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3YTU2MDkxN2VhMjU4ZjA3MDBiNjNkNTQ4OWIzN2RkNjk3MTFiYTcxNWFlZWZjZmVjNjBjYzAzNGI4OGY3ZWMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_caeec04d3434402c9787b5284d731e3b",
+      "statement": "The FVC format is JSON-Lines with METADATA as first line containing content type, source, and origin, followed by data records",
+      "evidence": [
+        {
+          "resource": "repo://README.md#L70-L90",
+          "version": "repo-lines-v1:sha256:22da77a2a9b1d542538ef3fe6aa31fb8d271b14dfb9fde4fcbf0684e587d5b92:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUzYzdlZTZlOGM2ZGM1MGI5ZDIzYzM5NWYwYTY2NzIzNDgzMDNlNTE2ZmUyZTE0YjZjYzVlMzc5NjNlZTZhNjciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU4ODQwODUwYzQzODUxZTI1MDRjYTY1ZjNlNjA0YWY3MGNhZTliYjBjZjQ3MTY2NTJiY2RjNGI1Y2M1YjRjOGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA5MDFkNTlkZTEyZDgxMjg4ZThhMTJlMGU5ZDZkOTdmNzI3NzE4OTUyMjA2NmZiMmRmZTJjZWI5YzA0OGM0MWIifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L58-L59",
+          "version": "repo-lines-v1:sha256:cdd5abeec15c77158afa5e72a1553d5f5d41f91b426b8416460a2c30125834a2:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDMxMDk3OGI1YTYwNTkwNTQxZWUzZjQzMzAyYTFhNTU1Yzg3OWYyYjgyMDUwY2Y1OTU2ZGQ5YjRiMmE5NjhiNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiY2E0ZDE4YjM1MWNiMGU0ZTUxNzU5MGYzNmMwZWU2YzQyYmYzNWQ1YjcxOTc4MGI2MmFhOGYxNThlM2JlN2E4NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOGU3ZDZiOTZjOTlkMzdmY2ZiMmJjYjFjZGFiOWI2OWVlYzE4NjA2OWI5MTNiMDIxNjFlMWRiNWRiMzhkYTMyZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTAzN2Q5YWI1NjIyYTc1NThlYmNkYmZmZDgxMjc1NjNhZDE2NzU1M2RkN2IxNDFlYzM4MjY3OTdjMDNkZDRmNCJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/schema.yaml#L1-L537",
+          "version": "repo-lines-v1:sha256:47dc936269a6f42b39bc66e00f422505c337925eeb9330387387a281a1770a3f:eyJzZWxlY3RlZExpbmVDb3VudCI6NTM3LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJmYmUxZDRiNTc2OGI3MTk0YjAyNzA0MTBiNjI5NTY2MDdjNjA2Zjc2MDA2ZWMxNjM4NmUwODU0ZDgyMjA5ZmJiIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI4MDg2MzAwZGU5MjM2ZGFiMWM3YjZmMThiOThhNWY2NmVhNGQ0M2NkNWU0ZTU5MTdiOTE2ODhkZGYzODMwNjdlIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MCwicHJlY2VkaW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MCwiZm9sbG93aW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1In0"
+        }
+      ]
+    },
+    {
+      "id": "claim_3006b295b6c04538a38397ad8ddcdcd6",
+      "statement": "fvctools includes performance optimizations such as fast NMEA parsing with message type filtering and efficient schema validation with pre-compiled validators",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L89-L93",
+          "version": "repo-lines-v1:sha256:f1d6bfb65e14417387bc7e7542fe0a1c21766e0ad238278e076b05242d698757:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTNiZDU0M2VkYzljZTk5ZTc2Mjc2ZmEwYmZjNWQxYTY1NTNjODdmZDAyY2E0M2Q3NmZjMTFjZmQ0NmE1MWJhZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzcwN2Q0MGQzNDZlMmIyZTM1ZDViYTc2YjZiYjU3ZTg4YmMyM2IyZWNhMDdkODIyYTI4MmQ1YmZmMTM4YjI4NSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzIxMWM0NmU1YmUwMzZkODRiNDUwMTMwNzllYWRjOWQyOWNhODVjYTI4YTM1ODRhNzQ4MzkyNzU0MjgxYTJhNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWNjYTA2NjE2YTc0NmYxMWU0YjczNjZhOGQ2YThiMzdiNzQ1NDZhZmVlOGUxNjMyNjI5YjMyNjNhOTljMmIwZSJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/nmea.py#L78-L102",
+          "version": "repo-lines-v1:sha256:5200aba5e07865e41c439c304bae050eb32408339e1da7368f0bfb523af263fb:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNjYTgwZDFjNDA1NWJmOTliMWRjZjhlMTkwNGQ1ZGJkNGIyZTIxZDQxYzNhMjJlNzA3MmY5MTNlOWFkN2I1ZTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA5NTNhNTM4OTQyY2VjNjczZGRhYTBlOGZmODE0ZTM4Y2MyYTlkNDRhMmRkMTNjYTg0YmRkNjI3M2ExZmUwOTIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNkMmEzNGNhMGZhMWE1ZDY5NGY2OWRkNTllZmExMDJmMWZkZTcyZjRjMDViMjk0NTRhZTg3ZjgxNDg0MGE4ZWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU0NTk4Mjc1ZWQ5ZjI0NDYwY2MzY2QyY2ZhNzY0NmFkMjgzN2Q4NDg5YzU0ZTc5ZWY5ZjgyNjgwY2Q3ZGQ3ZjcifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_529037fc7d054680a3c1a9e38fdfeda5",
+      "statement": "Development workflow requires pre-commit hooks (ruff, mypy), comprehensive testing with pytest, and follows Conventional Commits for commit messages",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml#L48-L52",
+          "version": "repo-lines-v1:sha256:b5145d1278661921d97290d4d7b03004f3628baa5c0da382723d5200657c3151:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNzc0NWZhYjg2YjEyMWRjODViNGY3ODY3MzM5YTEzZmVlODA0YzhhMDJmNDcxMDY1NzJmMmJmMDY2NGQ1OTUxZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTBjM2RjZjcwOTk1N2VhOTNkZGJiNDNlZWVjNmJmY2E4M2JmMzRiMDJjYmE4NWI4OWQyMDM4NTgwNGNjOTNhNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTcwMzZhNGViNmYxZjdiNGUwZmQxMzBhZjQwZmZjOWQ5ODg4ZTIzODRkNzRkZTE0YzI2ZDFjZjcyYjk2NTE3NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzFlNmZiNzg0OGUzMDQ0M2E2NjUzMmMzY2QxMzNkYmU2ZjRlOWRmNDY0ZTVmYWNjMTc2OGYzYjI0NDVjMTI2ZSJ9"
+        },
+        {
+          "resource": "repo://tests/test_nmea_xformat.py#L6-L21",
+          "version": "repo-lines-v1:sha256:1950bf7f9bd33f574a37495bcb758fb551e77b863394941b8d661e8956b2f98b:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMxMDNhNWI2MDUzMWY2MjA3Y2E4ZDI1NjgxN2QzYjc4OTU3ZWQxNGRiMTE2MDNlZDgyMWRmYTJhZGNmZDZjNjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAyMmNiZGZiMDBkZjVkNGYxNTQyMDA1M2FlMzM1OWY2MTVlZjg1Yjc4YzMxN2YwZTIwZGQxZDA2NDhjZjY1OWMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJjYjAzNzJlMTJjNWUzM2Q5YTQzNzI1N2JkNDQ4NWFhMTM0YTQ2YzFiNDU1YWM3ZDk4ODJjZWJhOGZmZGFiMzEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_8aaafe36cc714c89b8fb44b964295cfc",
+      "statement": "fvctools supports multiple external formats including NMEA, ULog, AgentFly, DatCon, SenHive, and provides module_help() functions for format-specific documentation",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/agentfly.py",
+          "version": "repo-file-v1:sha256:94d34fd34c8ae59d31ba94b50040cc2c562f523dd0c6b1a5f6410e6fea1ef5be"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/datcon.py",
+          "version": "repo-file-v1:sha256:9d7d56088d32b6350e30059814a7ac268de5575d711025b59392032884ea6d25"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/nmea.py#L21-L22",
+          "version": "repo-lines-v1:sha256:56e9ee452f43214f4357fba7a9afdbe313b84721860b5ed202ee9ef498dc9114:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDg1NTMxNmI1Y2E3NzY2OTc2MWRhZjc3NjkyNTg0MzkzODk4YjMwNDliNTUyNWRlM2Y2ODUxZmViZWQ0ZTk3ZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzdhZmQzOTA5MDU2NjNmYzVmMDRkZDgyMjBmYjU3OTliMTc2OGZmODM2YTk3MDc0MzY5NGU1OTI1NDk3NThlZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjFhOTFhMGZjOGRjYjg2M2ZjYzE5OWY5YzU3NjRlNjYyZjllYWIzZmM1MTVmMjEzZjc3N2Q5MzkwZjY1ZDI2NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTA4NWQxNjg1MzM4ODBjNWNlNThjMGZhY2U5MGJkOGU0ZTAzN2U5MjBiMjNlNjgzMTgwNTZkYTQxMDU2NmY4YyJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/senhive.py",
+          "version": "repo-file-v1:sha256:140412f06ecf90e76d76a50cce6421197d0e06d3447640c520bc0449a11fa090"
+        }
+      ]
+    },
+    {
+      "id": "claim_7eddbbd7aac7439b957c61e1b3aac971",
+      "statement": "Type hints are used throughout fvctools with Python 3.12+ syntax, including TypedDict, Optional, Union, and TypeAlias for complex data structures",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml#L31-L31",
+          "version": "repo-lines-v1:sha256:fd4cd79b8625b700d26dc221323b9f704aba9ae7cb653f57562074c0edcb090a:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZmQ0Y2Q3OWI4NjI1YjcwMGQyNmRjMjIxMzIzYjlmNzA0YWJhOWFlN2NiNjUzZjU3NTYyMDc0YzBlZGNiMDkwYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZmQ0Y2Q3OWI4NjI1YjcwMGQyNmRjMjIxMzIzYjlmNzA0YWJhOWFlN2NiNjUzZjU3NTYyMDc0YzBlZGNiMDkwYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZGFkOTYwOGE1ODc1ZGFlY2YxYmVlMzc3NTVkZmEwZmQ2ZDM1ZmUwMjJmZTA5YjA2ZDlmMzVhOGVjMzdlYjE3NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYWY5ODU2YWY0YjI5ZGRjYjIxNGViMjYxOGQ1MGIzZjhlMDY0MGY4MDc3N2NjNjQyOTFhMDgwODZkM2RjNzAyZiJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L15-L22",
+          "version": "repo-lines-v1:sha256:ccc4c21b6d1cf4890ecc2a5267edf6a293273336d397461e60182ad477e612e1:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTAyZDI2YTYxNjEzYmE2ZmIxMzU2NzA0Njc2YmYwYTNiYjIwNGQ1NTRkOTJjZDkwNTAzZjAxYjI2NmZkM2QwZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjZhODMzZmUxY2RjMzlhZjMyMDE1MjhiN2Q3OTU4NTQyZjAwNTVkMDY0MWUwYWExNmEwNTRmMmNkOGRjNWI5YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWUxZjkxYTk5NmM2NmZmNGJkY2M5N2U2OGRiNzlmNzg5MWE0ODMwN2IwYjRjYzdlZWM4MDNjNTk1Y2IyNjk0NCJ9"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/nmea.py#L1-L18",
+          "version": "repo-lines-v1:sha256:2ef267c121c4794c6e7d8ceff605cae748766944ed82bff64df002c8bb7f16e8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzMDNlY2RkNGE0ZDEwZjE5YzczZmQ0MmZkMTI0MzdmZDMzNTRhODI2ODE2MDVkYTUyNTVhOTdhMzkwNjhkYmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUzMmU5MmE2Yzg5ZTM4NmZjOTJmYjcxOTcwZGY3MTNhZGM4ODZlM2M0NTZkODkzMGYxMzAyYjc4YmI0NTQwYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRlYWE3OWVhNmUwMDI0MzYyNDAzZDkxOTkxMDg3ODhiYjgwZWY0NTYzY2E4ODJiYmMzODQ5NDc1NTcwNjA1MjgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ef0c500c2de64610b44da8c0431dd9a9",
+      "statement": "Testing follows pytest structure with format-specific test files (test_nmea_xformat.py, test_datcon_xformat.py, etc.) and uses fixtures for temporary directories and sample data",
+      "evidence": [
+        {
+          "resource": "repo://tests/test_datcon_xformat.py",
+          "version": "repo-file-v1:sha256:feb003073c3c8dad97d0e7eeb0bd3f147359c7d605f33af9e734e4b87af5608e"
+        },
+        {
+          "resource": "repo://tests/test_nmea_xformat.py",
+          "version": "repo-file-v1:sha256:4e29e666b5dd1ca50f842e944fb699617c19400bce0e0c356f8b7f15412579ec"
+        },
+        {
+          "resource": "repo://tests/test_ulog_xformat.py",
+          "version": "repo-file-v1:sha256:b5751d401101f63d9fb0ab3b4f9213bdccc713c022c907ed695a4a5e634852d6"
+        }
+      ]
+    },
+    {
+      "id": "claim_345ad0eabf524fc4830279db5f62e73c",
+      "statement": "Ruff is configured with 120 character line length and single quotes for string literals in pyproject.toml",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml#L48-L52",
+          "version": "repo-lines-v1:sha256:b5145d1278661921d97290d4d7b03004f3628baa5c0da382723d5200657c3151:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNzc0NWZhYjg2YjEyMWRjODViNGY3ODY3MzM5YTEzZmVlODA0YzhhMDJmNDcxMDY1NzJmMmJmMDY2NGQ1OTUxZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTBjM2RjZjcwOTk1N2VhOTNkZGJiNDNlZWVjNmJmY2E4M2JmMzRiMDJjYmE4NWI4OWQyMDM4NTgwNGNjOTNhNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTcwMzZhNGViNmYxZjdiNGUwZmQxMzBhZjQwZmZjOWQ5ODg4ZTIzODRkNzRkZTE0YzI2ZDFjZjcyYjk2NTE3NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzFlNmZiNzg0OGUzMDQ0M2E2NjUzMmMzY2QxMzNkYmU2ZjRlOWRmNDY0ZTVmYWNjMTc2OGYzYjI0NDVjMTI2ZSJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-16T12:24:16.401Z"
+  }
+}

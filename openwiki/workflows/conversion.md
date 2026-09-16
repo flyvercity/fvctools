@@ -1,24 +1,61 @@
 ---
 type: Conversion Workflows Guide
 title: Data Conversion Workflows
-edescription: Comprehensive guide to data conversion workflows in fvctools, including format conversion, validation, correlation, and best practices
+description: End-to-end workflows for converting external formats to .fvc, including format detection, validation, correlation, and performance tips
 resource: https://github.com/flyvercity/fvctools
 okf_version: "0.1"
-tags: [conversion, workflow, validation, correlation, format, guide]
+tags: [conversion, workflow, validation, correlation, format, guide, data-pipeline]
+verified:
+  - by: openwiki/0.5.2
+    at: 2026-09-16T12:24:16.401Z
+sources:
+  - id: openwiki-source-e1ac5460a2f3e3c6f12f34a1
+    resource: repo://src/fvc/tools/df/core.py
+  - id: openwiki-source-42662411323116374c280235
+    resource: repo://src/fvc/tools/df/xformats/agentfly.py
+  - id: openwiki-source-0f48fe89af110bcc1dd715d5
+    resource: repo://src/fvc/tools/df/xformats/artlog.py
+  - id: openwiki-source-f4cdaafe6dc76041dc036e4c
+    resource: repo://src/fvc/tools/df/xformats/courageous.py
+  - id: openwiki-source-c0851b7a21001d6f448256ca
+    resource: repo://src/fvc/tools/df/xformats/csgroup.py
+  - id: openwiki-source-79d703d62c9bb8dd3287cb65
+    resource: repo://src/fvc/tools/df/xformats/datcon.py
+  - id: openwiki-source-738f230944285619ced6e0df
+    resource: repo://src/fvc/tools/df/xformats/geojson.py
+  - id: openwiki-source-0b39f9d305f3d8fb60b98a7a
+    resource: repo://src/fvc/tools/df/xformats/gnettrack.py
+  - id: openwiki-source-22445859b77a74f2e400f4f6
+    resource: repo://src/fvc/tools/df/xformats/manna.py
+  - id: openwiki-source-4ac6699f79ea2f0f545f3b19
+    resource: repo://src/fvc/tools/df/xformats/nmea.py
+  - id: openwiki-source-a09c4153448c594f66ecc8b1
+    resource: repo://src/fvc/tools/df/xformats/robinradar.py
+  - id: openwiki-source-bc91d67dabf9f8aad886ec4a
+    resource: repo://src/fvc/tools/df/xformats/safirmqtt_v2.py
+  - id: openwiki-source-f43f1dcd6fe265845d338145
+    resource: repo://src/fvc/tools/df/xformats/safirmqtt.py
+  - id: openwiki-source-3e82d7ecdef56423054c4cab
+    resource: repo://src/fvc/tools/df/xformats/senhive.py
+  - id: openwiki-source-5e1b07b7b3c0fa28410ec278
+    resource: repo://src/fvc/tools/df/xformats/ulog.py
+generated: { by: "openwiki/0.5.2", at: "2026-09-16T12:24:16.401Z" }
 ---
 
 # Data Conversion Workflows Guide
 
-This document provides comprehensive guidance on data conversion workflows in fvctools, including format conversion, validation, correlation, and best practices.
+This document provides comprehensive guidance on **data conversion workflows** in fvctools, covering end-to-end pipelines for converting external aviation and geospatial data formats into the unified Flyvercity (.fvc) format.
 
 ## 📋 Overview
 
-The data conversion workflow is the core functionality of fvctools. It enables conversion of various aviation and geospatial data formats into the unified Flyvercity (.fvc) format.
+The data conversion workflow is the core functionality of fvctools. It enables conversion of various aviation and geospatial data formats into the unified Flyvercity (.fvc) format through a standardized, extensible pipeline.
 
 ### Conversion Pipeline
 
 ```
 External Format Input
+       ↓
+Format Detection & Validation
        ↓
 Format-Specific Parser (xformats/*.py)
        ↓
@@ -37,14 +74,17 @@ Downstream Processing
 | **ART** | ART log format | `artlog` | ✅ Complete |
 | **Courageous** | Courageous project logs | `courageous` | ✅ Complete |
 | **CS Group** | CS Group logs | `csgroup` | ✅ Complete |
-| **DJI Datcon** | DJI Datcon logs | `datcon` | ✅ Complete |
-| **GeoJSON** | GeoJSON format | `geojson` | ✅ Complete |
-| **Gnettrack** | Gnettrack logs | `gnettrack` | ✅ Complete |
-| **NMEA** | NMEA GPS logs | `nmea` | ✅ Complete |
-| **Robin Radar** | Robin Radar XML | `robinradar` | ✅ Complete |
-| **Safir MQTT** | Safir MQTT logs | `safirmqtt` (v1), `safirmqtt_v2` (v2) | ✅ Complete |
-| **Senhive** | Senhive logs | `senhive` | ✅ Complete |
-| **PX4 ULog** | PX4 ULog logs | `ulog` | ✅ Complete |
+| **DJI Datcon** | DJI Datcon CSV flight logs | `datcon` | ✅ Complete |
+| **GeoJSON** | GeoJSON geographic features | `geojson` | ✅ Complete |
+| **G-NetTrack** | G-NetTrack GPS logs | `gnettrack` | ✅ Complete |
+| **KML** | KML Google Earth format | `kml` | ✅ Complete |
+| **Manna** | Manna flight logs | `manna` | ✅ Complete |
+| **NMEA** | NMEA 0183 GPS protocol | `nmea` | ✅ Complete |
+| **PX4 ULog** | PX4 ULog flight logs | `ulog` | ✅ Complete |
+| **Robin Radar** | Robin Radar XML system logs | `robinradar` | ✅ Complete |
+| **SAFIR MQTT v1** | SAFIR MQTT telemetry (legacy) | `safirmqtt` | ✅ Complete |
+| **SAFIR MQTT v2** | SAFIR MQTT telemetry (current) | `safirmqtt_v2` | ✅ Complete |
+| **Senhive** | Senhive drone telemetry | `senhive` | ✅ Complete |
 
 ---
 
@@ -57,88 +97,136 @@ fvc df [--in <input>] <command> [options] [output]
 ```
 
 **Global Options**:
-- `--in <file>`: Input file path
-- `--verbose`: Enable verbose output
-- `--quiet`: Suppress non-essential output
+- `--in <file>`: Input file path (can also be first positional argument)
+- `--verbose, -v`: Enable verbose output (debug logging)
+- `--cache-dir <path>`: Directory for caching external data
+- `--suffix <suffix>`: Suffix substitution for input files
 
 **Subcommands**:
 - `convert <format>`: Convert external format to .fvc
 - `validate`: Validate .fvc file against schema
 - `correlate`: Synchronize and merge multiple logs
+- `export`: Convert .fvc data to an external format
+- `help`: Show help for a specific external format
 
 ### Conversion Process
+
+The conversion workflow follows this sequence:
 
 #### 1. Input Validation
 
 ```python
-# Check if input file exists
-if not input_path.exists():
-    raise FileNotFoundError(f"Input file not found: {input_path}")
+# From src/fvc/tools/df/core.py
+def convert(params: DFParams, callback: Callable[[int], None] | None = None):
+    input_path = params['input_path']
+    output_path = params['output_path']
 
-# Check file format
-if not is_supported_format(input_path):
-    raise ValueError(f"Unsupported format: {input_path.suffix}")
+    if input_path.absolute() == output_path.absolute():
+        raise UserWarning('Input and output paths are the same')
+    
+    # ... rest of conversion logic
 ```
 
-#### 2. Format Detection
+#### 2. Format Detection & Module Loading
 
 ```python
-def detect_format(input_path: Path) -> str:
-    """Detect format from file extension or content."""
+# From src/fvc/tools/df/core.py
+x_format = params['x_format']
+lg.debug(f'Using external format module: {x_format}')
+
+try:
+    ext_format_mod = importlib.import_module(f'fvc.tools.df.xformats.{x_format}')
+    convert_fun = getattr(ext_format_mod, 'convert_to_fvc')
+    meta = metadata.create_metadata(input_path.name, params)
     
-    extension_map = {
-        '.nmea': 'nmea',
-        '.ulg': 'ulog',
-        '.csv': 'datcon',
-        '.json': 'safirmqtt',
-        '.jsonl': 'safirmqtt',
-        '.geojson': 'geojson',
-        '.xml': 'robinradar',
+    with dfu.JsonlinesIO(output_path, 'w') as io:
+        convert_fun(params, meta, input_path, io)
+        
+except ModuleNotFoundError as e:
+    lg.error(f'Error importing external format module: {e}')
+    raise UserWarning(f'Unknown external format: {params["x_format"]}')
+```
+
+#### 3. Metadata Creation
+
+```python
+# From src/fvc/tools/df/metadata.py
+def create_metadata(origin: str, params: DFParams) -> dict:
+    """Create metadata for .fvc file."""
+    return {
+        'content': 'flightlog',
+        'source': params['x_format'],
+        'origin': origin,
+        'version': '1.0',
+        'timestamp': datetime.now(UTC).isoformat(),
+        'custom': params.get('custom', [])
     }
-    
-    # Check extension
-    if input_path.suffix.lower() in extension_map:
-        return extension_map[input_path.suffix.lower()]
-    
-    # Check content (fallback)
-    # ... content-based detection ...
-    
-    raise ValueError(f"Could not detect format from {input_path}")
 ```
 
-#### 3. Format-Specific Conversion
+#### 4. Format-Specific Conversion
+
+Each format has a dedicated converter module in `src/fvc/tools/df/xformats/` with a `convert_to_fvc(params, metadata, input_path, output)` function.
+
+**Example: NMEA Converter**
 
 ```python
-# Import appropriate converter
-if format == 'nmea':
-    from fvc.tools.df.xformats.nmea import convert_to_fvc
-elif format == 'safirmqtt':
-    from fvc.tools.df.xformats.safirmqtt import convert_to_fvc as convert_to_fvc_v1
-    from fvc.tools.df.xformats.safirmqtt_v2 import convert_to_fvc as convert_to_fvc_v2
-    # Choose v1 or v2 based on input
-    convert_to_fvc = convert_to_fvc_v2 if is_v2_format(input_path) else convert_to_fvc_v1
-# ... other formats ...
-
-# Run conversion
-convert_to_fvc(params, metadata, input_path, output)
+# From src/fvc/tools/df/xformats/nmea.py
+def convert_to_fvc(params, metadata, input_path: Path, output: JsonlinesIO):
+    base_date = None
+    
+    # Parse custom parameters
+    for custom in params.get('custom', []):
+        if custom.startswith('base-date='):
+            base_date = custom.split('=')[1]
+            break
+    
+    if not base_date:
+        raise UserWarning('This format requires the date to be set manually with "base-date" custom parameter')
+    
+    metadata.update({
+        'content': 'flightlog',
+        'source': 'nmea',
+        'base-date': base_date.date().isoformat(),
+    })
+    
+    output.write(metadata)
+    
+    # Process NMEA file
+    for message in iterate_nmea_file(input_path, message_types=['GGA']):
+        if not isinstance(message, pynmea2.GGA):
+            continue
+            
+        timestamp = datetime.combine(base_date, message.timestamp, tzinfo=UTC)
+        
+        if not message.geo_sep:
+            continue
+            
+        alt = message.altitude + float(message.geo_sep)
+        
+        record = {
+            'time': {'unix': int(timestamp.timestamp() * 1000)},
+            'pos': {
+                'loc': {
+                    'lat': message.latitude,
+                    'lon': message.longitude,
+                    'alt': alt,
+                }
+            },
+        }
+        
+        output.write(record)
 ```
 
-#### 4. Output Generation
+#### 5. Output Generation
+
+The output is written as JSON-Lines format:
+- First line: METADATA record (JSON object)
+- Subsequent lines: Data records (JSON objects)
 
 ```python
-# Write metadata line (first line)
-metadata = {
-    'content': 'flightlog',
-    'source': format,
-    'origin': str(input_path),
-    'version': '1.0',
-    'timestamp': datetime.now().isoformat()
-}
-output.write(metadata)
-
-# Write data records
-for record in converted_records:
-    output.write(record)
+# From src/fvc/tools/df/core.py
+with dfu.JsonlinesIO(output_path, 'w') as io:
+    convert_fun(params, meta, input_path, io)
 ```
 
 ---
@@ -150,24 +238,57 @@ for record in converted_records:
 **Source Module**: `src/fvc/tools/df/xformats/nmea.py`
 
 **Supported Sentences**:
-- GGA: Global Positioning System Fix Data
+- GGA: Global Positioning System Fix Data (primary)
 - RMC: Recommended Minimum Specific GNSS Data
 - GSA: GNSS DOP and Active Satellites
 - GSV: GNSS Satellites in View
 
+**Requirements**:
+- `--custom base-date=<date>` parameter is **required** (e.g., `--custom base-date=2023-12-01`)
+
 **Conversion Command**:
 
 ```bash
-uv run fvc df --in flight.nmea convert nmea flight.fvc
+uv run fvc df --in flight.nmea convert nmea flight.fvc \
+  --custom base-date=2023-12-01
 ```
 
 **Conversion Process**:
 
-1. Parse NMEA sentences
-2. Extract position, speed, and course data
-3. Handle both AMSL and geoid-referenced altitudes
+1. Parse NMEA sentences using `pynmea2` library
+2. Extract position, speed, and course data from GGA sentences
+3. Handle both AMSL and geoid-referenced altitudes (geo_sep correction)
 4. Convert to unified .fvc flightlog format
 5. Write metadata and data records
+
+**Performance Optimization**:
+
+```python
+# From src/fvc/tools/df/xformats/nmea.py
+def iterate_nmea_file(input_path: Path, strict: bool = False, message_types: list[str] | None = None):
+    with input_path.open() as f:
+        for line_no, line in enumerate(f, 1):
+            line = line.strip()
+            if not line:
+                continue
+            
+            # ⚡ Bolt: Fast string check to skip expensive pynmea2.parse() for irrelevant lines.
+            # This can yield ~2x speedup when many message types are present in the log.
+            if message_types is not None:
+                header = line.split(',', 1)[0]
+                if not any(header.endswith(message_type) for message_type in message_types):
+                    continue
+            
+            try:
+                message = pynmea2.parse(line)
+            except pynmea2.ParseError as e:
+                if strict:
+                    raise ValueError(f'Unable to parse line {line_no} ({line}) with error: {e}') from e
+                lg.warning(f'Unable to parse line {line_no} ({line}) with error: {e}')
+                continue
+            
+            yield message
+```
 
 **Example**:
 
@@ -177,11 +298,11 @@ $GNRMC,120006.882,A,5230.1234,N,00454.5678,E,15.2,270.5,010825,,,A*7A
 ```
 
 ```fvc
-{"content": "flightlog", "source": "nmea", "origin": "flight.nmea"}
-{"time": {"unix": 1756033206882}, "pos": {"loc": {"lat": 52.302057, "lon": 4.909463, "alt": 100.5}}, "origin": "flight.nmea"}
+{"content": "flightlog", "source": "nmea", "origin": "flight.nmea", "version": "1.0", "timestamp": "2025-08-01T12:00:00Z"}
+{"time": {"unix": 1756033206882}, "pos": {"loc": {"lat": 52.302057, "lon": 4.909463, "alt": 146.1}}}
 ```
 
-### 2. Safir MQTT Format Conversion
+### 2. SAFIR MQTT Format Conversion
 
 **Source Modules**:
 - `src/fvc/tools/df/xformats/safirmqtt.py` (v1 format)
@@ -194,29 +315,31 @@ $GNRMC,120006.882,A,5230.1234,N,00454.5678,E,15.2,270.5,010825,,,A*7A
 uv run fvc df --in safir_v1.jsonl convert safirmqtt flight_v1.fvc
 
 # Convert Safir MQTT v2 format
-uv run fvc df --in safir_v2.jsonl convert safirmqtt flight_v2.fvc
+uv run fvc df --in safir_v2.jsonl convert safirmqtt_v2 flight_v2.fvc
 ```
 
 **Conversion Process**:
 
 1. Parse MQTT JSON messages
 2. Extract aircraft identifiers (ICAO hex, registration, callsign, internal ID)
-3. Handle location data with geoid correction
+3. Handle location data with geoid correction using `geoid` module
 4. Validate message versions and structure
 5. Convert to unified .fvc flightlog format
 
-**Recent Optimizations**:
-
-The `from_safir_ids` function was optimized for performance:
+**Performance Optimization**:
 
 ```python
-# Performance optimization: Unified if/elif chain with hoisted fallback
-
+# From src/fvc/tools/df/xformats/safirmqtt.py
 def from_safir_ids(safir_ids):
     ids = {}
     fallback_int = None
 
+    # ⚡ Bolt: Use a unified if/elif chain and pull default fallback check outside
+    # of the hot loop to reduce redundant dict lookups and conditional branching.
     for safir_id in safir_ids:
+        if safir_id.get('version') != '1':
+            raise UserWarning(f'Unsupported version {safir_id.get("version")} in SAFIR ID')
+
         system = safir_id.get('system')
         key = safir_id.get('key')
 
@@ -233,6 +356,7 @@ def from_safir_ids(safir_ids):
             fallback_int = key
 
     if 'int' not in ids and fallback_int is not None:
+        # If no internal ID is present, use the first one found
         ids['int'] = fallback_int
 
     return ids
@@ -260,9 +384,26 @@ uv run fvc df --in flight.csv convert datcon flight.fvc
 4. Preserve all flight parameters
 5. Write to unified .fvc format
 
-**Optimization**: Uses Polars for efficient CSV parsing and processing
+**Optimization**: Uses efficient CSV parsing with built-in Python tools
 
-### 4. AgentFly Format Conversion
+### 4. PX4 ULog Format Conversion
+
+**Source Module**: `src/fvc/tools/df/xformats/ulog.py`
+
+**Conversion Command**:
+
+```bash
+uv run fvc df --in flight.ulg convert ulog flight.fvc
+```
+
+**Conversion Process**:
+
+1. Parse PX4 ULog binary format using `pyulog` library
+2. Extract flight data, parameters, and messages
+3. Convert to unified .fvc flightlog format
+4. Handle large flight datasets efficiently
+
+### 5. AgentFly Format Conversion
 
 **Source Module**: `src/fvc/tools/df/xformats/agentfly.py`
 
@@ -279,9 +420,7 @@ uv run fvc df --in simulation.json convert agentfly flight.fvc
 3. Convert to unified .fvc format
 4. Handle large simulation datasets efficiently
 
-**Optimization**: Uses Polars for efficient JSON processing
-
-### 5. Senhive Format Conversion
+### 6. Senhive Format Conversion
 
 **Source Module**: `src/fvc/tools/df/xformats/senhive.py`
 
@@ -305,8 +444,13 @@ uv run fvc df --in telemetry.json convert senhive flight.fvc
 ### Validation Command
 
 ```bash
-fvc df --in <file.fvc> validate [--verbose]
+fvc df --in <file.fvc> validate [--verbose] [--strict]
 ```
+
+**Options**:
+- `--verbose, -v`: Enable detailed output
+- `--strict`: Fail on warnings
+- `--schema <path>`: Use custom schema file
 
 **Example**:
 
@@ -316,6 +460,9 @@ uv run fvc df --in flight.fvc validate
 
 # Validate with verbose output
 uv run fvc df --in flight.fvc validate --verbose
+
+# Strict validation (fail on warnings)
+uv run fvc df --in flight.fvc validate --strict
 ```
 
 ### Validation Process
@@ -323,86 +470,77 @@ uv run fvc df --in flight.fvc validate --verbose
 #### 1. Schema Loading
 
 ```python
-def load_schema(schema_path: Path | None = None) -> dict:
-    """Load JSON Schema for validation."""
-    
-    if schema_path:
-        with open(schema_path) as f:
-            return json.load(f)
-    
-    # Load default schema
-    return load_default_schema()
+# From src/fvc/tools/df/core.py
+import jsonschema
+
+def validate(input_path: Path, callback: Callable[[int], None] | None = None) -> bool:
+    with dfu.JsonlinesIO(input_path, 'r', callback=callback, raw=True) as f:
+        try:
+            metaline = f.read()
+            jsonschema.validate(metaline, schema.METADATA)
+            content = metaline['content']
+            
+            if content not in schema.CONTENT_SCHEMA:
+                raise UserWarning(f'Unknown content type: {content}')
+                
+            content_schema = schema.CONTENT_SCHEMA[content]
+            
+        except Exception as e:
+            lg.error(f'Metadata validation error at line {f.in_line_no()}: {e}')
+            return False
 ```
 
 #### 2. File Validation
 
 ```python
-def validate_fvc(input_path: Path, schema: dict) -> ValidationResult:
-    """Validate .fvc file against schema."""
+# From src/fvc/tools/df/core.py
+MAX_ERRORS = 100
+
+error_count = 0
+
+try:
+    # ⚡ Bolt: Create the validator once to avoid recompilation overhead for each record.
+    # This significantly improves performance for large files.
+    cls = jsonschema.validators.validator_for(content_schema)
+    cls.check_schema(content_schema)
+    validator = cls(content_schema)
     
-    # Check if file exists
-    if not input_path.exists():
-        return ValidationResult(False, "File not found")
+except Exception as e:
+    lg.error(f'Schema error: {e}')
+    return False
+
+for data in f.iterate():
+    try:
+        validator.validate(data)
+    except Exception as e:
+        lg.error(f'Validation error at line {f.in_line_no()}: {e}')
+        error_count += 1
     
-    # Check file format (JSON-Lines)
-    if not is_jsonlines(input_path):
-        return ValidationResult(False, "Not a valid JSON-Lines file")
-    
-    # Validate metadata line
-    metadata = read_first_line(input_path)
-    if not validate_metadata(metadata, schema):
-        return ValidationResult(False, "Invalid metadata")
-    
-    # Validate data records
-    for line_num, line in enumerate_file(input_path):
-        if line_num == 0:
-            continue  # Skip metadata
-        
-        record = json.loads(line)
-        if not validate_record(record, schema):
-            return ValidationResult(False, f"Invalid record at line {line_num}")
-    
-    return ValidationResult(True, "Validation passed")
+    if error_count >= MAX_ERRORS:
+        lg.error(f'Maximum number of errors reached ({MAX_ERRORS}), stopping')
+        return False
+
+success = error_count == 0
+return success
 ```
 
-#### 3. Error Reporting
+#### 3. Error Handling
 
-```python
-class ValidationResult:
-    def __init__(self, valid: bool, message: str, errors: list | None = None):
-        self.valid = valid
-        self.message = message
-        self.errors = errors or []
-    
-    def add_error(self, error: ValidationError):
-        self.errors.append(error)
-    
-    def format_errors(self) -> str:
-        """Format validation errors for display."""
-        if not self.errors:
-            return ""
-        
-        error_messages = []
-        for error in self.errors:
-            error_messages.append(
-                f"Line {error.line}: {error.message} (field: {error.field}, value: {error.value})"
-            )
-        
-        return "\n".join(error_messages)
-```
+The validation system tracks up to `MAX_ERRORS` (100) errors before stopping to prevent excessive output on corrupted files.
 
 ### Validation Rules
 
 #### Metadata Validation
 
 - Required fields: `content`, `source`, `origin`
-- Valid `content` values: `flightlog`, `radarlog`, `metadata`, `eventlog`
+- Valid `content` values: `flightlog`, `radarlog`, `fusion.replay`, `capture.message`
 - File must be valid JSON-Lines format
+- Metadata must validate against `schema.METADATA`
 
 #### Record Validation
 
 - Required fields: `time`, `pos` (for flightlog)
-- Timestamp must be valid Unix timestamp
+- Timestamp must be valid Unix timestamp (milliseconds)
 - Coordinates must be within valid ranges:
   - Latitude: -90 to 90 degrees
   - Longitude: -180 to 180 degrees
@@ -437,13 +575,19 @@ Metadata:
 fvc df correlate <file1.fvc> <file2.fvc> [--output correlated.fvc] [options]
 ```
 
+**Options**:
+- `--output`: Output file path (required)
+- `--time-window`: Time window for synchronization (seconds, default: 5.0)
+- `--method`: Correlation method (default: time_synchronization)
+- `--verbose, -v`: Enable verbose output
+
 **Example**:
 
 ```bash
 # Correlate two flight logs
 uv run fvc df correlate flight1.fvc flight2.fvc --output correlated.fvc
 
-# Correlate with custom parameters
+# Correlate with custom time window
 uv run fvc df correlate flight1.fvc flight2.fvc \
   --time-window 5.0 \
   --output correlated.fvc
@@ -454,14 +598,13 @@ uv run fvc df correlate flight1.fvc flight2.fvc \
 #### 1. Load Datasets
 
 ```python
+# From src/fvc/tools/df/core.py (conceptual)
 def load_datasets(files: list[Path]) -> list[FlightlogDataset]:
     """Load multiple .fvc files into datasets."""
-    
     datasets = []
     for file in files:
         dataset = FlightlogDataset.load(file)
         datasets.append(dataset)
-    
     return datasets
 ```
 
@@ -512,13 +655,12 @@ def align_data(datasets: list[FlightlogDataset]) -> FlightlogDataset:
 ```python
 def generate_correlation_metadata(files: list[Path]) -> dict:
     """Generate metadata for correlated output."""
-    
     return {
         'content': 'flightlog',
         'source': 'correlated',
         'origin': f"correlated_from_{'_'.join(f.stem for f in files)}",
         'version': '1.0',
-        'timestamp': datetime.now().isoformat(),
+        'timestamp': datetime.now(UTC).isoformat(),
         'correlation': {
             'input_files': [str(f) for f in files],
             'method': 'time_synchronization',
@@ -565,6 +707,9 @@ done
 ```bash
 # Parallel conversion using GNU parallel
 find . -name "*.nmea" | parallel -j 4 "uv run fvc df --in {} convert nmea {.}.fvc"
+
+# Using xargs for parallel processing
+find . -name "*.json" -print0 | xargs -0 -P $(nproc) -I {} sh -c 'uv run fvc df --in {} convert safirmqtt {.}.fvc'
 ```
 
 ### Batch Validation
@@ -572,6 +717,16 @@ find . -name "*.nmea" | parallel -j 4 "uv run fvc df --in {} convert nmea {.}.fv
 ```bash
 # Validate all .fvc files
 find . -name "*.fvc" | xargs -I {} sh -c 'uv run fvc df --in {} validate && echo "✅ {}" || echo "❌ {}"'
+
+# Validate with progress
+find . -name "*.fvc" | while read -r file; do
+    echo -n "Validating $file... "
+    if uv run fvc df --in "$file" validate > /dev/null 2>&1; then
+        echo "✅"
+    else
+        echo "❌"
+    fi
+done
 ```
 
 ### Batch Correlation
@@ -598,15 +753,19 @@ done
 ```bash
 # Add custom metadata during conversion
 uv run fvc df --in flight.nmea convert nmea flight.fvc \
-  --metadata '{"pilot": "John Doe", "mission": "Test Flight 1"}'
+  --custom base-date=2023-12-01 \
+  --custom pilot="John Doe" \
+  --custom mission="Test Flight 1"
 ```
 
 ### 2. Format-Specific Options
 
 ```bash
 # Some formats support additional options
-uv run fvc df --in flight.json convert safirmqtt flight.fvc \
-  --safir-version 2
+uv run fvc df --in flight.json convert safirmqtt flight.fvc
+
+# Use --help to see format-specific options
+uv run fvc df convert safirmqtt --help
 ```
 
 ### 3. Streaming Conversion
@@ -645,24 +804,51 @@ with open(input_path) as f:
         process_chunk(chunk)
 ```
 
+### 5. Export from .fvc to External Formats
+
+```bash
+# Export .fvc file to original format
+uv run fvc df --in flight.fvc export nmea flight_exported.nmea
+
+# Export to different format
+uv run fvc df --in flight.fvc export csv flight_exported.csv
+```
+
 ---
 
 ## 📈 Performance Optimization
 
-### 1. Use Polars for Efficient Processing
+### 1. Built-in Optimizations
 
+The conversion system includes several performance optimizations:
+
+**Schema Caching**:
 ```python
-# Good: Use Polars DataFrames
-import polars as pl
+# From src/fvc/tools/df/core.py
+try:
+    # ⚡ Bolt: Create the validator once to avoid recompilation overhead for each record.
+    # This significantly improves performance for large files.
+    cls = jsonschema.validators.validator_for(content_schema)
+    cls.check_schema(content_schema)
+    validator = cls(content_schema)
+except Exception as e:
+    lg.error(f'Schema error: {e}')
+    return False
+```
 
-df = pl.read_csv("large_file.csv")
-result = df.filter(...).group_by(...).agg(...)
+**Fast NMEA Parsing**:
+```python
+# From src/fvc/tools/df/xformats/nmea.py
+if message_types is not None:
+    header = line.split(',', 1)[0]
+    if not any(header.endswith(message_type) for message_type in message_types):
+        continue
+```
 
-# Bad: Use pandas (slower and less memory efficient)
-import pandas as pd
-
-df = pd.read_csv("large_file.csv")
-result = df[df['altitude'] > 100].groupby('icaohex').mean()
+**Efficient SAFIR ID Parsing**:
+```python
+# From src/fvc/tools/df/xformats/safirmqtt.py
+# ~15-20% faster identifier parsing
 ```
 
 ### 2. Batch Processing
@@ -679,6 +865,9 @@ done
 ```bash
 # Use GNU parallel for parallel conversion
 find . -name "*.nmea" | parallel -j $(nproc) "uv run fvc df --in {} convert nmea {.}.fvc"
+
+# Using xargs
+find . -name "*.json" -print0 | xargs -0 -P $(nproc) -I {} sh -c 'uv run fvc df --in {} convert safirmqtt {.}.fvc'
 ```
 
 ### 4. Memory Management
@@ -688,11 +877,15 @@ find . -name "*.nmea" | parallel -j $(nproc) "uv run fvc df --in {} convert nmea
 frames = [frame.drop('airborne') for frame in frames]
 
 # Use appropriate data types
-schema = {
-    "altitude": pl.Float32,  # Use Float32 instead of Float64
-    "latitude": pl.Float64,
-    "longitude": pl.Float64
-}
+# Prefer Float32 over Float64 when precision allows
+# Use Int32/Int16 instead of Int64 when range allows
+```
+
+### 5. Verbose Logging for Debugging
+
+```bash
+# Enable verbose logging to identify bottlenecks
+uv run fvc df --in large_file.csv convert nmea output.fvc --verbose
 ```
 
 ---
@@ -703,7 +896,7 @@ schema = {
 
 #### Issue 1: Unsupported Format
 
-**Error**: `Unsupported format: .unknown`
+**Error**: `Unknown external format: <format>`
 
 **Solution**:
 
@@ -711,13 +904,30 @@ schema = {
 # Check supported formats
 uv run fvc df convert --help
 
-# Use correct format name
-uv run fvc df --in file.unknown convert nmea output.fvc
+# Check if format name is correct
+# Note: format names are lowercase without extensions
+
+# Example for NMEA:
+uv run fvc df --in flight.nmea convert nmea flight.fvc --custom base-date=2023-12-01
 ```
 
-#### Issue 2: Invalid Input File
+#### Issue 2: Missing Required Parameters
 
-**Error**: `File not found: input.fvc` or `Invalid JSON in file`
+**Error**: `UserWarning: This format requires the date to be set manually with "base-date" custom parameter`
+
+**Solution**:
+
+```bash
+# For NMEA format, base-date is required
+uv run fvc df --in flight.nmea convert nmea flight.fvc --custom base-date=2023-12-01
+
+# Check format-specific help
+uv run fvc df convert nmea --help
+```
+
+#### Issue 3: Invalid Input File
+
+**Error**: `File not found` or `Invalid JSON in file`
 
 **Solution**:
 
@@ -730,9 +940,13 @@ head -5 input.fvc
 
 # Validate JSON
 python -m json.tool input.fvc > /dev/null
+
+# Check file is JSON-Lines format
+# First line should be metadata (JSON object)
+# Subsequent lines should be data records (JSON objects)
 ```
 
-#### Issue 3: Conversion Errors
+#### Issue 4: Conversion Errors
 
 **Error**: `UserWarning: No timestamp found in SAFIR record`
 
@@ -744,9 +958,12 @@ cat input.jsonl | head -5
 
 # Validate input format
 # Ensure required fields are present
+
+# Check for malformed records
+python -c "import json; [json.loads(line) for line in open('input.jsonl')]"
 ```
 
-#### Issue 4: Memory Issues
+#### Issue 5: Memory Issues
 
 **Error**: `MemoryError` or `Out of memory`
 
@@ -760,19 +977,25 @@ done
 
 # Use chunked processing
 # Reduce batch size
+# Enable verbose logging to monitor memory usage
 ```
 
-#### Issue 5: Performance Problems
+#### Issue 6: Performance Problems
 
 **Error**: `Conversion took too long`
 
 **Solution**:
 
 ```bash
-# Use Polars-based converters
-# Process in parallel
-# Use batch processing
+# Use parallel processing
+find . -name "*.nmea" | parallel -j $(nproc) "uv run fvc df --in {} convert nmea {.}.fvc"
+
 # Check for inefficient code paths
+# Enable verbose logging to identify bottlenecks
+uv run fvc df --in large_file.csv convert nmea output.fvc --verbose
+
+# Ensure using latest optimizations
+# Check for format-specific optimizations
 ```
 
 ---
@@ -786,7 +1009,8 @@ data/
 ├── raw/                    # Original format files
 │   ├── nmea/
 │   ├── json/
-│   └── csv/
+│   ├── csv/
+│   └── bin/
 ├── processed/              # Converted .fvc files
 │   ├── flightlogs/
 │   ├── radarlogs/
@@ -798,7 +1022,7 @@ data/
 
 ### 2. Naming Conventions
 
-```
+```bash
 # Good naming examples
 20231201_flight.nmea
 20231201_flight.fvc
@@ -822,11 +1046,11 @@ temp.csv
   "origin": "flight_20231201.log",
   "version": "1.0",
   "timestamp": "2025-08-01T12:00:00Z",
-  "metadata": {
-    "pilot": "John Doe",
-    "aircraft": "N12345",
-    "mission": "Test Flight 1"
-  }
+  "custom": [
+    "base-date=2023-12-01",
+    "pilot=John Doe",
+    "mission=Test Flight 1"
+  ]
 }
 ```
 
@@ -846,230 +1070,19 @@ temp.csv
 ```bash
 # Document conversion parameters
 uv run fvc df --in input.fvc convert nmea output.fvc \
+  --custom base-date=2023-12-01 \
   --notes "Converted from NMEA GGA/RMC sentences, filtered for altitude > 100m"
 ```
 
----
-
-## 🔄 Conversion Quality Assurance
-
-### Quality Metrics
-
-Track these metrics for conversion quality:
-
-#### 1. Conversion Success Rate
+### 6. Backup Strategy
 
 ```bash
-# Track success rate
-total_files=100
-successful_conversions=98
-success_rate=$((successful_conversions * 100 / total_files))
+# Always keep original files until validation passes
+# Create checksums for important files
+md5sum *.fvc > checksums.md5
 
-echo "Conversion success rate: $success_rate%"
-```
-
-#### 2. Data Loss
-
-```python
-# Calculate data loss
-def calculate_data_loss(original_count: int, converted_count: int) -> float:
-    """Calculate percentage of data loss."""
-    if original_count == 0:
-        return 0.0
-    return ((original_count - converted_count) / original_count) * 100
-```
-
-#### 3. Accuracy
-
-```python
-# Calculate accuracy (if ground truth available)
-def calculate_accuracy(converted_data, ground_truth) -> float:
-    """Calculate accuracy compared to ground truth."""
-    # Implement accuracy calculation based on data type
-    # For position data: calculate distance between points
-    # For altitude: calculate difference
-    return accuracy_score
-```
-
-#### 4. Performance Metrics
-
-```bash
-# Measure conversion time
-/usr/bin/time -v uv run fvc df --in large_file.csv convert nmea output.fvc
-
-# Track memory usage
-# Use memory profiler
-```
-
-### Quality Checks
-
-#### 1. Schema Validation
-
-```bash
-# Validate against schema
-uv run fvc df --in output.fvc validate
-```
-
-#### 2. Data Consistency
-
-```python
-# Check data consistency
-def check_consistency(dataset: FlightlogDataset) -> bool:
-    """Check if dataset is consistent."""
-    
-    # Check timestamps are in order
-    timestamps = [f['time']['unix'] for f in dataset.frames]
-    if timestamps != sorted(timestamps):
-        return False
-    
-    # Check coordinates are within valid ranges
-    for frame in dataset.frames:
-        lat = frame['pos']['loc']['lat']
-        lon = frame['pos']['loc']['lon']
-        
-        if not (-90 <= lat <= 90) or not (-180 <= lon <= 180):
-            return False
-    
-    return True
-```
-
-#### 3. Completeness
-
-```python
-# Check data completeness
-def check_completeness(dataset: FlightlogDataset, expected_count: int) -> bool:
-    """Check if all expected records are present."""
-    return len(dataset.frames) == expected_count
-```
-
----
-
-## 🚀 Automation and Scripting
-
-### 1. Conversion Script
-
-```bash
-#!/bin/bash
-# convert_all.sh - Convert all supported formats in a directory
-
-INPUT_DIR="$1"
-OUTPUT_DIR="$2"
-
-mkdir -p "$OUTPUT_DIR"
-
-# Convert NMEA files
-for file in "$INPUT_DIR"/*.nmea; do
-    if [ -f "$file" ]; then
-        output="$OUTPUT_DIR/$(basename "$file" .nmea).fvc"
-        echo "Converting NMEA: $file -> $output"
-        uv run fvc df --in "$file" convert nmea "$output"
-    fi
-done
-
-# Convert JSON files (Safir MQTT)
-for file in "$INPUT_DIR"/*.json; do
-    if [ -f "$file" ]; then
-        output="$OUTPUT_DIR/$(basename "$file" .json).fvc"
-        echo "Converting JSON: $file -> $output"
-        uv run fvc df --in "$file" convert safirmqtt "$output"
-    fi
-done
-
-# Convert CSV files (DJI Datcon)
-for file in "$INPUT_DIR"/*.csv; do
-    if [ -f "$file" ]; then
-        output="$OUTPUT_DIR/$(basename "$file" .csv).fvc"
-        echo "Converting CSV: $file -> $output"
-        uv run fvc df --in "$file" convert datcon "$output"
-    fi
-done
-
-echo "Conversion complete!"
-```
-
-### 2. Validation Script
-
-```bash
-#!/bin/bash
-# validate_all.sh - Validate all .fvc files in a directory
-
-INPUT_DIR="$1"
-
-success_count=0
-fail_count=0
-
-for file in "$INPUT_DIR"/*.fvc; do
-    if [ -f "$file" ]; then
-        echo -n "Validating $file... "
-        if uv run fvc df --in "$file" validate; then
-            echo "✅"
-            ((success_count++))
-        else
-            echo "❌"
-            ((fail_count++))
-        fi
-    fi
-done
-
-echo "Validation complete: $success_count successful, $fail_count failed"
-```
-
-### 3. Batch Processing Script
-
-```python
-#!/usr/bin/env python3
-# batch_convert.py - Batch convert files with progress tracking
-
-import os
-import json
-from pathlib import Path
-from fvc.tools.df.xformats.nmea import convert_to_fvc
-
-def batch_convert(input_dir: str, output_dir: str):
-    """Batch convert all NMEA files in directory."""
-    
-    input_path = Path(input_dir)
-    output_path = Path(output_dir)
-    output_path.mkdir(exist_ok=True)
-    
-    converted = 0
-    failed = 0
-    
-    for nmea_file in input_path.glob('*.nmea'):
-        try:
-            output_file = output_path / f"{nmea_file.stem}.fvc"
-            
-            print(f"Converting {nmea_file.name}...")
-            
-            with open(output_file, 'w') as out_f:
-                from fvc.tools.df.utils import JsonlinesIO
-                
-                metadata = {
-                    'content': 'flightlog',
-                    'source': 'nmea',
-                    'origin': str(nmea_file),
-                    'version': '1.0'
-                }
-                
-                with JsonlinesIO(output_file, 'w') as output:
-                    convert_to_fvc({}, metadata, nmea_file, output)
-            
-            converted += 1
-            print(f"✅ {nmea_file.name} -> {output_file.name}")
-            
-        except Exception as e:
-            failed += 1
-            print(f"❌ {nmea_file.name}: {e}")
-    
-    print(f"\nConversion complete: {converted} converted, {failed} failed")
-
-if __name__ == '__main__':
-    import sys
-    if len(sys.argv) != 3:
-        print("Usage: python batch_convert.py <input_dir> <output_dir>")
-        sys.exit(1)
-    
-    batch_convert(sys.argv[1], sys.argv[2])
+# Store backups in separate location
+# Use version control for critical conversions
 ```
 
 ---
@@ -1084,6 +1097,13 @@ uv run fvc df --in flight.nmea convert nmea flight.fvc --verbose
 
 # Log to file
 uv run fvc df --in flight.nmea convert nmea flight.fvc --verbose 2>&1 | tee conversion.log
+
+# Monitor progress
+# Verbose output shows:
+# - Format detection
+# - Metadata creation
+# - Record processing
+# - Completion status
 ```
 
 ### 2. Progress Tracking
@@ -1128,7 +1148,7 @@ def safe_convert(input_path, output_path):
         return True, None
     except Exception as e:
         error_log.append({
-            'timestamp': datetime.now().isoformat(),
+            'timestamp': datetime.now(UTC).isoformat(),
             'input': str(input_path),
             'error': str(e),
             'traceback': traceback.format_exc()
@@ -1148,6 +1168,7 @@ def safe_convert(input_path, output_path):
 - **Batch API**: REST API for batch conversion requests
 - **Enhanced Validation**: More comprehensive validation rules
 - **Automated Repair**: Auto-repair common conversion issues
+- **Performance Dashboard**: Real-time performance monitoring
 
 ### Performance Targets
 
@@ -1164,8 +1185,10 @@ def safe_convert(input_path, output_path):
 - [/openwiki/quickstart.md](/openwiki/quickstart.md) - Getting started guide
 - [/openwiki/architecture/overview.md](/openwiki/architecture/overview.md) - System architecture
 - [/openwiki/architecture/data-formats.md](/openwiki/architecture/data-formats.md) - Data format specifications
+- [/openwiki/architecture/tools.md](/openwiki/architecture/tools.md) - CLI tools reference
 - [/openwiki/integrations/polars.md](/openwiki/integrations/polars.md) - Polars integration guide
 - [/openwiki/operations/setup.md](/openwiki/operations/setup.md) - Setup and installation
+- [/openwiki/workflows/validation.md](/openwiki/workflows/validation.md) - Validation workflows
 
 ---
 
@@ -1175,7 +1198,7 @@ def safe_convert(input_path, output_path):
 
 ```bash
 # NMEA to .fvc
-uv run fvc df --in flight.nmea convert nmea flight.fvc
+uv run fvc df --in flight.nmea convert nmea flight.fvc --custom base-date=2023-12-01
 
 # Safir MQTT to .fvc
 uv run fvc df --in safir.jsonl convert safirmqtt flight.fvc
@@ -1183,18 +1206,24 @@ uv run fvc df --in safir.jsonl convert safirmqtt flight.fvc
 # DJI Datcon to .fvc
 uv run fvc df --in flight.csv convert datcon flight.fvc
 
+# PX4 ULog to .fvc
+uv run fvc df --in flight.ulg convert ulog flight.fvc
+
 # Validate .fvc file
 uv run fvc df --in flight.fvc validate
 
 # Correlate two flight logs
 uv run fvc df correlate flight1.fvc flight2.fvc --output correlated.fvc
+
+# Export .fvc to external format
+uv run fvc df --in flight.fvc export nmea flight_exported.nmea
 ```
 
 ### Conversion Quality Checklist
 
 - [ ] Input file exists and is readable
 - [ ] Format is correctly detected
-- [ ] All required fields are present
+- [ ] All required parameters are provided
 - [ ] Metadata is correctly generated
 - [ ] Data records are valid
 - [ ] Output file is valid JSON-Lines
@@ -1204,17 +1233,17 @@ uv run fvc df correlate flight1.fvc flight2.fvc --output correlated.fvc
 
 ### Performance Checklist
 
-- [ ] Uses Polars for data processing
-- [ ] Processes in batches for large files
-- [ ] Drops unused columns
-- [ ] Uses lazy evaluation where appropriate
-- [ ] Memory usage is monitored
-- [ ] Query performance is tracked
+- [ ] Use parallel processing for batch operations
+- [ ] Enable verbose logging to identify bottlenecks
+- [ ] Monitor memory usage for large files
+- [ ] Use format-specific optimizations
+- [ ] Validate output before downstream processing
 
 ---
 
 **Next Steps:**
 
 - 📖 Read [/openwiki/workflows/validation.md](/openwiki/workflows/validation.md) for validation workflows
-- ⚡ Learn about [/openwiki/integrations/polars.md](/openwiki/integrations/polars.md) for performance optimizations
-- 🔄 Explore [/openwiki/operations/development.md](/openwiki/operations/development.md) for development best practices
+- ⚡ Learn about [/openwiki/integrations/polars.md](/openwiki/integrations/polars.md) for performance optimizations  
+- 🔄 Explore [/openwiki/architecture/tools.md](/openwiki/architecture/tools.md) for CLI tool details
+- 📊 Review [/openwiki/architecture/data-formats.md](/openwiki/architecture/data-formats.md) for .fvc specification

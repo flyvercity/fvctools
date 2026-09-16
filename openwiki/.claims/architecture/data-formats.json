@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:5bb2f69d0c4ed5091932f71fbc93d169d9f4f28cd99f3bd22f168f4e09e5ddab",
+  "claims": [
+    {
+      "id": "claim_54a6ea0b1d654758ac94068f14eb3125",
+      "statement": "The Flyvercity Data Format (.fvc) is a JSON-Lines format with METADATA as the first line and data records in subsequent lines, validated against schemas in `/src/fvc/tools/df/schema.yaml`",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/schema.yaml",
+          "version": "repo-file-v1:sha256:47dc936269a6f42b39bc66e00f422505c337925eeb9330387387a281a1770a3f"
+        }
+      ]
+    },
+    {
+      "id": "claim_b70407cd3eba4691b4e02312420970b4",
+      "statement": "Format conversion uses a streaming architecture where external format modules implement `convert_to_fvc()` functions that write METADATA first, followed by data records to a JsonlinesIO output stream",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L24-L63",
+          "version": "repo-lines-v1:sha256:45068b54a0883a0bb6f689529cc07284ca1b0409f2ce6903906ae6106dfe3bb2:eyJzZWxlY3RlZExpbmVDb3VudCI6NDAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1ZjRjYjZiNDhhOGZhMzI3ZTEwMzBjZTZiNzJjYTY0NjczNTE1ZWZhNDM5MjUzOWUzNWUzOWZkYmExYjJkNjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlkM2ZmY2U3M2MwMjNiOWNmZDg1YThkOGZkMjUxYmFjMmM4ZmYyNTUwZDRmY2ViMDgzOTZjMmQ5Yjk1N2E5YzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRiOGIzZWFlZDcyYzA3ZWZmOWYxYWQxNTQ5NTZmYjBhYWNkOTQ4N2YwMmZjOTM4NGFjZDZhNTBjOTc5ZTNhZGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFlYmVlMDZlYzE1NjA2ZjZjNzkxNjY2ZTIwNDQ0Y2RkODkzZjU3YjUzODkzMzE2MmM2MTAxODA3MWNkNjFkY2MifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/xformats/nmea.py#L25-L126",
+          "version": "repo-lines-v1:sha256:a822f84f72ebefb4e41bca57822f3982f36d22f63b9f81f67df65e6b483c6389:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAyLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI0YTFiZDI3MGIwMTY3MjYwMDAwZGU3NzVhZmZkMzQ1ZTQ1OTE2NzY2YzZhZmI0ZmQ2NGJmOWE1ZDk0OGVkNzM5IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI0ODkzZjQwZTM3ODFlYjg5NmM4MmQwNDZhMDgwNjdhMTFlMzVjZGYyZjFkZmFmMjZmZWE5MGI4ZGI2Njc2NDEzIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJjM2RmODRjOTI2ODUwYzUxOTIxNTYzZTgwZDdkMDdhNjJlZjUzYmQzMGFjOGQwZjRlMDY2ZmQ2OWI3MTgxNTRkIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MCwiZm9sbG93aW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1In0"
+        }
+      ]
+    },
+    {
+      "id": "claim_ac140314052f410f85ab5dbc51282c57",
+      "statement": "Schema validation validates METADATA first against schema.METADATA, then validates each data record against the schema corresponding to the content type using jsonschema validators",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L66-L113",
+          "version": "repo-lines-v1:sha256:78e9d77d3dd9ca46ae0914b6b83f26d7d464aa74ceb9fc95089ef78aa408c723:eyJzZWxlY3RlZExpbmVDb3VudCI6NDgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE4ZjFiNTRkZGIzYjkyMmNiMmFhZmQ3MjZiYTAzOGIxOTAxNTMyMDAyYjgyNzI3NzUyNjMxOWU3NjNlN2FmNjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIyZDAzNWFjN2IzNzUzOTg4M2M2MWRkYTE2MGQ2OWQ3YTc1OTVkYzk2NzdjZDc5ZjQyZDMzMmU3OWIyNzcwODMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ1MDk5MzdmOGVkODU4NjQ4NDBlZDIwMzZhZGU2ODhhY2YwMjg3ODdkZmU2YTE0YTM4ZmExMmZmNzFkZjY5NmIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3YTU2MDkxN2VhMjU4ZjA3MDBiNjNkNTQ4OWIzN2RkNjk3MTFiYTcxNWFlZWZjZmVjNjBjYzAzNGI4OGY3ZWMifQ"
+        },
+        {
+          "resource": "repo://src/fvc/tools/df/schema.py#L7-L32",
+          "version": "repo-lines-v1:sha256:68fc895c5701a3b67c3681ae55e926964e4fc0b3e6d6790b3c210fa3108f4e6d:eyJzZWxlY3RlZExpbmVDb3VudCI6MjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI3MjNjYjQ0MGU5YzVmMDk2ZWQ5NzgzMzVhNzI4OGNkNDMxNWY3NWJmYTNlYzJmOTcyZWM3ZDhhYWY0NDA2YTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgwZDRhNzkyNzM2YWNlZDRmZDZkYmY2NGRlNDJmNTQxMjM5YWYyMWQyNzAyNTY2OTUzNjZlYmUyOTgwNDg1NGYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI4NWVlNzkxMDMzMjk3ZTc4MDFlMjAyNDk0MjFlMTNmNTgyYTJlZTcwOWRmNDkwYjAyYjNkNmVmNGJiOTMzYWEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_740d4bf41556446186e3e52bc2d7d3b5",
+      "statement": "The schema system uses reusable components (anchors) in schema.yaml to define FLIGHTLOG, RADARLOG, FUSION_REPLAY, and CAPTURE_MESSAGE schemas with required fields and proper type validation",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/schema.yaml#L1-L537",
+          "version": "repo-lines-v1:sha256:47dc936269a6f42b39bc66e00f422505c337925eeb9330387387a281a1770a3f:eyJzZWxlY3RlZExpbmVDb3VudCI6NTM3LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJmYmUxZDRiNTc2OGI3MTk0YjAyNzA0MTBiNjI5NTY2MDdjNjA2Zjc2MDA2ZWMxNjM4NmUwODU0ZDgyMjA5ZmJiIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI4MDg2MzAwZGU5MjM2ZGFiMWM3YjZmMThiOThhNWY2NmVhNGQ0M2NkNWU0ZTU5MTdiOTE2ODhkZGYzODMwNjdlIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MCwicHJlY2VkaW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1IiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MCwiZm9sbG93aW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1In0"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-16T12:24:16.401Z"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:e65285f89204150e8311f7726d59448b5e7153088de2b105a7b67661724b1fb7",
+  "claims": [
+    {
+      "id": "claim_ccef114d7d984fa88c41f5f570c9752e",
+      "statement": "The validation workflow entry point is the validate() function in /src/fvc/tools/df/core.py which validates .fvc files against their schemas using a two-tier validation approach",
+      "evidence": [
+        {
+          "resource": "repo://src/fvc/tools/df/core.py#L66-L113",
+          "version": "repo-lines-v1:sha256:78e9d77d3dd9ca46ae0914b6b83f26d7d464aa74ceb9fc95089ef78aa408c723:eyJzZWxlY3RlZExpbmVDb3VudCI6NDgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE4ZjFiNTRkZGIzYjkyMmNiMmFhZmQ3MjZiYTAzOGIxOTAxNTMyMDAyYjgyNzI3NzUyNjMxOWU3NjNlN2FmNjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIyZDAzNWFjN2IzNzUzOTg4M2M2MWRkYTE2MGQ2OWQ3YTc1OTVkYzk2NzdjZDc5ZjQyZDMzMmU3OWIyNzcwODMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ1MDk5MzdmOGVkODU4NjQ4NDBlZDIwMzZhZGU2ODhhY2YwMjg3ODdkZmU2YTE0YTM4ZmExMmZmNzFkZjY5NmIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3YTU2MDkxN2VhMjU4ZjA3MDBiNjNkNTQ4OWIzN2RkNjk3MTFiYTcxNWFlZWZjZmVjNjBjYzAzNGI4OGY3ZWMifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-16T12:24:16.401Z"
+  }
+}

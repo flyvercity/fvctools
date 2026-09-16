@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:ab32b5fe40a6d4ddbdf6978b376f5b1949081e83950ee5bdb059eecdd512ded5",
+  "claims": [
+    {
+      "id": "claim_2779bafa813147d08d02f372da2709b4",
+      "statement": "fvctools requires Python 3.12 or later as specified in pyproject.toml.",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml#L31-L31",
+          "version": "repo-lines-v1:sha256:fd4cd79b8625b700d26dc221323b9f704aba9ae7cb653f57562074c0edcb090a:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZmQ0Y2Q3OWI4NjI1YjcwMGQyNmRjMjIxMzIzYjlmNzA0YWJhOWFlN2NiNjUzZjU3NTYyMDc0YzBlZGNiMDkwYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZmQ0Y2Q3OWI4NjI1YjcwMGQyNmRjMjIxMzIzYjlmNzA0YWJhOWFlN2NiNjUzZjU3NTYyMDc0YzBlZGNiMDkwYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZGFkOTYwOGE1ODc1ZGFlY2YxYmVlMzc3NTVkZmEwZmQ2ZDM1ZmUwMjJmZTA5YjA2ZDlmMzVhOGVjMzdlYjE3NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYWY5ODU2YWY0YjI5ZGRjYjIxNGViMjYxOGQ1MGIzZjhlMDY0MGY4MDc3N2NjNjQyOTFhMDgwODZkM2RjNzAyZiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_fa0d31bb914f4ae0bec376d26ea53e52",
+      "statement": "fvctools uses uv for package management as indicated by build-system requires in pyproject.toml.",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml#L36-L38",
+          "version": "repo-lines-v1:sha256:1be9b82eff188babac4fc0e2c99d8bf7a48ea1307544bcf032bce3ec57a3e779:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDQ1Njk5NDZhYzliYmU3Y2IyY2RlYzNmOGJlY2YzNDM3NTBjNThiOWIzMjFlYzIxOTViZmJhYWIyYWE4YzRiYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTk1ZTYwMWYwN2M4NjdkZTg2YmQyYTNiNjk5OGY4YjJjZTBiMjcyMDZkZTQxN2EzZjI2NGI3YjNkYTk4NzE3MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjc4N2FmMjk1MzY1OGU2YzcwZTA0Njk1YzJjYjhhM2M4NDUxNGM3MTAxN2YxNWY4ZjIwMjllNWY4ODdiMDYwNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjg0Yjg2YjYyMTI4YjZiYmQ0YTUyZDRkMzg2NjNhNmY3OTc1YzAwM2Y3YWZlNTc3MTAwNDc1OWY1OWVhYmZkNCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_954e945d889545d69b2731cb807ea9ab",
+      "statement": "fvctools defines a dev dependency group in pyproject.toml containing duct, jsonschema2md, ptpython, pytest, and ruff.",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml#L40-L46",
+          "version": "repo-lines-v1:sha256:52fad4190ce5c26fa811a17926eb566b2466e954f8bed14a3080f6c7bb103471:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZGJiNzQ5OWIxY2UxYzRmNGIyNTI3ZjNhMzI4NGNhYzZiNmExZTNiZjQ5ODhiNTY3OTgyYzNkYzhlOWExN2YyMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjk0MTZlMDlmNzhiYTMxNmMwMzI1NjgyMTNiODU1ZWU3NTZlNDE1NjVkOTE4ZjA5NTE5YzgxZmQ2MjBmNDA2MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjEzN2FhYWFjOGFmNGYwY2JiMDhhNzFmNmU1NGMyOGZiMGE0ODFiN2VhZGVlYTEyMTM0YzQ3Mzg3NTM0ZTdmOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYmI4NTBkMDkxYWU4MjgxODRhZDRiMDJhOWI2N2Q3YzU0YjQ4YThkYjdlMTU5YWE3MDVkOTdiYzIzMDYwYWQ1NCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_5c22d516db1e43438dd91c9b4a861023",
+      "statement": "fvctools provides a PowerShell helper script pwsh/Load-FvcTools.ps1 that loads the fvctools CLI in PowerShell sessions.",
+      "evidence": [
+        {
+          "resource": "repo://pwsh/Load-FvcTools.ps1",
+          "version": "repo-file-v1:sha256:e72ae91653b4db3f52458603f856d6f89014f32b6a3da04030d153626a07d5fd"
+        }
+      ]
+    },
+    {
+      "id": "claim_4a75912f6cb54376be255e60dfd8f6b3",
+      "statement": "The fvctools CLI entry point is defined in pyproject.toml at src/fvc/tools/cli:main.",
+      "evidence": [
+        {
+          "resource": "repo://pyproject.toml#L33-L34",
+          "version": "repo-lines-v1:sha256:d75e15edbe7e304a30d097a550559caed45d3528cacd3c143de6554e27ef34a3:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGVhYjRlYzYzZGU1MTdkYTRjZDhlNWM4MzA3ZmIyYzc3MzdkMzkxOTBhYjY5ZjMyYTVlOWVmODFlYTQ0MTZkZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjhlZWI3NWYwZDFkNGVhYTM1YTFkZmY0MmFkOGI0MGNkOWZiOGI0MWU1YmJjZjYwNzE5N2UxZmI4MmU0MWYyNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiY2U4Nzc1Y2VlNGZjOGI2MTc3ODVkY2U1ODMwNWVhNjNmYjg5NWYyNDk0MjY1NzJkODQ2YTRiODkwZjRhYTIyZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjkwNWJkZWQwNjQ0MDE5ODI4NDkwYjFkNTZjOTA2YTQ4YTk4YzIwM2JlMTY5MDNiNGZmNTIwMmI5NTRmYjZhZSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_68e6258a8d99458a9c4cd436303b8cec",
+      "statement": "fvctools has been updated to remove references to non-existent installation scripts.",
+      "evidence": [
+        {
+          "resource": "repo://README.md#L16-L17",
+          "version": "repo-lines-v1:sha256:8fd86ba0153ea4017807010cd7c0c5b266bbd1a43efb78c336eaea9f6c96ad7e:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTVmNGZlY2RjZDdlMWIzODYwY2ZhMmE0MDgwZWJjMWQxODlhNGY1Y2JkMmVmOGNiODNlY2IxNDY5MGM3OTcxZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYjgzZmYzZDIyNjM2YTlhNmFjZTQ3NDE4ZjYxZTc5ZjFmNDY2NmNmNmZmNTgxMjNmOGQxM2FmZmNiZjRiZjc1YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMmE2OWVkM2Q1NzkwMjFmNDc2ZDc5NWIyYWMxMDQzMGQ2MDA2YjU0YjViNGY1ZDgxMGEwNDJjMmI1NjM0OTZlMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2UxMTQ4MjMxNDdhNDA0YmE5MmNkZTUyZTE0OGU4YzQ2YWM3ODIwNDEwMDk4MjNlYmY1ZDk4ZmVlYzMzNzM0NiJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-16T12:24:16.401Z"
+  }
+}
