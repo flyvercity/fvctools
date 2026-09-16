@@ -14,6 +14,7 @@ class FlightlogDataset:
         self.metadata = metadata
         self.frames = frames
 
+    # Used externally - do not remove
     def serialize(self) -> dict:
         return {
             'metadata': self.metadata.dict(),
