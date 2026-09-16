@@ -35,10 +35,20 @@ Notes:
     required=False,
 )
 @click.option(
+    '--s3-root',
+    's3_root',
+    help='Default S3 root for resolving relative fetch URIs',
+    type=str,
+    envvar='FVC_S3_URI',
+    default=dfu.DEFAULT_S3_ROOT,
+    show_default=True,
+    required=False,
+)
+@click.option(
     '--in',
     'input_path',
     required=False,
-    type=click.Path(exists=True, path_type=Path),
+    type=str,
 )
 @click.option(
     '--suffix',
@@ -65,6 +75,30 @@ def validate(params):
 
     if params['JSON']:
         json_print(params, {'valid': valid})
+
+
+@df.command(name='fetch', help='Download a file from S3 (or the local cache) by URI')
+@click.pass_obj
+@click.option('--force', is_flag=True, help='Re-download even if a cached copy exists')
+@click.argument('uri', type=str, required=True)
+def fetch_command(params, force, uri):
+    """Download a file into the local cache.
+
+    URI is either a full ``s3://bucket/key`` URI or a relative path resolved
+    against the default S3 root (see --s3-root / FVC_S3_URI).
+    """
+
+    resolved = dfu.fetch(
+        uri,
+        params.get('cache_dir'),
+        params.get('s3_root', dfu.DEFAULT_S3_ROOT),
+        force=force,
+    )
+
+    lg.info(f'File available at {resolved}')
+
+    if params['JSON']:
+        json_print(params, {'path': str(resolved)})
 
 
 @df.command(name='help', help='Show help for a specific format')
@@ -138,10 +172,7 @@ def convert_command(params, output_file, **kwargs):
     lg.info(f'Conversion complete, output written to {output_path}')
 
 
-@df.command(
-    name='export',
-    help='Convert data to an external format'
-)
+@df.command(name='export', help='Convert data to an external format')
 @click.pass_obj
 @click.argument('x_format', type=str, required=True)
 @click.argument('output-file', type=Path, required=False)
@@ -151,10 +182,7 @@ def export_command(params, output_file, **kwargs):
     core.export(params)
 
 
-@df.command(
-    name='correlate',
-    help='Correlate several flightlogs'
-)
+@df.command(name='correlate', help='Correlate several flightlogs')
 @click.pass_obj
 @click.argument(
     'infiles',

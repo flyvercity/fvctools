@@ -3,12 +3,16 @@ import logging
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Generator, Literal
+from urllib.parse import urlparse
 
 from benedict import benedict
 import polars as pl
 
 
 lg = logging.getLogger('fvc.tools.df')
+
+#: Default S3 root used to resolve relative fetch URIs.
+DEFAULT_S3_ROOT = 's3://flyvercity.datasets/'
 
 
 class JsonlinesIO:
@@ -108,13 +112,162 @@ class JsonlinesIO:
             yield data
 
 
+def parse_uri(uri: str, s3_root: str = DEFAULT_S3_ROOT) -> tuple[str, str] | None:
+    """Resolve a fetch URI into an ``(bucket, key)`` pair.
+
+    Args:
+        uri: Either a full ``s3://bucket/key`` URI or a relative path that is
+            joined onto ``s3_root``.
+        s3_root: The default S3 root (``s3://bucket/prefix``) used to resolve
+            relative paths.
+
+    Returns:
+        A ``(bucket, key)`` tuple for S3 URIs, or ``None`` when ``uri`` refers
+        to an existing local path (so callers can use it as-is).
+
+    Raises:
+        UserWarning: If the URI is empty or cannot be resolved to a valid
+            ``s3://bucket/key`` location.
+    """
+
+    if not uri:
+        raise UserWarning('Empty URI provided')
+
+    parsed = urlparse(uri)
+
+    if parsed.scheme == 's3':
+        bucket = parsed.netloc
+        key = parsed.path.lstrip('/')
+
+        if not bucket or not key:
+            raise UserWarning(f'Invalid S3 URI: {uri}')
+
+        return bucket, key
+
+    # Backward compatibility: an existing local path is used directly.
+    if Path(uri).exists():
+        return None
+
+    # Treat as a relative path against the default S3 root.
+    root = urlparse(s3_root)
+
+    if root.scheme != 's3' or not root.netloc:
+        raise UserWarning(f'Invalid S3 root: {s3_root}')
+
+    bucket = root.netloc
+    prefix = root.path.strip('/')
+    rel = uri.strip('/')
+    key = f'{prefix}/{rel}' if prefix else rel
+
+    if not key:
+        raise UserWarning(f'Cannot resolve URI: {uri}')
+
+    return bucket, key
+
+
+def default_bucket(s3_root: str = DEFAULT_S3_ROOT) -> str:
+    """Return the bucket name of the default S3 root."""
+
+    return urlparse(s3_root).netloc
+
+
+def cache_target(bucket: str, key: str, cache_dir: Path, s3_root: str = DEFAULT_S3_ROOT) -> Path:
+    """Return the local cache path for ``s3://bucket/key``.
+
+    The cache root mirrors the default bucket's root, so keys from the default
+    bucket map directly to ``cache_dir/key`` (no redundant bucket directory).
+    Keys from any other bucket are namespaced under ``cache_dir/bucket/key`` to
+    avoid collisions.
+    """
+
+    if bucket == default_bucket(s3_root):
+        return Path(cache_dir) / key
+
+    return Path(cache_dir) / bucket / key
+
+
+def fetch(
+    uri: str,
+    cache_dir: Path | None,
+    s3_root: str = DEFAULT_S3_ROOT,
+    force: bool = False,
+) -> Path:
+    """Resolve ``uri`` to a local path, downloading from S3 if needed.
+
+    Full ``s3://`` URIs and relative paths (resolved against ``s3_root``) are
+    downloaded into ``cache_dir``. The cache root mirrors the default bucket's
+    root, so keys from the default bucket map to ``cache_dir/key``; keys from
+    other buckets are namespaced under ``cache_dir/bucket/key``. Existing local
+    paths are returned unchanged.
+
+    AWS credentials are resolved via the standard boto3 chain, honouring the
+    ``AWS_PROFILE`` environment variable (which the top-level ``--aws-profile``
+    option sets).
+
+    Args:
+        uri: The file URI (``s3://bucket/key`` or a relative cache path).
+        cache_dir: The local cache root (``FVC_CACHE`` / ``--cache-dir``).
+        s3_root: Default S3 root for relative URIs.
+        force: Re-download even if a cached copy already exists.
+
+    Returns:
+        The local :class:`~pathlib.Path` of the resolved file.
+
+    Raises:
+        UserWarning: If the cache directory is missing or the download fails.
+    """
+
+    resolved = parse_uri(uri, s3_root)
+
+    if resolved is None:
+        # Existing local path, used directly.
+        return Path(uri)
+
+    bucket, key = resolved
+
+    if not cache_dir:
+        raise UserWarning('Cache directory is not set, use --cache-dir or FVC_CACHE')
+
+    target = cache_target(bucket, key, cache_dir, s3_root)
+
+    if target.exists() and not force:
+        lg.debug(f'Using cached file: {target}')
+        return target
+
+    target.parent.mkdir(parents=True, exist_ok=True)
+
+    lg.info(f'Downloading s3://{bucket}/{key} to {target}')
+
+    try:
+        import boto3
+        from botocore.exceptions import NoCredentialsError
+
+        s3 = boto3.client('s3')
+        s3.download_file(bucket, key, str(target))
+
+    except NoCredentialsError:
+        raise UserWarning(
+            'Unable to locate AWS credentials. Pass --aws-profile <name>, set the '
+            'AWS_PROFILE environment variable, or configure default credentials.'
+        )
+
+    except Exception as e:
+        raise UserWarning(f'Failed to download s3://{bucket}/{key}: {e}')
+
+    return target
+
+
 def input_path(params: benedict) -> Path:
     param = params.get('input_path')
 
     if not param:
         raise UserWarning('Input path is not set, use --in to set it')
 
-    path = Path(param)
+    path = fetch(
+        str(param),
+        params.get('cache_dir'),
+        params.get('s3_root', DEFAULT_S3_ROOT),
+    )
 
     if suffix := params.get('suffix'):
         path = path.with_suffix(suffix)
