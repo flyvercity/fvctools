@@ -1,16 +1,20 @@
 import logging as lg
+import os
 import traceback
 from argparse import ArgumentParser
 from importlib.metadata import version
 
-import boto3
 import click
 from benedict import benedict
 from rich.logging import RichHandler
 
+
 from fvc.tools.calc.cli import calc
 from fvc.tools.df.cli import df
 from fvc.tools.render.cli import render
+
+#: Hardcoded default AWS profile used for S3 operations when none is provided.
+DEFAULT_AWS_PROFILE = 'flyvercity'
 
 
 @click.group(help='Flyvercity CLI Tools Suite')
@@ -23,7 +27,13 @@ from fvc.tools.render.cli import render
     help='Make JSON default output format instead of free form',
 )
 @click.option('--no-pprint', is_flag=True, help='Disable colored pretty printing')
-@click.option('--aws-profile', help='AWS profile to use for S3 operations')
+@click.option(
+    '--aws-profile',
+    help='AWS profile to use for S3 operations',
+    envvar='AWS_PROFILE',
+    default=DEFAULT_AWS_PROFILE,
+    show_default=True,
+)
 @click.option(
     '--egm',
     type=click.Path(exists=True),
@@ -49,7 +59,9 @@ def cli(ctx, verbose, json, no_pprint, aws_profile, egm):
 
     if aws_profile:
         lg.info(f'Using AWS profile: {aws_profile}')
-        boto3.setup_default_session(profile_name=aws_profile)
+        # Set AWS_PROFILE so every boto3 session/client (including freshly
+        # constructed ones) picks up the profile, not just the default session.
+        os.environ['AWS_PROFILE'] = aws_profile
 
 
 @cli.group(help='Shell Integration')

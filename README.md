@@ -44,6 +44,27 @@ The `df` toolset manages the conversion, validation, and correlation of aviation
   ```bash
   uv run fvc df correlate log1.fvc log2.fvc
   ```
+- **Fetch**: Downloads a data file from S3 (or the local cache) by URI. The URI is
+  either a full `s3://bucket/key` URI or a relative path resolved against the
+  default S3 root (`s3://flyvercity.datasets/`, configurable via `--s3-root` or the
+  `FVC_S3_URI` environment variable). Files are downloaded into the local cache
+  (`--cache-dir` / `FVC_CACHE`), which mirrors the default bucket's root: files
+  from the default bucket are stored at `<cache>/<key>`, while files from other
+  buckets are namespaced under `<cache>/<bucket>/<key>`. Cached copies are reused
+  on subsequent runs.
+  ```bash
+  # Relative path (resolved against s3://flyvercity.datasets/)
+  uv run fvc df fetch flights/flight.fvc
+
+  # Full S3 URI
+  uv run fvc df fetch s3://my-bucket/data/flight.fvc
+  ```
+
+  The `--in` option of any `df` command also accepts these URIs, downloading the
+  file into the cache before processing:
+  ```bash
+  uv run fvc df --in s3://my-bucket/data/flight.fvc validate
+  ```
 
 ### Geospatial Calculations (`fvc calc`)
 
