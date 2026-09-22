@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 from pathlib import Path
@@ -188,7 +189,7 @@ def cache_target(bucket: str, key: str, cache_dir: Path, s3_root: str = DEFAULT_
 
 def fetch(
     uri: str,
-    cache_dir: Path | None,
+    cache_dir: Path | None = None,
     s3_root: str = DEFAULT_S3_ROOT,
     force: bool = False,
 ) -> Path:
@@ -224,6 +225,8 @@ def fetch(
         return Path(uri)
 
     bucket, key = resolved
+
+    cache_dir = cache_dir or os.getenv('FVC_CACHE')
 
     if not cache_dir:
         raise UserWarning('Cache directory is not set, use --cache-dir or FVC_CACHE')
