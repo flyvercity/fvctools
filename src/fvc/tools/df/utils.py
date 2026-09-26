@@ -52,10 +52,7 @@ class JsonlinesIO:
     def read(self) -> benedict | dict | None:
         self._check_entered()
 
-        if self._file:
-            line = self._file.readline()
-        else:
-            raise RuntimeError('File is not open')
+        line = self._file.readline()
 
         self._in_line_no += 1
 
@@ -81,32 +78,21 @@ class JsonlinesIO:
     def write(self, data):
         self._check_entered()
 
-        if self._file:
-            line = json.dumps(data) + '\n'
-            self._file.write(line)
+        line = json.dumps(data) + '\n'
+        self._file.write(line)
 
-            if self._callback:
-                self._callback(len(line.encode('utf-8')))
-        else:
-            raise RuntimeError('File is not open')
+        if self._callback:
+            self._callback(len(line.encode('utf-8')))
 
     def write_dataframe(self, df: pl.DataFrame):
         """Write a Polars DataFrame as JSON lines to the file."""
         self._check_entered()
-
-        if self._file:
-            df.write_ndjson(self._file)
-        else:
-            raise RuntimeError('File is not open')
+        df.write_ndjson(self._file)
 
     def read_dataframe(self) -> pl.DataFrame:
         """Read remaining JSON lines from the file as a Polars DataFrame."""
         self._check_entered()
-
-        if self._file:
-            return pl.read_ndjson(self._file)
-
-        raise RuntimeError('File is not open')
+        return pl.read_ndjson(self._file)
 
     def iterate(self) -> Generator[benedict | dict, None, None]:
         while data := self.read():
