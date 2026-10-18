@@ -150,7 +150,6 @@ def calculate_bounds(coordinates: List[Dict[str, Any]]) -> Dict[str, float]:
     }
 
 
-
 def _compute_time_extents(
     coordinates: List[Dict[str, Any]],
 ) -> Dict[str, str | None]:
